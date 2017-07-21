@@ -19,8 +19,8 @@ GA WDI Final Project - Live P2P Streaming, Collaborate content curation.
 * How to build
 
 ### Contribution
-* [Elnathan Erh](https://github.com/eLn86)
 * [Alex Min](https://github.com/AlexMin314)
+* [Elnathan Erh](https://github.com/eLn86)
 
 ### License
 
