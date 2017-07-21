@@ -18,9 +18,10 @@ GA WDI Final Project - Live P2P Streaming, Collaborate content curation.
 * How to install
 * How to build
 
-### Read More
-* Create React App: https://github.com/facebookincubator/create-react-app
-
 ### Contribution
+* [Elnathan Erh](https://github.com/eLn86)
+* [Alex Min](https://github.com/AlexMin314)
 
 ### License
+
+The Arena.tv is released under the [MIT license](https://opensource.org/licenses/MIT).
