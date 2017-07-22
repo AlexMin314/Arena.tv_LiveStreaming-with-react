@@ -2,9 +2,11 @@ import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
 
 // Child components
+import Header from '../Partials/Header/Header';
+import Footer from '../Partials/Footer/Footer';
 
 // Import static files
-import './Home.css';
+import './Layout.css';
 
 /**
  * App's Index Page
@@ -18,15 +20,17 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
 
   render() {
     return (
-      <div className="container-fluid contentBody">
-        <div>Test</div>
+      <div className="layoutWrapper">
+        <Header/>
+        {this.props.children}
+        <Footer/>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => {
-  return {user: state.user}
+  return {}
 }
 
 export default connect(mapStateToProps)(Home);
