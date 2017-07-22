@@ -1,18 +1,18 @@
-# Arena.tv_LiveStreaming with react
-GA WDI Final Project - Live P2P Streaming, Collaborate content curation. 
+# Mind Tap with react
+GA WDI Final Project - A Pictionary-like, fun and engaging game 
 
 
 ### Introduction
-* 
+*
 
-### Why Arean.tv?
+### Why Mind Tap?
 *
 
 ### Stacks
 * React
 * Redux
 * Firebase
-* WebRTC
+* Literally Canvas
 
 ### Getting Start
 * How to install
@@ -24,4 +24,4 @@ GA WDI Final Project - Live P2P Streaming, Collaborate content curation.
 
 ### License
 
-The Arena.tv is released under the [MIT license](https://opensource.org/licenses/MIT).
+Mind Tap is released under the [MIT license](https://opensource.org/licenses/MIT).
