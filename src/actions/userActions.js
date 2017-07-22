@@ -2,9 +2,15 @@
 import database from '../firebase';
 
 // This Action for the flow of storing user login status.
-const updateUser = (user) => {
+export const addUser = (user) => {
   return {
-    type: "USER_UPDATE",
+    type: "ADD_USER",
     user
   }
+}
+
+export const getUser = () => {
+  return (dispatch) => {
+
+  };
 }
