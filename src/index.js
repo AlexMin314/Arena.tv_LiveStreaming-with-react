@@ -8,7 +8,10 @@ import App from './components/App/App';
 import './index.css';
 
 // Import API
-import {setUsers} from './API/userAPI';
+import {getUsers, setUsers} from './API/userAPI';
+
+// Import actions
+import {getUser} from './actions/userActions';
 
 import registerServiceWorker from './registerServiceWorker';
 
