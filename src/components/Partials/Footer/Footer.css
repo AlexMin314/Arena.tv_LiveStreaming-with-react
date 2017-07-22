@@ -1,0 +1,29 @@
+.footer {
+  width: 100%;
+  color: black;
+  flex: 0 0 auto;
+}
+
+.footer-content-left {
+  display: inline-block;
+  float: left;
+}
+
+.footer-content-right {
+  display: inline-block;
+  float: right;
+  text-decoration: none !important;
+  color: rgb(83, 200, 221);
+}
+
+.footer-content-right:hover {
+  color: blue;
+}
+
+.footer-content-right i {
+  color: rgb(83, 200, 221);
+}
+
+.fa-github {
+  color: black;
+}
