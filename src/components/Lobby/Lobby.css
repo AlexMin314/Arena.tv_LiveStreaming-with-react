@@ -1,0 +1,107 @@
+.lobbyContent {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.lobbyLeftSection, .lobbyRightSection {
+  border: 1px solid red;
+  height: 100%;
+}
+
+.lobbyLeftSection {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  -moz-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+/* Right */
+
+.lobbyRightSection {
+
+}
+
+/* Left-Top */
+
+.filterSection {
+  border: 1px solid red;
+  height: 80px;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  padding: 0;
+  overflow: auto;
+  overflow-y: hidden;
+}
+
+.filterIcon {
+  border: 1px solid red;
+  display: inline-block;
+  height: 100%;
+  margin: 0 5px;
+  width: 80px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 90% 90%;
+}
+
+#TV {
+  margin-left: 0;
+  background-image: url('./img/TV.png');
+}
+#game {
+  background-image: url('./img/game.png');
+}
+#IT {
+  background-image: url('./img/IT.png');
+}
+#sports {
+  background-image: url('./img/sports.png');
+}
+#travel {
+  background-image: url('./img/travel.png');
+}
+
+
+/* Left-Middle */
+
+.roomListWrapper {
+  border: 1px solid red;
+  padding: 5px;
+  margin: 5px 0;
+  flex: 1;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+
+/* Left-Bottom */
+
+.bottomContentWrapper {
+  border: 1px solid red;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  height: 120px;
+  padding: 0;
+}
+
+.noticeSection, .createRoom, .quickJoin {
+  border: 1px solid red;
+  height: 100%;
+}
+
+.createRoom, .quickJoin {
+  font-size: 25px;
+  padding-top: 25px;
+  text-align: center;
+}
+
+.createRoom:hover, .quickJoin:hover {
+  background: black;
+  color: white;
+}

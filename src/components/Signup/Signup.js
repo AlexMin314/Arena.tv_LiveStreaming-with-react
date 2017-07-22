@@ -53,28 +53,27 @@ class Signup extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row signupHeader">
+      <div className="container-fluid contentBody">
+        <div className="row signupContentWrapper">
           <div className="col-md-12">
             <h2> Sign Up </h2>
           </div>
-        </div>
-
-        <div className = "loginForm">
-        Username<input type="text"
-                    name="username"
-                    onChange={this.uepInput}
-                    value={this.state.username}/>
-        Email<input type="text"
-                    name="email"
-                    onChange={this.uepInput}
-                    value={this.state.email}/>
-        Password<input type="password"
-                    name="password"
-                    onChange={this.uepInput}
-                    value={this.state.password}/>
-        <button className="btn btn-success"
-                onClick={this.signup}>Sign Up</button>
+          <div className = "loginForm">
+          Username<input type="text"
+                      name="username"
+                      onChange={this.uepInput}
+                      value={this.state.username}/>
+          Email<input type="text"
+                      name="email"
+                      onChange={this.uepInput}
+                      value={this.state.email}/>
+          Password<input type="password"
+                      name="password"
+                      onChange={this.uepInput}
+                      value={this.state.password}/>
+          <button className="btn btn-success"
+                  onClick={this.signup}>Sign Up</button>
+          </div>
         </div>
       </div>
     );

@@ -25,6 +25,7 @@ class App extends Component {
         <Layout>
           <Switch>
             <Route exact path="/" component={userLoggedIn ? Lobby : Home}/>
+            {/*<Route exact path="/" component={Lobby}/>*/}
             <Route exact path='/signup' component={userLoggedIn ? Lobby : Signup}/>
             <Route exact path='/login' component={Login}/>
           </Switch>
