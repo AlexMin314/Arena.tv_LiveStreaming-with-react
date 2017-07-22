@@ -11,21 +11,19 @@ h5, nav {
   padding: 0;
 }
 
-body {
-
-}
-
 .layoutWrapper {
   display: -webkit-flex;
   display:         flex;
   flex-direction: column;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
 }
 
 .contentBody {
   border-bottom: 1px solid black;
   border-top: 1px solid black;
   width: 100vw;
+  height: auto;
   flex: 1 1 auto;
+  position: relative;
 }

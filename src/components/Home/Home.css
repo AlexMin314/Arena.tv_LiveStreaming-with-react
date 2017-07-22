@@ -1,0 +1,44 @@
+.leftSection, .rightSection {
+  height: 100%;;
+  border: 1px solid black;
+}
+
+.homeContent {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.brandWrapper {
+  border: 1px solid red;
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translate(-50%, -50%);
+}
+
+.brandName {
+  font-size: 80px;
+  margin-bottom: 50px;
+}
+
+.introText {
+  font-size: 20px;
+}
+
+.joinBtn {
+  text-align: center;
+  width: 200px;
+  height: 80px;
+  margin-top: 50px;
+  padding-top: 25px;
+  font-size: 20px;
+  border: 1px solid green;
+}
+
+.joinBtn:hover {
+  background-color: black;
+}
