@@ -6,6 +6,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 
 // Import components
 import Home from '../Home/Home';
+import Layout from '../Layout/Layout'
 
 // Import CSS
 import './App.css';
@@ -13,10 +14,13 @@ import './App.css';
 class App extends Component {
   render() {
     return (
+
       <Router>
-        <Switch>
-          <Route exact path="/" component={Home}/>
-        </Switch>
+        <Layout>
+          <Switch>
+            <Route exact path="/" component={Home}/>
+          </Switch>
+        </Layout>
       </Router>
     );
   }
