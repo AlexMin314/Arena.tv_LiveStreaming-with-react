@@ -6,9 +6,8 @@ var config = {
   authDomain: "arenatv-31f44.firebaseapp.com",
   databaseURL: "https://arenatv-31f44.firebaseio.com",
   projectId: "arenatv-31f44",
-  storageBucket: "",
+  storageBucket: "arenatv-31f44.appspot.com",
   messagingSenderId: "838269703483"
 };
 firebase.initializeApp(config);
-const database = firebase.database;
-export default database;
+export default firebase;
