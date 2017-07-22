@@ -33,8 +33,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
           {/* Collect the nav links, forms, and other content for toggling */}
           <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul className="nav navbar-nav navbar-right">
-              <a className="sign" href="#">Sign In</a>
-              <a className="sign" href="#">Sign Up</a>
+              <a className="sign" href="/login">Sign In</a>
             </ul>
           </div>{/* /.navbar-collapse */}
         </div>{/* /.container-fluid */}
