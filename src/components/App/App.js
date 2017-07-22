@@ -10,6 +10,8 @@ import Home from '../Home/Home';
 import Login from '../Login/Login';
 import Signup from '../Signup/Signup';
 import Lobby from '../Lobby/Lobby';
+import Layout from '../Layout/Layout'
+
 
 // Import CSS
 import './App.css';
@@ -18,12 +20,15 @@ class App extends Component {
   render() {
     const userLoggedIn = firebase.auth().currentUser;
     return (
+
       <Router>
-        <Switch>
-          <Route exact path="/" component={userLoggedIn ? Lobby : Home}/>
-          <Route exact path='/signup' component={userLoggedIn ? Lobby : Signup}/>
-          <Route exact path='/login' component={Login}/>
-        </Switch>
+        <Layout>
+          <Switch>
+            <Route exact path="/" component={userLoggedIn ? Lobby : Home}/>
+            <Route exact path='/signup' component={userLoggedIn ? Lobby : Signup}/>
+            <Route exact path='/login' component={Login}/>
+          </Switch>
+        </Layout>
       </Router>
     );
   }

@@ -2,11 +2,13 @@
   width: 100%;
   color: black;
   flex: 0 0 auto;
+  height: 40px;
 }
 
 .footer-content-left {
   display: inline-block;
   float: left;
+  padding-left: 15px;
 }
 
 .footer-content-right {
@@ -14,6 +16,7 @@
   float: right;
   text-decoration: none !important;
   color: rgb(83, 200, 221);
+  padding-right: 15px;
 }
 
 .footer-content-right:hover {

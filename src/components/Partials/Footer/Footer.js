@@ -15,15 +15,13 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
   render() {
 
     return (
-      <div className="row footerRow">
-          <div className="col-md-6 footer">
-            <h5 className="footer-content-left">
-              Mind Tap <span> Alex . EL </span>
-              All rights reserved 2017.</h5>
-            <a className="footer-content-right" href="https://github.com/AlexMin314/MindTap-with-react-firebase">
-              <i className="fa fa-github" aria-hidden="true"></i>Git Hub
-            </a>
-          </div>
+      <div className="footer">
+        <h5 className="footer-content-left">
+          MindTap &hearts;<span> Alex . EL </span>
+          All rights reserved 2017.</h5>
+        <a className="footer-content-right" href="https://github.com/AlexMin314/MindTap-with-react-firebase">
+          <i className="fa fa-github" aria-hidden="true"></i>Git Hub
+        </a>
       </div>
     );
   }
