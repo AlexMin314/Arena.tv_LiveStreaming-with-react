@@ -5,6 +5,9 @@ import firebase from 'firebase';
 // Import CSS
 import './Login.css';
 
+// Import Child Component
+import SocialBtn from './SocialBtn';
+
 class Login extends Component {
 
   constructor() {
@@ -25,10 +28,11 @@ class Login extends Component {
 
   // Event listener for Login button
   login = (e) => {
-    var email = this.state.email;
-    var password = this.state.password;
-    firebase.auth().signInWithEmailAndPassword(email, password).catch(error => {
-
+    const email = this.state.email;
+    const password = this.state.password;
+    firebase.auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch(error => {
         // Handle Errors here.
         const errorCode = error.code;
         const errorMessage = error.message;
@@ -40,24 +44,28 @@ class Login extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row loginHeader">
-          <div className="col-md-12">
+      <div className="container-fluid contentBody">
+        <div className="singInContentWrapper">
+          <div className="singInContent">
             <h2> Login </h2>
+            <div className = "loginForm">
+              Email<input type="text"
+                          name="email"
+                          onChange={this.emailpasswordInput}/>
+              <br/>
+              Password<input type="password"
+                          name="password"
+                          onChange={this.emailpasswordInput}/>
+              <br/>
+              <button className="btn btn-primary"
+                      onClick={this.login}>Login</button>
+            </div>
+            <div className="goToSignUp">
+              Don't have a MindTap account yet?<br/>
+              <a href="/signup">Register Now</a>
+            </div>
+            <SocialBtn/>
           </div>
-        </div>
-
-        <div className = "loginForm">
-        Email<input type="text"
-                    name="email"
-                    onChange={this.emailpasswordInput}
-                    />
-        Password<input type="password"
-                    name="password"
-                    onChange={this.emailpasswordInput}
-                    />
-        <button className="btn btn-primary"
-                onClick={this.login}>Login</button>
         </div>
       </div>
     );
