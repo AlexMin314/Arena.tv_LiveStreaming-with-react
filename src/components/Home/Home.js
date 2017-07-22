@@ -16,6 +16,11 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
     this.state = {}
   }
 
+  onClick = (e) => {
+    e.preventDefault();
+    window.location.href = '/login';
+  }
+
   render() {
     return (
       <div className="container-fluid contentBody">
@@ -28,10 +33,11 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
                 Curabitur blandit tempus porttitor. Etiam porta sem
                 malesuada magna mollis euismod. Curabitur blandit tempus porttitor.
               </div>
-              <div className="joinBtn">Sign up / Sign in</div>
+              <div className="joinBtn"
+                   onClick={this.onClick}>Sign in</div>
             </div>
           </div>
-          <div className="rightSection col-sm-6">Right Section</div>
+          <div className="rightSection col-sm-6 hidden-xs">Right Section</div>
         </div>
       </div>
     );
