@@ -8,8 +8,8 @@ const userReducer = (state = initialUser, action) => {
     case "ADD_USER":
       return [action.user]
       break;
-    case "USER_LOGOUT":
-      
+    case "REMOVE_USER":
+      return removeUser()
       break;
     default:
       return state;

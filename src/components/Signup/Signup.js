@@ -35,11 +35,16 @@ class Signup extends Component {
   // Event listener for Sign Up button
   signup = (e) => {
     e.preventDefault();
+
+    // Passwords match validation
     if(this.state.password !== this.state.confirmPassword) {
       this.setState({error: {message: 'Passwords do not match'} });
     }
 
+    // Getting email and password from state
     const {email, password} = this.state;
+
+    // Create firebase user with email and password
     firebaseDB.auth().createUserWithEmailAndPassword(email, password)
       .catch(error => {
         this.setState({
@@ -49,24 +54,16 @@ class Signup extends Component {
           confirmPassword: '',
           error});
       })
-    // var username = this.state.username;
-    // var email = this.state.email;
-    // var password = this.state.password;
-    // var confirmPassword = this.state.confirmPassword;
-    //
-    // firebase.auth().createUserWithEmailAndPassword(email, password).catch(error => {
-    //     // Handle Errors here.
-    //     const errorCode = error.code;
-    //     const errorMessage = error.message;
-    //     console.log('error code: ',errorCode);
-    //     console.log('error message: ',errorMessage);
-    // });
-    //
-    // this.setState({
-    //   username: '',
-    //   email: '',
-    //   password: ''
-    // })
+
+    // Firebase observer to listen if user has signed in
+    // If signed in, fire off action to add user to local store
+    firebaseDB.auth().onAuthStateChanged(user => {
+      if(user) {
+        this.props.addUser(user.uid);
+      } else {
+        console.log('no user is signed in');
+      }
+    })
   }
 
   render() {
@@ -114,10 +111,6 @@ class Signup extends Component {
   }
 }
 
-Signup.propTypes = {
-  userSignupRequest: React.PropTypes.func.isRequired
-}
-
 const mapStateToProps = (state) => {
   return {
     user: state.user
@@ -126,7 +119,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    userSignupRequest: (user) => {
+    addUser: (user) => {
       dispatch(addUser(user))
       }
   };

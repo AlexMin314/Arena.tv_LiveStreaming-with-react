@@ -19,6 +19,9 @@ export const getUsers = () => {
   return Array.isArray(User) ? User : [];
 }
 
-export const removeUser = (user) => {
-  localStorage.removeItem(user);
+export const removeUser = () => {
+  const usersJSON = localStorage.removeItem('user');
+  let User;
+  User = JSON.parse(usersJSON);
+  return User; 
 }

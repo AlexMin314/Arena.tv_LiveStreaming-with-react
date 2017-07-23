@@ -8,7 +8,7 @@
   border-radius: 0px;
 }
 
-#signIn, #brandName  {
+#signIn, #brandName, #logout  {
   text-decoration: none !important;
   display: inline-block;
   color: white;
@@ -18,7 +18,7 @@
   font-weight: 900;
 }
 
-#signIn {
+#signIn, #logout {
   float: right;
   padding-right: 10px;
 }

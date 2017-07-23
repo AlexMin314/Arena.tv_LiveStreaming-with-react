@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { firebaseDB } from '../../firebase';
 
@@ -18,14 +18,6 @@ import Room from '../Room/Room';
 
 // Import CSS
 import './App.css';
-
-firebaseDB.auth().onAuthStateChanged(user => {
-  if(user) {
-    console.log('user has signed in', user);
-  } else {
-    console.log('no user is signed in');
-  }
-})
 
 class App extends Component {
 
@@ -52,4 +44,9 @@ const mapStateToProps = (state) => {
   return {user: state.user}
 }
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = (dispatch) => {
+  return {
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
