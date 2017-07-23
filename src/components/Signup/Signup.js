@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
-import firebase from '../../firebase';
+import firebase from '../../firebase.js';
 
 // Import Actions
 import { addUser } from '../../actions/userActions';
@@ -31,10 +31,10 @@ class Signup extends Component {
 
   // Event listener for Sign Up button
   signup = (e) => {
-    console.log('UserName: ',this.state.username);
     var username = this.state.username;
     var email = this.state.email;
     var password = this.state.password;
+
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(error => {
         // Handle Errors here.
         const errorCode = error.code;
@@ -42,8 +42,7 @@ class Signup extends Component {
         console.log('error code: ',errorCode);
         console.log('error message: ',errorMessage);
     });
-    console.log('Current User: ', firebase.auth().currentUser);
-    this.props.addUser(username);
+
     this.setState({
       username: '',
       email: '',
@@ -52,6 +51,13 @@ class Signup extends Component {
   }
 
   render() {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.props.addUser(user.uid);
+      } else {
+        console.log('user is not signed in');
+      }
+    });
     return (
       <div className="container-fluid contentBody">
         <div className="row signupContentWrapper">
@@ -59,20 +65,23 @@ class Signup extends Component {
             <h2> Sign Up </h2>
           </div>
           <div className = "loginForm">
-          Username<input type="text"
-                      name="username"
-                      onChange={this.uepInput}
-                      value={this.state.username}/>
-          Email<input type="text"
-                      name="email"
-                      onChange={this.uepInput}
-                      value={this.state.email}/>
-          Password<input type="password"
-                      name="password"
-                      onChange={this.uepInput}
-                      value={this.state.password}/>
-          <button className="btn btn-success"
-                  onClick={this.signup}>Sign Up</button>
+              Username<input type="text"
+                          name="username"
+                          onChange={this.uepInput}
+                          value={this.state.username}
+                          className="inputField"/>
+              Email<input type="text"
+                          name="email"
+                          onChange={this.uepInput}
+                          value={this.state.email}
+                          className="inputField"/>
+              Password<input type="password"
+                          name="password"
+                          onChange={this.uepInput}
+                          value={this.state.password}
+                          className="inputField"/>
+              <button className="btn btn-success"
+                      onClick={this.signup}>Sign Up</button>
           </div>
         </div>
       </div>

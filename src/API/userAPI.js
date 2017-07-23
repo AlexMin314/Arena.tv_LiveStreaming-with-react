@@ -16,7 +16,5 @@ export const getUsers = () => {
   } catch (e) {
     console.log("Error: Cound not decode preferences from localstorage");
   }
-  return Array.isArray(User)
-    ? User
-    : [];
+  return Array.isArray(User) ? User : [];
 }

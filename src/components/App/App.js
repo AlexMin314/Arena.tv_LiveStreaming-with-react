@@ -5,6 +5,9 @@ import firebase from '../../firebase';
 // Import React Router
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
+// Import API
+import { getUsers } from '../../API/userAPI';
+
 // Import components
 import Home from '../Home/Home';
 import Login from '../Login/Login';
@@ -18,19 +21,19 @@ import Room from '../Room/Room';
 import './App.css';
 
 class App extends Component {
-  render() {
-    const userLoggedIn = firebase.auth().currentUser;
-    return (
 
+  render() {
+    const userLoggedIn = getUsers()[0]; // Check if user is logged in by accessing local storage, returns undefined if user is not logged in
+    return (
       <Router>
         <Layout>
           <Switch>
             <Route exact path="/" component={userLoggedIn ? Lobby : Home}/>
             <Route exact path='/signup' component={userLoggedIn ? Lobby : Signup}/>
-            <Route exact path='/login' component={Login}/>
-            <Route exact path='/room/:id' component={Room}/>
+            <Route exact path='/login' component={userLoggedIn ? Lobby : Login}/>
+            <Route exact path='/room/:id' component={userLoggedIn ? Room : Home}/>
             {/* for development */}
-            <Route exact path='/lobby' component={Lobby}/>
+            <Route exact path='/lobby' component={userLoggedIn ? Lobby : Home}/>
           </Switch>
         </Layout>
       </Router>
