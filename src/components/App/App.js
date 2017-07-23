@@ -29,6 +29,8 @@ class App extends Component {
             <Route exact path='/signup' component={userLoggedIn ? Lobby : Signup}/>
             <Route exact path='/login' component={Login}/>
             <Route exact path='/room/:id' component={Room}/>
+            {/* for development */}
+            <Route exact path='/lobby' component={Lobby}/>
           </Switch>
         </Layout>
       </Router>
