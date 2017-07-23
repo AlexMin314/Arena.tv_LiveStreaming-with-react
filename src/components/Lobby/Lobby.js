@@ -23,7 +23,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
         <div className="row lobbyContent">
           <div className="col-md-9 col-sm-8 lobbyLeftSection">
             {/* Left-Top Section */}
-            <div className="col-md-12 filterSection">
+            <div className="row filterSection">
               <div className="filterIcon" id='TV'></div>
               <div className="filterIcon" id='game'></div>
               <div className="filterIcon" id='IT'></div>
@@ -31,24 +31,24 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
               <div className="filterIcon" id='travel'></div>
             </div>
             {/* Left-Middle Section */}
-            <div className="col-md-12 roomListWrapper">
+            <div className="row roomListWrapper">
               <RoomList/>
             </div>
             {/* Left-Bottom Section */}
-            <div className="col-md-12 bottomContentWrapper">
-              <div className="col-sm-8 hidden-xs noticeSection">
-                Notice & Welcom
+            <div className="row bottomContentWrapper">
+              <div className="col-sm-8 hidden-xs-down noticeSection">
+                Notice & Welcome
               </div>
-              <div className="col-sm-2 col-xs-6 createRoom">
+              <div className="col-sm-2 col-6 createRoom">
                 Create<br/>Room
               </div>
-              <div className="col-sm-2 col-xs-6 quickJoin">
+              <div className="col-sm-2 col-6 quickJoin">
                 Quick<br/>Join
               </div>
             </div>
           </div>
           {/* Right-Global Chat */}
-          <div className="col-md-3 col-sm-4 hidden-xs lobbyRightSection">
+          <div className="col-md-3 col-sm-4 hidden-xs-down lobbyRightSection">
             <GlobalChat/>
           </div>
         </div>

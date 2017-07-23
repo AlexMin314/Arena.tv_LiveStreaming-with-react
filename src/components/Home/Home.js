@@ -32,8 +32,10 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
               Curabitur blandit tempus porttitor. Etiam porta sem
               malesuada magna mollis euismod. Curabitur blandit tempus porttitor.
             </div>
-            <div className="joinBtn"
-                 onClick={this.onClick}>Sign in</div>
+            <button type="button"
+                    className="btn btn-secondary"
+                    id="mainSinginBtn"
+                    onClick={this.onClick}>Sign in</button>
           </div>
         </div>
       </div>

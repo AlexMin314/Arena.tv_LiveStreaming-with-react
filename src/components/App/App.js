@@ -1,16 +1,17 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import firebase from '../../firebase';
 
 // Import React Router
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 // Import components
 import Home from '../Home/Home';
 import Login from '../Login/Login';
 import Signup from '../Signup/Signup';
 import Lobby from '../Lobby/Lobby';
-import Layout from '../Layout/Layout'
+import Layout from '../Layout/Layout';
+import Room from '../Room/Room';
 
 
 // Import CSS
@@ -25,9 +26,9 @@ class App extends Component {
         <Layout>
           <Switch>
             <Route exact path="/" component={userLoggedIn ? Lobby : Home}/>
-            {/*<Route exact path="/" component={Lobby}/>*/}
             <Route exact path='/signup' component={userLoggedIn ? Lobby : Signup}/>
             <Route exact path='/login' component={Login}/>
+            <Route exact path='/room/:id' component={Room}/>
           </Switch>
         </Layout>
       </Router>

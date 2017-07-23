@@ -1,10 +1,7 @@
-.SocialBtnWrapper {
+#SocialBtnWrapper {
   margin-top: 50px;
 }
 
-.text-center {
-  width: 25%;
-}
 
 .icon-circle .fa {
   font-size: 25px;

@@ -25,14 +25,10 @@
   font-size: 20px;
 }
 
-.joinBtn {
-  text-align: center;
+#mainSinginBtn {
   width: 200px;
   height: 80px;
   margin-top: 50px;
-  padding-top: 25px;
-  font-size: 20px;
-  border: 1px solid green;
 }
 
 .joinBtn:hover {

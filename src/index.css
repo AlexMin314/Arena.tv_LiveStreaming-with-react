@@ -18,6 +18,11 @@ h5, nav {
   position: relative;
 }
 
+.row, .container, .container-fluid {
+  padding: 0;
+  margin: 0;
+}
+
 body {
   background:
   		-webkit-linear-gradient(45deg, hsla(165, 100%, 78%, 1) 0%, hsla(165, 100%, 78%, 0) 70%),

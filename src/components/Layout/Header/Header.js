@@ -18,8 +18,8 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
   render() {
 
     return (
-      <nav className="navbar row">
-        <a id="brandName" href="/">MindTap</a>
+      <nav className="navbarWrapper">
+        <a id="brandName" href="/">MindTap <i className="fa fa-pencil" aria-hidden="true"></i></a>
         <a id="signIn" href="/login">Sign In</a>
       </nav>
     );
