@@ -18,3 +18,7 @@ export const getUsers = () => {
   }
   return Array.isArray(User) ? User : [];
 }
+
+export const removeUser = (user) => {
+  localStorage.removeItem(user);
+}

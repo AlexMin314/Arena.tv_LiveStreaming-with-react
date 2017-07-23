@@ -16,7 +16,8 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
   }
 
   render() {
-
+    const isLoggedIn = this.props.user;
+    
     return (
       <nav className="navbarWrapper">
         <a id="brandName" href="/">MindTap <i className="fa fa-pencil" aria-hidden="true"></i></a>

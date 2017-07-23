@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 
 // Initialize Firebase
 var config = {
@@ -9,5 +9,4 @@ var config = {
   storageBucket: "arenatv-31f44.appspot.com",
   messagingSenderId: "838269703483"
 };
-firebase.initializeApp(config);
-export default firebase;
+export const firebaseDB = firebase.initializeApp(config);
