@@ -26,7 +26,9 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
       <div className="container-fluid contentBody">
         <div className="row homeContent">
           <div className="col-md-7 col-sm-12 brandWrapper">
-            <div className="brandName">MindTap <i className="fa fa-pencil" aria-hidden="true"></i></div>
+            <div className="brandName">
+              MindTap <i className="fa fa-pencil" aria-hidden="true"></i>
+            </div>
             <div className="introText">
                 Etiam porta sem malesuada magna mollis euismod.
               Curabitur blandit tempus porttitor. Etiam porta sem
