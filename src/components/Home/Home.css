@@ -19,6 +19,11 @@
 .brandName {
   font-size: 80px;
   margin-bottom: 50px;
+  background: -webkit-linear-gradient(300deg,#822fba, #e830e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 1s ease infinite;
+  -webkit-animation: gradient 1s ease infinite;
 }
 
 .introText {

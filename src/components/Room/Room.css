@@ -1,0 +1,39 @@
+.roomContent {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.sectionWrapper {
+  border: 1px solid red;
+  position: relative;
+  height: 100%;
+}
+
+#centerWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translate(-50%, -50%);
+}
+
+#infoBoard, #toolBoard {
+  border: 1px solid red;
+  height: 50px;
+}
+
+#whiteBoard {
+  border: 1px solid red;
+  margin: auto;
+  display: block;
+  width: 640px;
+  height: 360px;
+}
+
+#btnSection {
+  border: 1px solid red;
+  height: 100px;
+}

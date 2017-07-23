@@ -33,7 +33,7 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
               malesuada magna mollis euismod. Curabitur blandit tempus porttitor.
             </div>
             <button type="button"
-                    className="btn btn-secondary"
+                    className="btn btn-primary"
                     id="mainSinginBtn"
                     onClick={this.onClick}>Sign in</button>
           </div>
