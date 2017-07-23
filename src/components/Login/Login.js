@@ -37,6 +37,7 @@ class Login extends Component {
   login = (e) => {
     e.preventDefault();
     const {email, password} = this.state;
+    // Log in via firebase, initialise user session
     firebaseDB.auth().signInWithEmailAndPassword(email, password)
       .catch(error => {
         this.setState({
@@ -48,6 +49,7 @@ class Login extends Component {
     // If signed in, fire off action to add user to local store
     firebaseDB.auth().onAuthStateChanged(user => {
       if(user) {
+        // add user to local store if successfully logged in to firebase
         this.props.addUser(user.uid);
       } else {
       console.log('no user is signed in');
