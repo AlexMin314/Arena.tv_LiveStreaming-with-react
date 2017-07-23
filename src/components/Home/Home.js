@@ -25,19 +25,18 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
     return (
       <div className="container-fluid contentBody">
         <div className="row homeContent">
-          <div className="leftSection col-sm-6 row">
-            <div className="brandWrapper">
-              <div className="brandName">MindTap</div>
-              <div className="introText">
+          <div className="col-md-7 col-sm-12 brandWrapper">
+            <div className="brandName">MindTap <i className="fa fa-pencil" aria-hidden="true"></i></div>
+            <div className="introText">
                 Etiam porta sem malesuada magna mollis euismod.
-                Curabitur blandit tempus porttitor. Etiam porta sem
-                malesuada magna mollis euismod. Curabitur blandit tempus porttitor.
-              </div>
-              <div className="joinBtn"
-                   onClick={this.onClick}>Sign in</div>
+              Curabitur blandit tempus porttitor. Etiam porta sem
+              malesuada magna mollis euismod. Curabitur blandit tempus porttitor.
             </div>
+            <button type="button"
+                    className="btn btn-secondary"
+                    id="mainSinginBtn"
+                    onClick={this.onClick}>Sign in</button>
           </div>
-          <div className="rightSection col-sm-6 hidden-xs">Right Section</div>
         </div>
       </div>
     );

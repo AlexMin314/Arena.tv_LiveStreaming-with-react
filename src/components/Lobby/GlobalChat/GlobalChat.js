@@ -96,7 +96,7 @@ export class GlobalChat extends Component { // eslint-disable-line react/prefer-
                    value={this.state.msg}
                    onKeyPress={this.onKeypress}/>
             <span className="input-group-btn">
-              <button className="btn btn-warning"
+              <button className="btn btn-secondary"
                       id="btn-chat"
                       onClick={this.onClick}>
                       Send

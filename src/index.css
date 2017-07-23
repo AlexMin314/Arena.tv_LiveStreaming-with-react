@@ -3,7 +3,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: Quicksand, sans-serif;
 }
 
 h5, nav {
@@ -12,10 +12,26 @@ h5, nav {
 }
 
 .contentBody {
-  border-bottom: 1px solid black;
-  border-top: 1px solid black;
   width: 100vw;
   height: auto;
   flex: 1 1 auto;
   position: relative;
+}
+
+.row, .container, .container-fluid {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background:
+  		-webkit-linear-gradient(45deg, hsla(165, 100%, 78%, 1) 0%, hsla(165, 100%, 78%, 0) 70%),
+  		-webkit-linear-gradient(315deg, hsla(158, 100%, 45%, 1) 10%, hsla(158, 100%, 45%, 0) 80%),
+  		-webkit-linear-gradient(225deg, hsla(155, 100%, 73%, 1) 10%, hsla(155, 100%, 73%, 0) 80%),
+  		-webkit-linear-gradient(135deg, hsla(172, 100%, 84%, 1) 100%, hsla(172, 100%, 84%, 0) 70%);
+  	background:
+  		linear-gradient(45deg, hsla(165, 100%, 78%, 1) 0%, hsla(165, 100%, 78%, 0) 70%),
+  		linear-gradient(135deg, hsla(158, 100%, 45%, 1) 10%, hsla(158, 100%, 45%, 0) 80%),
+  		linear-gradient(225deg, hsla(155, 100%, 73%, 1) 10%, hsla(155, 100%, 73%, 0) 80%),
+  		linear-gradient(315deg, hsla(172, 100%, 84%, 1) 100%, hsla(172, 100%, 84%, 0) 70%);
 }
