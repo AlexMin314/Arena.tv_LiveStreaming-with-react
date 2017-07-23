@@ -52,19 +52,19 @@
 
 #TV {
   margin-left: 0;
-  background-image: url('./img/TV.png');
+  background-image: url('../../img/TV.png');
 }
 #game {
-  background-image: url('./img/game.png');
+  background-image: url('../../img/game.png');
 }
 #IT {
-  background-image: url('./img/IT.png');
+  background-image: url('../../img/IT.png');
 }
 #sports {
-  background-image: url('./img/sports.png');
+  background-image: url('../../img/sports.png');
 }
 #travel {
-  background-image: url('./img/travel.png');
+  background-image: url('../../img/travel.png');
 }
 
 
