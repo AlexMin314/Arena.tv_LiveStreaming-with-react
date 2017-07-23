@@ -37,14 +37,13 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
   render() {
     {/* Conditional render for 'is user logged in' */}
     const isLoggedIn = this.props.user;
-    const name = this.props.user[0].displayName ? this.props.user[0].displayName : this.props.user[0].email;
       return (
         <div>
         {isLoggedIn.length>0 ?
           <nav className="navbarWrapper">
             <a id="brandName" href="/">MindTap <i className="fa fa-pencil" aria-hidden="true"></i></a>
             <div className="container greetingContainer">
-            <h2 className="greeting"> Welcome {name}</h2>
+            <h2 className="greeting"> Welcome {this.props.user[0].displayName ? this.props.user[0].displayName : this.props.user[0].username}</h2>
             </div>
             <a id="logout" href="/" onClick={this.logout}>Log Out</a>
           </nav>

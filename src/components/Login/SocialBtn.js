@@ -43,14 +43,14 @@ class SocialBtn extends Component {
       const credential = error.credential;
       // ...
     });
-
   }
 
-  render() {
+  componentWillMount() {
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
     firebaseDB.auth().onAuthStateChanged(user => {
-      if(user) {
+      if(user && user.providerData[0].providerId == "facebook.com") {
+        console.log(user.providerData[0]);
         // Set the reference to the users object in firebase
         const usersRef = firebaseDB.database().ref('users');
 
@@ -65,7 +65,7 @@ class SocialBtn extends Component {
           photo: photo
         }
 
-
+        // Listener for changes to users object
         usersRef.on('value',(snapshot) => {
           // get all the users by id from firebase
           var users = snapshot.val();
@@ -80,7 +80,7 @@ class SocialBtn extends Component {
 
           // If user exists, just add the user to local storage
           if(userExistsInDB) {
-            fbUser.id = userId
+            fbUser.id = userId;
             this.props.addUser(fbUser);
           }
 
@@ -92,9 +92,12 @@ class SocialBtn extends Component {
         });
 
       } else {
-      console.log('no user is signed in');
+      console.log('Sign in locally');
       }
     })
+  }
+
+  render() {
 
     return (
       <div className="row" id="SocialBtnWrapper">

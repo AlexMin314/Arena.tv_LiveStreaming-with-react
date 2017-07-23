@@ -37,7 +37,7 @@ class Login extends Component {
   login = (e) => {
     e.preventDefault();
     const {email, password} = this.state;
-    // Log in via firebase, initialise user session
+    // Log in via firebase auth
     firebaseDB.auth().signInWithEmailAndPassword(email, password)
       .catch(error => {
         this.setState({
@@ -49,10 +49,15 @@ class Login extends Component {
     // If signed in, fire off action to add user to local store
     firebaseDB.auth().onAuthStateChanged(user => {
       if(user) {
-        // add user to local store if successfully logged in to firebase
-        this.props.addUser(user.uid);
+        var userRef = firebaseDB.database().ref('users/' + user.uid);
+        userRef.on('value', (snapshot) => {
+          var currentUser = snapshot.val();
+          currentUser.id = user.uid;
+        this.props.addUser(currentUser);
+        })
+
       } else {
-      console.log('no user is signed in');
+        console.log('No user is signed in');
       }
     })
   }

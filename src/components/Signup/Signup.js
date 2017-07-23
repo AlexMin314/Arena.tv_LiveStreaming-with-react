@@ -59,7 +59,43 @@ class Signup extends Component {
     // If signed in, fire off action to add user to local store
     firebaseDB.auth().onAuthStateChanged(user => {
       if(user) {
-        this.props.addUser(user.uid);
+        // Set the reference to the users object in firebase
+        const usersRef = firebaseDB.database().ref('users');
+
+        // store all received auth info in variables
+        const {username, email} = this.state;
+        var userId = user.uid;
+        const localUser = {
+          username: username,
+          email: email,
+          photo: ''
+        }
+
+        // Listener for changes to users object
+        usersRef.on('value',(snapshot) => {
+          // get all the users by id from firebase
+          var users = snapshot.val();
+          // Boolean to check if user exists in database
+          var userExistsInDB = false;
+          // Loop through users object to check if user exists
+          for (var id in users) {
+            if (userId == id) {
+              userExistsInDB = true;
+            }
+          }
+
+          // If user exists, just add the user to local storage
+          if(userExistsInDB) {
+            localUser.id = userId;
+            this.props.addUser(localUser);
+          }
+
+          // If user does not exist, add the user to database and local storage
+          else{
+            usersRef.child(userId).set(localUser);
+            this.props.addUser(localUser);
+          }
+        });
       } else {
         console.log('no user is signed in');
       }
