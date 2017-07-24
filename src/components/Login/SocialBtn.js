@@ -22,7 +22,7 @@ class SocialBtn extends Component {
   facebookLogin = () => {
 
     // assign provider variable for facebook
-    var provider = new firebase.auth.FacebookAuthProvider();
+    const provider = new firebase.auth.FacebookAuthProvider();
     // redirect to sign in with facebook via firebase
     firebase.auth().signInWithRedirect(provider);
     // catch the result of facebook login
@@ -55,10 +55,10 @@ class SocialBtn extends Component {
         const usersRef = firebase.database().ref('users');
 
         // store all received auth info in variables
-        var email = user.providerData[0].email || '';
-        var displayName = user.providerData[0].displayName;
-        var photo = user.providerData[0].photoURL;
-        var userId = user.uid;
+        const email = user.providerData[0].email || '';
+        const displayName = user.providerData[0].displayName;
+        const photo = user.providerData[0].photoURL;
+        const userId = user.uid;
         const fbUser = {
           email: email,
           displayName: displayName,
@@ -68,11 +68,11 @@ class SocialBtn extends Component {
         // Listener for changes to users object
         usersRef.on('value',(snapshot) => {
           // get all the users by id from firebase
-          var users = snapshot.val();
+          const users = snapshot.val();
           // Boolean to check if user exists in database
-          var userExistsInDB = false;
+          let userExistsInDB = false;
           // Loop through users object to check if user exists
-          for (var id in users) {
+          for (let id in users) {
             if (userId == id) {
               userExistsInDB = true;
             }

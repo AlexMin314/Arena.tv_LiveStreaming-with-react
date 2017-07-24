@@ -41,12 +41,12 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
             <div className="row">
               <button type="button"
                       className="btn btn-primary"
-                      id="mainSinginBtn"
+                      id="mainSignInBtn"
                       onClick={this.onSignIn}>SIGN IN</button>
               <div id="OR"> OR </div>
               <button type="button"
                       className="btn btn-primary"
-                      id="mainSinginBtn"
+                      id="mainSignInBtn"
                       onClick={this.onSignUp}>SIGN UP</button>
             </div>
           </div>
