@@ -1,6 +1,3 @@
-// Import firebase database
-import database from '../firebase';
-
 // This Action for the flow of storing user login status.
 export const addUser = (user) => {
   return {
@@ -9,8 +6,8 @@ export const addUser = (user) => {
   }
 }
 
-export const getUser = () => {
-  return (dispatch) => {
-
-  };
+export const removeUser = () => {
+  return {
+    type: "REMOVE_USER",
+  }
 }

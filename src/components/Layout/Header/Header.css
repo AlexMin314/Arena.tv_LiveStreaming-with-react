@@ -8,7 +8,7 @@
   border-radius: 0px;
 }
 
-#signIn, #brandName  {
+#signIn, #brandName, #logout {
   text-decoration: none !important;
   display: inline-block;
   color: white;
@@ -19,10 +19,21 @@
   text-shadow:#999999 1px 1px 1px;
 }
 
-#signIn {
+.greeting, .greetingContainer {
+  display: inline-flex;
+}
+
+.greetingContainer {
+  justify-content: center;
+  align-items: center;
+}
+
+#signIn, #logout {
   float: right;
   padding-right: 10px;
 }
+
+
 
 #brandName {
   float: left;
