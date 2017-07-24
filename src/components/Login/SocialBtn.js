@@ -7,6 +7,7 @@ import firebase from '../../firebase';
 
 // Import Actions
 import { addUser } from '../../actions/userActions';
+import { isStillLoading } from '../../actions/loadingActions';
 
 // Import CSS
 import './SocialBtn.css';
@@ -21,12 +22,14 @@ class SocialBtn extends Component {
 
   // Facebook Login Onclick listener
   facebookLogin = () => {
+    this.props.triggerLoading(true);
     // assign provider variable for facebook
     const provider = new firebase.auth.FacebookAuthProvider();
     // redirect to sign in with facebook via firebase
-    firebaseDB.auth().signInWithRedirect(provider);
+    firebase.auth().signInWithRedirect(provider);
     // catch the result of facebook login
-    firebaseDB.auth().getRedirectResult().then((result) => {
+
+    firebase.auth().getRedirectResult().then((result) => {
       if (result.credential) {
         // Provides a Facebook Access Token which can be used to access the Facebook API.
         const token = result.credential.accessToken;
@@ -47,12 +50,13 @@ class SocialBtn extends Component {
 
   // Twitter Login Onclick listener
   twitterLogin = () => {
+    this.props.triggerLoading(true);
     // assign provider variable for twitter
     const provider = new firebase.auth.TwitterAuthProvider();
     // redirect to sign in with facebook via firebase
-    firebaseDB.auth().signInWithRedirect(provider);
+    firebase.auth().signInWithRedirect(provider);
     // catch the result of facebook login
-    firebaseDB.auth().getRedirectResult().then(result => {
+    firebase.auth().getRedirectResult().then(result => {
       if (result.credential) {
         // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
         // You can use these server side with your app's credentials to access the Twitter API.
@@ -76,7 +80,7 @@ class SocialBtn extends Component {
 
   // Google Login Onclick listener
   googleLogin = () => {
-    console.log('google login clicked');
+    this.props.triggerLoading(true);
     // assign provider variable for twitter
     const provider = new firebase.auth.GoogleAuthProvider();
     // Pop up for google login
@@ -101,10 +105,10 @@ class SocialBtn extends Component {
   componentWillMount() {
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
-    firebaseDB.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
       if(user && user.providerData[0].providerId == "facebook.com" || user.providerData[0].providerId === "twitter.com" || user.providerData[0].providerId === "google.com") {
         // Set the reference to the users object in firebase
-        const usersRef = firebaseDB.database().ref('users');
+        const usersRef = firebaseDB.ref('users');
 
         // store all received auth info in variables
         const email = user.providerData[0].email || '';
@@ -134,12 +138,14 @@ class SocialBtn extends Component {
           if(userExistsInDB) {
             fbtwUser.id = userId;
             this.props.addUser(fbtwUser);
+            this.props.triggerLoading(false);
           }
 
           // If user does not exist, add the user to database and local storage
           else{
             usersRef.child(userId).set(fbtwUser);
             this.props.addUser(fbtwUser);
+            this.props.triggerLoading(false);
           }
         });
 
@@ -174,14 +180,19 @@ class SocialBtn extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {};
+  return {
+    isStillLoading: state.IsStillLoading
+  };
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
     addUser: (user) => {
       dispatch(addUser(user))
-      }
+    },
+    triggerLoading: (result) => {
+      dispatch(isStillLoading(result))
+    }
   };
 }
 
