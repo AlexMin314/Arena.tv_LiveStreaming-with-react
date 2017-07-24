@@ -49,9 +49,9 @@ class Login extends Component {
     // If signed in, fire off action to add user to local store
     firebaseDB.auth().onAuthStateChanged(user => {
       if(user) {
-        var userRef = firebaseDB.database().ref('users/' + user.uid);
+        const userRef = firebaseDB.database().ref('users/' + user.uid);
         userRef.on('value', (snapshot) => {
-          var currentUser = snapshot.val();
+          const currentUser = snapshot.val();
           currentUser.id = user.uid;
         this.props.addUser(currentUser);
         })
@@ -65,8 +65,8 @@ class Login extends Component {
   render() {
     return (
       <div className="container-fluid contentBody">
-        <div className="singInContentWrapper">
-          <div className="singInContent">
+        <div className="signInContentWrapper">
+          <div className="signInContent">
             <h2> Login </h2>
             <div className="errors"><h3 className="errorMessage">{this.state.error.message}</h3></div>
             <div className = "loginForm">

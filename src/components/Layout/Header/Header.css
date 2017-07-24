@@ -16,7 +16,7 @@
   margin: 15px;
   padding-left: 10px;
   font-weight: 900;
-  text-shadow:#999999 1px 1px 1px;
+  text-shadow: #999999 1px 1px 1px;
 }
 
 .greeting, .greetingContainer {
@@ -32,8 +32,6 @@
   float: right;
   padding-right: 10px;
 }
-
-
 
 #brandName {
   float: left;

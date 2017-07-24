@@ -36,24 +36,33 @@ class Signup extends Component {
   signup = (e) => {
     e.preventDefault();
 
+    let noErrors = true;
     // Passwords match validation
     if(this.state.password !== this.state.confirmPassword) {
-      this.setState({error: {message: 'Passwords do not match'} });
+      noErrors = false;
+      this.setState({
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
+        error: {message: 'Passwords do not match'} });
     }
 
     // Getting email and password from state
     const {email, password} = this.state;
 
-    // Create firebase user with email and password
-    firebaseDB.auth().createUserWithEmailAndPassword(email, password)
-      .catch(error => {
-        this.setState({
-          username: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          error});
-      })
+    if(noErrors) {
+      // Create firebase user with email and password
+      firebaseDB.auth().createUserWithEmailAndPassword(email, password)
+        .catch(error => {
+          this.setState({
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            error});
+        })
+    }
 
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
@@ -64,7 +73,7 @@ class Signup extends Component {
 
         // store all received auth info in variables
         const {username, email} = this.state;
-        var userId = user.uid;
+        const userId = user.uid;
         const localUser = {
           username: username,
           email: email,
@@ -74,9 +83,9 @@ class Signup extends Component {
         // Listener for changes to users object
         usersRef.on('value',(snapshot) => {
           // get all the users by id from firebase
-          var users = snapshot.val();
+          const users = snapshot.val();
           // Boolean to check if user exists in database
-          var userExistsInDB = false;
+          let userExistsInDB = false;
           // Loop through users object to check if user exists
           for (var id in users) {
             if (userId == id) {
