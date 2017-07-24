@@ -19,7 +19,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     }
   }
 
-  onQuickJoin = () => {
+  onQuickJoin = (e) => {
+    e.preventDefault();
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
       const rooms = snapshot.val();
       // Iterating over rooms.
@@ -47,8 +48,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     this.setState({ roomName: e.target.value });
   }
 
-  onRoomCreation = () => {
-
+  onRoomCreation = (e) => {
+    e.preventDefault();
     // Get roomName
     let roomName = this.state.roomName.split(' ').join('');
     if (roomName === '') {

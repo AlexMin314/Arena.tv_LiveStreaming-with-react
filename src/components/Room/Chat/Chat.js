@@ -20,7 +20,9 @@ export class Chat extends Component { // eslint-disable-line react/prefer-statel
       <div className="container-fluid hidden-sm-down">
         <div id="chatWrapper">
           <div className="chatLeft">
-            <div className='chatTestSpot'></div>
+            <div className='chatTestSpot'>
+              <div className="testChat">hey</div>
+            </div>
             <div className='chatTestSpot'></div>
             <div className='chatTestSpot'></div>
           </div>
