@@ -8,14 +8,14 @@ import App from './components/App/App';
 import './index.css';
 
 // Import API
-import {getUsers, setUsers} from './API/userAPI';
+import { getUsers, setUsers } from './API/userAPI';
 import { setLoading } from './API/loadingAPI';
 
 import registerServiceWorker from './registerServiceWorker';
 
 // Redux
-import {Provider} from 'react-redux';
-import {initStore} from './store/Store';
+import { Provider } from 'react-redux';
+import { initStore } from './store/Store';
 
 const store = initStore();
 

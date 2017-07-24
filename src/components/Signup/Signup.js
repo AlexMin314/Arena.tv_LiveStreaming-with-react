@@ -1,8 +1,8 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // Import firebase
-import {firebaseDB} from '../../firebase';
+import { firebaseDB } from '../../firebase';
 import firebase from '../../firebase';
 
 // Import Actions
