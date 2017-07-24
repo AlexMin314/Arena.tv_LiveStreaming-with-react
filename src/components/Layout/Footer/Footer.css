@@ -1,9 +1,9 @@
 .footer {
   width: 100%;
-  color: white;
+  color: #9c27b0;
   flex: 0 0 auto;
   height: 50px;
-  text-shadow:#999999 1px 1px 1px;   
+  text-shadow:#999999 1px 1px 1px;
 }
 
 .footer-content-left {
@@ -24,11 +24,11 @@
 }
 
 #git, .footer-content-right {
-  color: white;
+  color: #9c27b0;
 }
 
 .footer-content-right:hover {
-  color: blue;
+  color: #9c27b0;
 }
 
 .footer-content-right i {
