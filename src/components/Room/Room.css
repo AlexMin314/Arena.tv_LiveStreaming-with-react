@@ -21,12 +21,32 @@
 }
 
 #infoBoard, #toolBoard {
-  border: 1px solid red;
-  height: 50px;
+  height: 40px;
+}
+
+#turnMasterWrapper {
+  float: right;
+}
+#keyword, #skipTurnBtn, #whosTurn {
+  display: inline-block;
+}
+
+#whosTurn {
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+#keyword {
+  font-size: 18px;
+  margin: 0 20px;
+}
+
+#skipTurnBtn {
+  font-size: 12px;
 }
 
 #whiteBoard {
-  border: 1px solid red;
+  border: 2px solid black;
   margin: auto;
   display: block;
   width: 640px;
@@ -34,6 +54,6 @@
 }
 
 #btnSection {
-  border: 1px solid red;
-  height: 100px;
+  border: 1px solid orange;
+  height: 50px;
 }

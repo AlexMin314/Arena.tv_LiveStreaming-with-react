@@ -9,17 +9,13 @@ import './Lobby.css';
 
 // Import child Components
 
-
-/**
- * Login
- */
 export class Lobby extends Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props){
     super(props)
     this.state = {
       roomName: '',
-      roomTopic: 'TV',
+      roomTopic: 'TV'
     }
   }
 
@@ -28,9 +24,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       const rooms = snapshot.val();
       // Iterating over rooms.
       for (const key in rooms) {
-        // Need a condition which is checking room status(full or not)
+
+        /* Need a condition which is checking room status(full or not) */
         if (true) {
           const roomName = rooms[key].roomName;
+
+          /* Need a logic for room, user updating */
+
           window.location.href = '/room/' + roomName;
         }
       }
@@ -49,6 +49,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   onRoomCreation = () => {
 
+    // Get roomName
     let roomName = this.state.roomName.split(' ').join('');
     if (roomName === '') {
       roomName = firebase.database().ref().child('rooms').push().key;
@@ -58,10 +59,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     const newRoom = {};
     newRoom.roomTopic = this.state.roomTopic;
     newRoom.roomName = roomName;
-    newRoom.message = {};
+    newRoom.members = {}
+    newRoom.members['1'] = this.props.user[0];
 
+    // redirect to room.
     firebase.database().ref('rooms').push(newRoom).then(() => {
-      // redirect to room.
       window.location.href = '/room/' + roomName;
     });
   }
@@ -73,6 +75,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
         <div className="row lobbyContent">
           <div className="lobbyContentWrapper">
             <div className="subtitleText">Choose Your Topic</div>
+            <hr/>
             <div className="categoryWrapper">
               <div className="category TV">TV</div>
               <div className="category game">GAME</div>
@@ -84,6 +87,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             {/* Button trigger modal */}
             <button type="button"
                     className="btn btn-primary"
+                    id="createRoomBtn"
                     data-toggle="modal"
                     data-target="#createRoomModal">CREATE ROOM</button>
             <button type="button"
