@@ -6,8 +6,10 @@ import {connect} from 'react-redux';
 
 // Import Actions
 import {removeUser} from '../../../actions/userActions';
+import { isStillLoading } from '../../../actions/loadingActions';
 
 // Import Firebase
+import firebase from '../../../firebase';
 import {firebaseDB} from '../../../firebase';
 
 // Import CSS
@@ -25,11 +27,14 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
 
   // logout onClick event listener
   logout = () => {
+    this.props.triggerLoading(false);
     // Remove user from firebase session
-    firebaseDB.auth().signOut().then(() => {
+    firebase.auth().signOut().then(() => {
       // Remove user from local store
       this.props.removeUser();
+
     }).catch(error => {
+
       console.log(error);
     });
   }
@@ -43,9 +48,10 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
           <nav className="navbarWrapper">
             <a id="brandName" href="/">MindTap <i className="fa fa-pencil" aria-hidden="true"></i></a>
             <div className="container greetingContainer">
-            <h2 className="greeting"> Welcome {this.props.user[0].displayName ? this.props.user[0].displayName : this.props.user[0].username}</h2>
-            </div>
+            <h5 className="greeting"> Welcome {this.props.user[0].displayName ? this.props.user[0].displayName : this.props.user[0].username}</h5>
+            <img className="userPhoto" src={this.props.user[0].photo}/>
             <a id="logout" href="/" onClick={this.logout}>Log Out</a>
+            </div>
           </nav>
             :
           <nav className="navbarWrapper">
@@ -66,7 +72,10 @@ const mapDispatchToProps = (dispatch) => {
   return {
     removeUser: () => {
       dispatch(removeUser())
-      }
+    },
+    triggerLoading: (result) => {
+      dispatch(isStillLoading(result))
+    }
   }
 }
 

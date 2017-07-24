@@ -9,5 +9,6 @@ const config = {
   storageBucket: "arenatv-31f44.appspot.com",
   messagingSenderId: "838269703483"
 };
-export const firebaseDB = firebase.initializeApp(config);
+firebase.initializeApp(config);
+export const firebaseDB = firebase.database();
 export default firebase;
