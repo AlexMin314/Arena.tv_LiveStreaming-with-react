@@ -1,15 +1,14 @@
 import React, {Component, PropTypes} from 'react';
 import {connect} from 'react-redux';
-import firebase from '../../firebase';
+
+// Import firebase
+import {firebaseDB} from '../../firebase';
 
 // Import Actions
 import { addUser } from '../../actions/userActions';
 
 // Import CSS
 import './Signup.css';
-
-// Assign firebase database to variable
-var database = firebase.database;
 
 class Signup extends Component {
 
@@ -18,7 +17,11 @@ class Signup extends Component {
     this.state = {
       username: '',
       email: '',
-      password: ''
+      password: '',
+      confirmPassword: '',
+      error: {
+        message: ''
+      }
     }
   }
 
@@ -31,48 +34,112 @@ class Signup extends Component {
 
   // Event listener for Sign Up button
   signup = (e) => {
-    console.log('UserName: ',this.state.username);
-    var username = this.state.username;
-    var email = this.state.email;
-    var password = this.state.password;
-    firebase.auth().createUserWithEmailAndPassword(email, password).catch(error => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log('error code: ',errorCode);
-        console.log('error message: ',errorMessage);
-    });
-    console.log('Current User: ', firebase.auth().currentUser);
-    this.props.addUser(username);
-    this.setState({
-      username: '',
-      email: '',
-      password: ''
+    e.preventDefault();
+
+    // Passwords match validation
+    if(this.state.password !== this.state.confirmPassword) {
+      this.setState({error: {message: 'Passwords do not match'} });
+    }
+
+    // Getting email and password from state
+    const {email, password} = this.state;
+
+    // Create firebase user with email and password
+    firebaseDB.auth().createUserWithEmailAndPassword(email, password)
+      .catch(error => {
+        this.setState({
+          username: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          error});
+      })
+
+    // Firebase observer to listen if user has signed in
+    // If signed in, fire off action to add user to local store
+    firebaseDB.auth().onAuthStateChanged(user => {
+      if(user) {
+        // Set the reference to the users object in firebase
+        const usersRef = firebaseDB.database().ref('users');
+
+        // store all received auth info in variables
+        const {username, email} = this.state;
+        var userId = user.uid;
+        const localUser = {
+          username: username,
+          email: email,
+          photo: ''
+        }
+
+        // Listener for changes to users object
+        usersRef.on('value',(snapshot) => {
+          // get all the users by id from firebase
+          var users = snapshot.val();
+          // Boolean to check if user exists in database
+          var userExistsInDB = false;
+          // Loop through users object to check if user exists
+          for (var id in users) {
+            if (userId == id) {
+              userExistsInDB = true;
+            }
+          }
+
+          // If user exists, just add the user to local storage
+          if(userExistsInDB) {
+            localUser.id = userId;
+            this.props.addUser(localUser);
+          }
+
+          // If user does not exist, add the user to database and local storage
+          else{
+            usersRef.child(userId).set(localUser);
+            this.props.addUser(localUser);
+          }
+        });
+      } else {
+        console.log('no user is signed in');
+      }
     })
   }
 
   render() {
+
     return (
       <div className="container-fluid contentBody">
         <div className="row signupContentWrapper">
           <div className="col-md-12">
-            <h2> Sign Up </h2>
+            <h2>Sign Up</h2>
+            <div className="errors"><h3 className="errorMessage">{this.state.error.message}</h3></div>
           </div>
-          <div className = "loginForm">
-          Username<input type="text"
-                      name="username"
-                      onChange={this.uepInput}
-                      value={this.state.username}/>
-          Email<input type="text"
-                      name="email"
-                      onChange={this.uepInput}
-                      value={this.state.email}/>
-          Password<input type="password"
-                      name="password"
-                      onChange={this.uepInput}
-                      value={this.state.password}/>
-          <button className="btn btn-success"
-                  onClick={this.signup}>Sign Up</button>
+          <div className="form">
+            <div className="form-group">
+              Username<input type="text"
+                          name="username"
+                          onChange={this.uepInput}
+                          value={this.state.username}
+                          className="form-control"
+                          placeholder="Enter Username"/>
+              Email<input type="text"
+                          name="email"
+                          onChange={this.uepInput}
+                          value={this.state.email}
+                          className="form-control"
+                          placeholder="Enter Email"/>
+              Password<input type="password"
+                          name="password"
+                          onChange={this.uepInput}
+                          value={this.state.password}
+                          className="form-control"
+                          placeholder="Enter Password"/>
+              Confirm Password<input type="password"
+                          name="confirmPassword"
+                          onChange={this.uepInput}
+                          value={this.state.confirmPassword}
+                          className="form-control"
+                          placeholder="Retype password"/>
+              <button className="btn btn-primary signupButton"
+                      onClick={this.signup}>Sign Up</button>
+            </div>
           </div>
         </div>
       </div>

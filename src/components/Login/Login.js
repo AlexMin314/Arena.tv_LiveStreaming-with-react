@@ -1,6 +1,11 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import firebase from 'firebase';
+
+// Import firebase
+import {firebaseDB} from '../../firebase';
+
+// Import Actions
+import { addUser } from '../../actions/userActions';
 
 // Import CSS
 import './Login.css';
@@ -14,7 +19,10 @@ class Login extends Component {
     super();
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      error: {
+        message: ''
+      }
     }
   }
 
@@ -23,23 +31,35 @@ class Login extends Component {
     this.setState({
       [e.target.name]: e.target.value
     })
-
   }
 
   // Event listener for Login button
   login = (e) => {
-    const email = this.state.email;
-    const password = this.state.password;
-    firebase.auth()
-      .signInWithEmailAndPassword(email, password)
+    e.preventDefault();
+    const {email, password} = this.state;
+    // Log in via firebase auth
+    firebaseDB.auth().signInWithEmailAndPassword(email, password)
       .catch(error => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log('error code: ',errorCode);
-        console.log('error message: ',errorMessage)
-        console.log('Signed in successfully!')
-    });
+        this.setState({
+          email: '',
+          password: '',
+          error});
+      })
+    // Firebase observer to listen if user has signed in
+    // If signed in, fire off action to add user to local store
+    firebaseDB.auth().onAuthStateChanged(user => {
+      if(user) {
+        var userRef = firebaseDB.database().ref('users/' + user.uid);
+        userRef.on('value', (snapshot) => {
+          var currentUser = snapshot.val();
+          currentUser.id = user.uid;
+        this.props.addUser(currentUser);
+        })
+
+      } else {
+        console.log('No user is signed in');
+      }
+    })
   }
 
   render() {
@@ -48,15 +68,22 @@ class Login extends Component {
         <div className="singInContentWrapper">
           <div className="singInContent">
             <h2> Login </h2>
+            <div className="errors"><h3 className="errorMessage">{this.state.error.message}</h3></div>
             <div className = "loginForm">
-              Email<input type="text"
-                          name="email"
-                          onChange={this.emailpasswordInput}/>
-              <br/>
-              Password<input type="password"
-                          name="password"
-                          onChange={this.emailpasswordInput}/>
-              <br/>
+            Email<input type="text"
+                        name="email"
+                        onChange={this.emailpasswordInput}
+                        value={this.state.email}
+                        className="form-control"
+                        placeholder="Enter Email"/>
+            <br/>
+            Password<input type="password"
+                        name="password"
+                        onChange={this.emailpasswordInput}
+                        value={this.state.password}
+                        className="form-control"
+                        placeholder="Enter Password"/>
+            <br/>
               <button className="btn btn-primary"
                       onClick={this.login}>Login</button>
             </div>
@@ -77,7 +104,11 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {};
+  return {
+    addUser: (user) => {
+      dispatch(addUser(user))
+      }
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
