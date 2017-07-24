@@ -19,8 +19,8 @@ class SocialBtn extends Component {
     }
   }
 
+  // Facebook Login Onclick listener
   facebookLogin = () => {
-
     // assign provider variable for facebook
     const provider = new firebase.auth.FacebookAuthProvider();
     // redirect to sign in with facebook via firebase
@@ -45,12 +45,64 @@ class SocialBtn extends Component {
     });
   }
 
+  // Twitter Login Onclick listener
+  twitterLogin = () => {
+    // assign provider variable for twitter
+    const provider = new firebase.auth.TwitterAuthProvider();
+    // redirect to sign in with facebook via firebase
+    firebaseDB.auth().signInWithRedirect(provider);
+    // catch the result of facebook login
+    firebaseDB.auth().getRedirectResult().then(result => {
+      if (result.credential) {
+        // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+        // You can use these server side with your app's credentials to access the Twitter API.
+        const token = result.credential.accessToken;
+        const secret = result.credential.secret;
+        // ...
+      }
+      // The signed-in user info.
+      const user = result.user;
+    }).catch(error => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      const credential = error.credential;
+      // ...
+    });
+  }
+
+  // Google Login Onclick listener
+  googleLogin = () => {
+    console.log('google login clicked');
+    // assign provider variable for twitter
+    const provider = new firebase.auth.GoogleAuthProvider();
+    // Pop up for google login
+    firebase.auth().signInWithPopup(provider).then(result => {
+      // This gives you a Google Access Token. You can use it to access the Google API.
+      const token = result.credential.accessToken;
+      // The signed-in user info.
+      const user = result.user;
+      // ...
+    }).catch(error => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // The email of the user's account used.
+      const email = error.email;
+      // The firebase.auth.AuthCredential type that was used.
+      const credential = error.credential;
+      // ...
+    });
+  }
+
   componentWillMount() {
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
     firebaseDB.auth().onAuthStateChanged(user => {
-      if(user && user.providerData[0].providerId == "facebook.com") {
-        console.log(user.providerData[0]);
+      if(user && user.providerData[0].providerId == "facebook.com" || user.providerData[0].providerId === "twitter.com" || user.providerData[0].providerId === "google.com") {
         // Set the reference to the users object in firebase
         const usersRef = firebaseDB.database().ref('users');
 
@@ -59,7 +111,7 @@ class SocialBtn extends Component {
         const displayName = user.providerData[0].displayName;
         const photo = user.providerData[0].photoURL;
         const userId = user.uid;
-        const fbUser = {
+        const fbtwUser = {
           email: email,
           displayName: displayName,
           photo: photo
@@ -80,14 +132,14 @@ class SocialBtn extends Component {
 
           // If user exists, just add the user to local storage
           if(userExistsInDB) {
-            fbUser.id = userId;
-            this.props.addUser(fbUser);
+            fbtwUser.id = userId;
+            this.props.addUser(fbtwUser);
           }
 
           // If user does not exist, add the user to database and local storage
           else{
-            usersRef.child(userId).set(fbUser);
-            this.props.addUser(fbUser);
+            usersRef.child(userId).set(fbtwUser);
+            this.props.addUser(fbtwUser);
           }
         });
 
@@ -108,12 +160,12 @@ class SocialBtn extends Component {
         </div>
         <div className="col-4 text-center">
           <div className="icon-circle">
-            <a href="#" className="itwittter" title="Twitter"><i className="fa fa-twitter" /></a>
+            <a href="#" className="itwittter" title="Twitter" onClick={this.twitterLogin}><i className="fa fa-twitter" /></a>
           </div>
         </div>
         <div className="col-4 text-center">
           <div className="icon-circle">
-            <a href="#" className="igoogle" title="Google+"><i className="fa fa-google-plus" /></a>
+            <a className="igoogle" title="Google+" onClick={this.googleLogin}><i className="fa fa-google-plus" /></a>
           </div>
         </div>
       </div>
