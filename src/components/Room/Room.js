@@ -23,7 +23,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         <div className="row roomContent">
           {/* Chat & User Grid */}
           <Userlist/>
-          <Chat/>
+
           <div className="col-lg-3 col-md-2 hidden-sm-down sectionWrapper">
           </div>
           {/* Center Board Section */}

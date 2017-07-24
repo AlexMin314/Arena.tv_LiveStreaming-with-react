@@ -29,6 +29,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
                   <div id="curChance"></div>
                 </div>
               </div>
+              <div className="testChat1">hey, This is chat postion testing</div>
             </div>
             <div className="spots">
             </div>

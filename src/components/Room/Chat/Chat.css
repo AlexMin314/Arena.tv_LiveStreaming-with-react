@@ -25,6 +25,7 @@
 }
 
 .chatTestSpot {
+  position: relative;
   border-radius: 20px;
   background-color: rgba(191, 191, 191, 0.37);
   height: 20%;
@@ -37,7 +38,7 @@
   text-align: right;
   font-size: 30px;
   background: white;
-  z-index: 1;
+  z-index: 2;
   position: relative;
   width: 100%;
 }

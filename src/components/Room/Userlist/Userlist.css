@@ -29,6 +29,14 @@
 .userSpotsLeft {
   float: left;
 }
+.testChat1 {
+  position: relative;
+  top: -90%;
+  left: 100%;
+  background: white;
+  color: green;
+  font-size: 30px;
+}
 
 .testUser {
   background-color: #393939;
