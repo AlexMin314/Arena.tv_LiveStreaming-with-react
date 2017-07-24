@@ -1,8 +1,9 @@
-import React, {Component, PropTypes} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // Import firebase
-import {firebaseDB} from '../../firebase';
+import { firebaseDB } from '../../firebase';
+import firebase from '../../firebase';
 
 // Import Actions
 import { addUser } from '../../actions/userActions';
@@ -45,7 +46,7 @@ class Signup extends Component {
     const {email, password} = this.state;
 
     // Create firebase user with email and password
-    firebaseDB.auth().createUserWithEmailAndPassword(email, password)
+    firebase.auth().createUserWithEmailAndPassword(email, password)
       .catch(error => {
         this.setState({
           username: '',
@@ -57,10 +58,10 @@ class Signup extends Component {
 
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
-    firebaseDB.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
       if(user) {
         // Set the reference to the users object in firebase
-        const usersRef = firebaseDB.database().ref('users');
+        const usersRef = firebase.database().ref('users');
 
         // store all received auth info in variables
         const {username, email} = this.state;

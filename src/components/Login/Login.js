@@ -1,8 +1,9 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // Import firebase
-import {firebaseDB} from '../../firebase';
+import { firebaseDB } from '../../firebase';
+import firebase from '../../firebase';
 
 // Import Actions
 import { addUser } from '../../actions/userActions';
@@ -38,7 +39,7 @@ class Login extends Component {
     e.preventDefault();
     const {email, password} = this.state;
     // Log in via firebase auth
-    firebaseDB.auth().signInWithEmailAndPassword(email, password)
+    firebase.auth().signInWithEmailAndPassword(email, password)
       .catch(error => {
         this.setState({
           email: '',
@@ -47,9 +48,9 @@ class Login extends Component {
       })
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
-    firebaseDB.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
       if(user) {
-        var userRef = firebaseDB.database().ref('users/' + user.uid);
+        var userRef = firebase.database().ref('users/' + user.uid);
         userRef.on('value', (snapshot) => {
           var currentUser = snapshot.val();
           currentUser.id = user.uid;

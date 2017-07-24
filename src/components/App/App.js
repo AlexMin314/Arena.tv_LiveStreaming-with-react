@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { firebaseDB } from '../../firebase';
 
@@ -40,7 +40,9 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {user: state.user}
+  return {
+    user: state.user
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {

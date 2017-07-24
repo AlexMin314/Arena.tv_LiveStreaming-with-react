@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Import firebase
@@ -24,12 +24,17 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   }
 
   onQuickJoin = () => {
-    // need a quick join algorithm
-    console.log('quick!')
-  }
-
-  componentDidMount() {
-
+    firebase.database().ref('/rooms').once('value').then((snapshot) => {
+      const rooms = snapshot.val();
+      // Iterating over rooms.
+      for (const key in rooms) {
+        // Need a condition which is checking room status(full or not)
+        if (true) {
+          const roomName = rooms[key].roomName;
+          window.location.href = '/room/' + roomName;
+        }
+      }
+    });
   }
 
   onRadioSelect = (e) => {
@@ -44,7 +49,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   onRoomCreation = () => {
 
-    let roomName = this.state.roomName;
+    let roomName = this.state.roomName.split(' ').join('');
     if (roomName === '') {
       roomName = firebase.database().ref().child('rooms').push().key;
     }
@@ -55,10 +60,10 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     newRoom.roomName = roomName;
     newRoom.message = {};
 
-    firebase.database().ref('rooms').push(newRoom);
-
-    // redirect to room.
-    window.location.href = '/room/' + roomName;
+    firebase.database().ref('rooms').push(newRoom).then(() => {
+      // redirect to room.
+      window.location.href = '/room/' + roomName;
+    });
   }
 
   render() {

@@ -1,8 +1,8 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 // Import firebase
-import {firebaseDB} from '../../firebase';
+import { firebaseDB } from '../../firebase';
 import firebase from '../../firebase';
 
 // Import Actions
@@ -24,9 +24,9 @@ class SocialBtn extends Component {
     // assign provider variable for facebook
     var provider = new firebase.auth.FacebookAuthProvider();
     // redirect to sign in with facebook via firebase
-    firebaseDB.auth().signInWithRedirect(provider);
+    firebase.auth().signInWithRedirect(provider);
     // catch the result of facebook login
-    firebaseDB.auth().getRedirectResult().then((result) => {
+    firebase.auth().getRedirectResult().then((result) => {
       if (result.credential) {
         // Provides a Facebook Access Token which can be used to access the Facebook API.
         const token = result.credential.accessToken;
@@ -48,11 +48,11 @@ class SocialBtn extends Component {
   componentWillMount() {
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
-    firebaseDB.auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
       if(user && user.providerData[0].providerId == "facebook.com") {
         console.log(user.providerData[0]);
         // Set the reference to the users object in firebase
-        const usersRef = firebaseDB.database().ref('users');
+        const usersRef = firebase.database().ref('users');
 
         // store all received auth info in variables
         var email = user.providerData[0].email || '';

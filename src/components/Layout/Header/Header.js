@@ -1,14 +1,15 @@
-import React, {Component, PropTypes} from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
 // Import Redux
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 // Import Actions
-import {removeUser} from '../../../actions/userActions';
+import { removeUser } from '../../../actions/userActions';
 
 // Import Firebase
-import {firebaseDB} from '../../../firebase';
+import { firebaseDB } from '../../../firebase';
+import firebase from '../../../firebase';
 
 // Import CSS
 import './Header.css';
@@ -26,7 +27,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
   // logout onClick event listener
   logout = () => {
     // Remove user from firebase session
-    firebaseDB.auth().signOut().then(() => {
+    firebase.auth().signOut().then(() => {
       // Remove user from local store
       this.props.removeUser();
     }).catch(error => {
