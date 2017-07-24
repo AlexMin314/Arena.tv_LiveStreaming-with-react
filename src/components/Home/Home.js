@@ -16,9 +16,13 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
     this.state = {}
   }
 
-  onClick = (e) => {
+  onSignIn = (e) => {
     e.preventDefault();
     window.location.href = '/login';
+  }
+  onSignUp = (e) => {
+    e.preventDefault();
+    window.location.href = '/signup';
   }
 
   render() {
@@ -34,10 +38,17 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
               Curabitur blandit tempus porttitor. Etiam porta sem
               malesuada magna mollis euismod. Curabitur blandit tempus porttitor.
             </div>
-            <button type="button"
-                    className="btn btn-primary"
-                    id="mainSinginBtn"
-                    onClick={this.onClick}>Sign in</button>
+            <div className="row">
+              <button type="button"
+                      className="btn btn-primary"
+                      id="mainSinginBtn"
+                      onClick={this.onSignIn}>SIGN IN</button>
+              <div id="OR"> OR </div>
+              <button type="button"
+                      className="btn btn-primary"
+                      id="mainSinginBtn"
+                      onClick={this.onSignUp}>SIGN UP</button>
+            </div>
           </div>
         </div>
       </div>

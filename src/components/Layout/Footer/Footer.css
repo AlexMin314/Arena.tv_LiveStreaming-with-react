@@ -3,6 +3,7 @@
   color: white;
   flex: 0 0 auto;
   height: 50px;
+  text-shadow:#999999 1px 1px 1px;   
 }
 
 .footer-content-left {
@@ -19,7 +20,7 @@
   color: rgb(83, 200, 221);
   padding: 5px;
   padding-right: 15px;
-  padding-top: 15px;  
+  padding-top: 15px;
 }
 
 #git, .footer-content-right {

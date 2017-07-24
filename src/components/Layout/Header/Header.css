@@ -16,6 +16,7 @@
   margin: 15px;
   padding-left: 10px;
   font-weight: 900;
+  text-shadow:#999999 1px 1px 1px;
 }
 
 #signIn {
@@ -28,5 +29,5 @@
 }
 
 #signIn:hover, #brandName:hover {
-  color: black;
+  color: #9c27b0;
 }
