@@ -55,7 +55,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     newRoom.roomName = roomName;
     newRoom.message = {};
 
-    firebase.database().ref('/rooms').push(newRoom);
+    firebase.database().ref('rooms').push(newRoom);
 
     // redirect to room.
     window.location.href = '/room/' + roomName;
