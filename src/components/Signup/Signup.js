@@ -52,23 +52,25 @@ class Signup extends Component {
     // Getting email and password from state
     const {email, password} = this.state;
 
-    // Create firebase user with email and password
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-      .catch(error => {
-        this.setState({
-          username: '',
-          email: '',
-          password: '',
-          confirmPassword: '',
-          error});
-      })
+    if(noErrors) {
+      // Create firebase user with email and password
+      firebase.auth().createUserWithEmailAndPassword(email, password)
+        .catch(error => {
+          this.setState({
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+            error});
+        })
+    }
 
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
     firebase.auth().onAuthStateChanged(user => {
       if(user) {
         // Set the reference to the users object in firebase
-        const usersRef = firebase.database().ref('users');
+        const usersRef = firebaseDB.ref('users');
 
         // store all received auth info in variables
         const {username, email} = this.state;

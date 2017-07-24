@@ -9,9 +9,7 @@ import './index.css';
 
 // Import API
 import { getUsers, setUsers } from './API/userAPI';
-
-// Import actions
-import { getUser } from './actions/userActions';
+import { setLoading } from './API/loadingAPI';
 
 import registerServiceWorker from './registerServiceWorker';
 
@@ -26,6 +24,7 @@ store.subscribe(() => {
   // This stuff happens everytime store is updated
   const state = store.getState();
   setUsers(state.user);
+  setLoading(state.isStillLoading);
 })
 
 // This dispatcher is for the flow of storing user login status.
