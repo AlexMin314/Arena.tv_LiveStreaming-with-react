@@ -1,11 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+// Import firebase
+import { firebaseDB } from '../../firebase';
+import firebase from '../../firebase';
+
 import './Lobby.css';
 
 // Import child Components
-import RoomList from './RoomList/RoomList';
-import GlobalChat from './GlobalChat/GlobalChat';
+
 
 /**
  * Login
@@ -14,6 +17,48 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   constructor(props){
     super(props)
+    this.state = {
+      roomName: '',
+      roomTopic: 'TV',
+    }
+  }
+
+  onQuickJoin = () => {
+    // need a quick join algorithm
+    console.log('quick!')
+  }
+
+  componentDidMount() {
+
+  }
+
+  onRadioSelect = (e) => {
+    // store room topic.
+    this.setState({ roomTopic: e.target.innerHTML });
+  }
+
+  onRoomName = (e) => {
+    // store room name.
+    this.setState({ roomName: e.target.value });
+  }
+
+  onRoomCreation = () => {
+
+    let roomName = this.state.roomName;
+    if (roomName === '') {
+      roomName = firebase.database().ref().child('rooms').push().key;
+    }
+
+    // Store to firebase (for testing)
+    const newRoom = {};
+    newRoom.roomTopic = this.state.roomTopic;
+    newRoom.roomName = roomName;
+    newRoom.message = {};
+
+    firebase.database().ref('/rooms').push(newRoom);
+
+    // redirect to room.
+    window.location.href = '/room/' + roomName;
   }
 
   render() {
@@ -21,35 +66,85 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     return (
       <div className="container-fluid contentBody">
         <div className="row lobbyContent">
-          <div className="col-md-9 col-sm-8 lobbyLeftSection">
-            {/* Left-Top Section */}
-            <div className="row filterSection">
-              <div className="filterIcon" id='TV'></div>
-              <div className="filterIcon" id='game'></div>
-              <div className="filterIcon" id='IT'></div>
-              <div className="filterIcon" id='sports'></div>
-              <div className="filterIcon" id='travel'></div>
+          <div className="lobbyContentWrapper">
+            <div className="subtitleText">Choose Your Topic</div>
+            <div className="categoryWrapper">
+              <div className="category TV">TV</div>
+              <div className="category game">GAME</div>
+              <div className="category IT">IT</div>
+              <div className="category sports">SPORTS</div>
+              <div className="category travel">TRAVEL</div>
             </div>
-            {/* Left-Middle Section */}
-            <div className="row roomListWrapper">
-              <RoomList/>
-            </div>
-            {/* Left-Bottom Section */}
-            <div className="row bottomContentWrapper">
-              <div className="col-sm-8 hidden-xs-down noticeSection">
-                Notice & Welcome
-              </div>
-              <div className="col-sm-2 col-6 createRoom">
-                Create<br/>Room
-              </div>
-              <div className="col-sm-2 col-6 quickJoin">
-                Quick<br/>Join
-              </div>
-            </div>
+            <div className="subtitleText"><hr/></div>
+            {/* Button trigger modal */}
+            <button type="button"
+                    className="btn btn-primary"
+                    data-toggle="modal"
+                    data-target="#createRoomModal">CREATE ROOM</button>
+            <button type="button"
+                    className="btn btn-primary"
+                    onClick={this.onQuickJoin}>QUICK JOIN</button>
           </div>
-          {/* Right-Global Chat */}
-          <div className="col-md-3 col-sm-4 hidden-xs-down lobbyRightSection">
-            <GlobalChat/>
+        </div> {/* Wrapper End*/}
+
+        {/* Modal */}
+        <div className="modal" id="createRoomModal" role="dialog"
+             aria-labelledby="createRoomModalLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title"
+                    id="createRoomModalLabel">CREATE ROOM</h5>
+                <button type="button"
+                        className="close"
+                        data-dismiss="modal"
+                        aria-label="Close">
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                <div className="modalSubtitle">Room Name</div>
+                  <input type="text" className="form-control"
+                         placeholder="Enter RoomName...(optional)"
+                         onChange={this.onRoomName}/>
+                <div className="modalSubtitle">Select Topic</div>
+                <div className="btn-group" data-toggle="buttons">
+                  <label className="btn btn-primary active" id="mRadio1"
+                         onClick={this.onRadioSelect}>
+                    <input type="radio" autoComplete="off"/>
+                    <div className="category categoryModal TV">TV</div>
+                  </label>
+                  <label className="btn btn-primary" id="mRadio2"
+                         onClick={this.onRadioSelect}>
+                    <input type="radio" autoComplete="off"/>
+                    <div className="category categoryModal game">GAME</div>
+                  </label>
+                  <label className="btn btn-primary" id="mRadio3"
+                         onClick={this.onRadioSelect}>
+                    <input type="radio" autoComplete="off"/>
+                    <div className="category categoryModal IT">IT</div>
+                  </label>
+                  <label className="btn btn-primary" id="mRadio4"
+                         onClick={this.onRadioSelect}>
+                    <input type="radio" autoComplete="off"/>
+                    <div className="category categoryModal sports">SPORTS</div>
+                  </label>
+                  <label className="btn btn-primary" id="mRadio5"
+                         onClick={this.onRadioSelect}>
+                    <input type="radio" autoComplete="off"/>
+                    <div className="category categoryModal travel">TRAVEL</div>
+                  </label>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button"
+                        className="btn btn-secondary"
+                        data-dismiss="modal">CLOSE</button>
+                <button type="button"
+                        className="btn btn-primary"
+                        onClick={this.onRoomCreation}>CREATE</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -59,13 +154,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
 const mapStateToProps = (state) => {
     return {
-
+      user: state.user
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    
+
   }
 }
 

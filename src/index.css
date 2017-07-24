@@ -27,3 +27,7 @@ h5, nav {
 body {
   background: white;
 }
+
+.modal-backdrop {
+  z-index: -1;
+}
