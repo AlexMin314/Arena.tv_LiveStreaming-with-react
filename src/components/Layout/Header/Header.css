@@ -11,11 +11,12 @@
 #signIn, #brandName, #logout {
   text-decoration: none !important;
   display: inline-block;
-  color: white;
+  color: #9c27b0;
   font-size: 20px;
   margin: 15px;
   padding-left: 10px;
   font-weight: 900;
+  text-shadow:#999999 1px 1px 1px;
 }
 
 .greeting, .greetingContainer {
@@ -39,5 +40,5 @@
 }
 
 #signIn:hover, #brandName:hover {
-  color: black;
+  color: #9c27b0;
 }

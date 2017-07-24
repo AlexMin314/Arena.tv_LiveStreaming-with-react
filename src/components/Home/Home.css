@@ -6,7 +6,6 @@
 }
 
 .brandWrapper {
-  border: 1px solid red;
   position: absolute;
   top: 45%;
   left: 50%;
@@ -28,14 +27,25 @@
 
 .introText {
   font-size: 20px;
+  font-weight: 900;
+  text-shadow:#999999 1px 1px 1px;
 }
 
 #mainSinginBtn {
-  width: 200px;
-  height: 80px;
+  width: 100px;
+  height: 50px;
   margin-top: 50px;
 }
 
-.joinBtn:hover {
-  background-color: black;
+#OR {
+  display: inline-block;
+  margin: 0 15px;
+  margin-top: 65px;
+  text-shadow:#999999 1px 1px 1px;
+}
+
+#mainSignUp {
+  margin-left: 0;
+  color: #9c27b0;
+  font-weight: 900;
 }
