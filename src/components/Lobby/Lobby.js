@@ -68,7 +68,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
     // redirect to room.
     firebase.database().ref('rooms').push(newRoom).then(() => {
-      //window.location.href = '/room/' + roomName;
+      window.location.href = '/room/' + roomName;
     });
   }
 
