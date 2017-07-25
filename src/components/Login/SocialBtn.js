@@ -55,6 +55,7 @@ class SocialBtn extends Component {
     const provider = new firebase.auth.TwitterAuthProvider();
     // redirect to sign in with facebook via firebase
     firebase.auth().signInWithRedirect(provider);
+
     // catch the result of facebook login
     firebase.auth().getRedirectResult().then(result => {
       if (result.credential) {
@@ -89,7 +90,7 @@ class SocialBtn extends Component {
       const token = result.credential.accessToken;
       // The signed-in user info.
       const user = result.user;
-      // ...
+
     }).catch(error => {
       // Handle Errors here.
       const errorCode = error.code;
@@ -100,59 +101,6 @@ class SocialBtn extends Component {
       const credential = error.credential;
       // ...
     });
-  }
-
-  componentWillMount() {
-    // Firebase observer to listen if user has signed in
-    // If signed in, fire off action to add user to local store
-    firebase.auth().onAuthStateChanged(user => {
-      if(user && user.providerData[0].providerId == "facebook.com" || user.providerData[0].providerId === "twitter.com" || user.providerData[0].providerId === "google.com") {
-        // Set the reference to the users object in firebase
-        const usersRef = firebaseDB.ref('users');
-
-        // store all received auth info in variables
-        const email = user.providerData[0].email || '';
-        const displayName = user.providerData[0].displayName;
-        const photo = user.providerData[0].photoURL;
-        const userId = user.uid;
-        const fbtwUser = {
-          email: email,
-          displayName: displayName,
-          photo: photo
-        }
-
-        // Listener for changes to users object
-        usersRef.on('value',(snapshot) => {
-          // get all the users by id from firebase
-          const users = snapshot.val();
-          // Boolean to check if user exists in database
-          let userExistsInDB = false;
-          // Loop through users object to check if user exists
-          for (let id in users) {
-            if (userId == id) {
-              userExistsInDB = true;
-            }
-          }
-
-          // If user exists, just add the user to local storage
-          if(userExistsInDB) {
-            fbtwUser.id = userId;
-            this.props.addUser(fbtwUser);
-            this.props.triggerLoading(false);
-          }
-
-          // If user does not exist, add the user to database and local storage
-          else{
-            usersRef.child(userId).set(fbtwUser);
-            this.props.addUser(fbtwUser);
-            this.props.triggerLoading(false);
-          }
-        });
-
-      } else {
-      console.log('Sign in locally');
-      }
-    })
   }
 
   render() {
@@ -181,6 +129,7 @@ class SocialBtn extends Component {
 
 const mapStateToProps = (state) => {
   return {
+    user: state.user,
     isStillLoading: state.IsStillLoading
   };
 }
