@@ -6,11 +6,8 @@ const loadingReducer = (state = initialLoad, action) => {
 
   switch (action.type) {
     case "UPDATE_LOADING_STATUS":
-
-        return [action.isStillLoading]
-
+        return [action.isStillLoading];
         break;
-
     default:
         return state;
   }
