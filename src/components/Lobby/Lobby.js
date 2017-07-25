@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Import firebase
-import { firebaseDB } from '../../firebase';
+import { firebaseDB, userRoomUpdating } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Lobby.css';
@@ -50,11 +50,14 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   onRoomCreation = (e) => {
     e.preventDefault();
+
+    const roomkey = firebase.database().ref().child('rooms').push().key;
+    // User info updating
+    userRoomUpdating(this.props.user[0].id, roomkey);
+
     // Get roomName
     let roomName = this.state.roomName.split(' ').join('');
-    if (roomName === '') {
-      roomName = firebase.database().ref().child('rooms').push().key;
-    }
+    if (roomName === '') roomName = roomkey;
 
     // Store to firebase (for testing)
     const newRoom = {};
@@ -65,7 +68,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
     // redirect to room.
     firebase.database().ref('rooms').push(newRoom).then(() => {
-      window.location.href = '/room/' + roomName;
+      //window.location.href = '/room/' + roomName;
     });
   }
 

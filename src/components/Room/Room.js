@@ -26,8 +26,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   };
 
   sendChat = (e) => {
-    console.log('msg sent!');
-    console.log(this.state.msg);
+    // firebase.database().ref('rooms/').push(newRoom).then(() => {
+    //   window.location.href = '/room/' + roomName;
+    // });
     this.setState({ 'msg': '' });
   }
 
