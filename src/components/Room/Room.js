@@ -14,7 +14,23 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   constructor(props){
     super(props)
+
+    this.state = {
+      'msg': ''
+    }
   }
+
+
+  onChangeChat = (e) => {
+    this.setState({ 'msg': e.target.value });
+  };
+
+  sendChat = (e) => {
+    console.log('msg sent!');
+    console.log(this.state.msg);
+    this.setState({ 'msg': '' });
+  }
+
 
   render() {
 
@@ -27,7 +43,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           <div className="col-lg-3 col-md-2 hidden-sm-down sectionWrapper">
           </div>
           {/* Center Board Section */}
-          <div className="col-lg-6 col-md-8 sectionWrapper">
+          <div className="col-lg-6 col-lg-offset-3 col-md-8 col-md-offset-2 sectionWrapper">
             <div id="centerWrapper">
               {/* Info Section */}
               <div id="infoBoard">
@@ -91,9 +107,15 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               {/* Input & Btn Section */}
               <div id="inputSection">
                 <div className="input-group">
-                  <input type="text" className="form-control" placeholder="Type Messages..." />
+                  <input type="text"
+                         className="form-control"
+                         placeholder="Type Messages..."
+                         value={this.state.msg}
+                         onChange={this.onChangeChat}/>
                   <span className="input-group-btn">
-                    <button className="btn btn-secondary" type="button">Send</button>
+                    <button className="btn btn-secondary"
+                            type="button"
+                            onClick={this.sendChat}>Send</button>
                   </span>
                 </div>
               </div>

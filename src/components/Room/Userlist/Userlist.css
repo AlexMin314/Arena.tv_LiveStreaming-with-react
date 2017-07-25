@@ -29,32 +29,141 @@
 .userSpotsLeft {
   float: left;
 }
-.testChat1 {
+
+.chatDisplayLeft {
   position: relative;
   top: -90%;
-  left: 100%;
+  left: 30%;
   background: white;
+  border: 1px solid green;
+  border-radius: 20px;
+  padding: 15px;
   color: green;
-  font-size: 30px;
+  font-size: 20px;
+  height: 90%;
+}
+.chatDisplayRight {
+  position: relative;
+  top: -90%;
+  left: -30%;
+  background: white;
+  border: 1px solid green;
+  border-radius: 20px;
+  padding: 15px;
+  color: green;
+  font-size: 20px;
+  height: 90%;
 }
 
-.testUser {
+/* Arrow Box */
+
+.arrow_box_left {
+	position: relative;
+	background: white;
+	border: 1px solid #c2e1f5;
+}
+.arrow_box_left:after, .arrow_box_left:before {
+	right: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box_left:after {
+	border-color: rgba(136, 183, 213, 0);
+	border-right-color: white;
+	border-width: 20px;
+	margin-top: -20px;
+}
+.arrow_box_left:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-right-color: #c2e1f5;
+	border-width: 21px;
+	margin-top: -21px;
+}
+
+.arrow_box_right {
+	position: relative;
+	background: #ffffff;
+	border: 1px solid #c2e1f5;
+}
+.arrow_box_right:after, .arrow_box_right:before {
+	left: 100%;
+	top: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.arrow_box_right:after {
+	border-color: rgba(255, 255, 255, 0);
+	border-left-color: #ffffff;
+	border-width: 20px;
+	margin-top: -20px;
+}
+.arrow_box_right:before {
+	border-color: rgba(194, 225, 245, 0);
+	border-left-color: #c2e1f5;
+	border-width: 21px;
+	margin-top: -21px;
+}
+
+
+/* User Name card */
+
+.userCardLeft, .userCardRight {
   background-color: #393939;
   border-radius: 15px;
   width: 100%;
   height: 100%;
   padding: 10px;
+  overflow: auto;
 }
 
-#userPics {
+.userCardRight {
+  justify-content: flex-end;
+}
+
+.userPicsLeft, .userPicsRight {
   background-color: #6e6e6e;
   border-radius: 100%;
-  width: 100px;
-  height: 100px;
   margin-left: 10px;
+  width: 30%;
+  height: 0;
+  padding-bottom: 30%;
+  margin-top: 10px;
+}
+@media (max-height: 700px) {
+  .userPicsLeft, .userPicsRight {
+    width: 25%;
+    padding-bottom: 25%;
+  }
+}
+@media (max-height: 550px) {
+  .userPicsLeft, .userPicsRight {
+    width: 15%;
+    padding-bottom: 15%;
+  }
+}
+.userPicsRight {
+  margin-left: 0px;
+  margin-right: 10px;
 }
 
-#profileName, #gameInfo, #curChance {
+.profileNameLeft, .gameInfoLeft, .curChanceLeft {
+  background-color: #6e6e6e;
+  width: 100px;
+  height: 20px;
+  margin: 10px;
+}
+.profileNameRight, .gameInfoRight, .curChanceRight {
   background-color: #6e6e6e;
   width: 100px;
   height: 20px;

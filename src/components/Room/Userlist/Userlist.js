@@ -21,23 +21,45 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
         <div id="userListWrapper">
           <div className="userSpotsLeft">
             <div className="spots">
-              <div className="testUser row">
-                <div className="" id="userPics"></div>
+              {/* Testing Purpose */}
+              <div className="userCardLeft row">
+                <div className="userPicsLeft"></div>
                 <div className="">
-                  <div id="profileName"></div>
-                  <div id="gameInfo"></div>
-                  <div id="curChance"></div>
+                  <div className="profileNameLeft"></div>
+                  <div className="gameInfoLeft"></div>
+                  <div className="curChanceLeft"></div>
                 </div>
               </div>
-              <div className="testChat1">hey, This is chat postion testing</div>
+              {/* Testing Purpose */}
+              <div className="chatDisplayLeft arrow_box_left">hey, This is chat postion testing</div>
             </div>
             <div className="spots">
+              {/* Testing Purpose */}
+              <div className="userCardLeft row">
+                <div className="userPicsLeft"></div>
+                <div className="">
+                  <div className="profileNameLeft"></div>
+                  <div className="gameInfoLeft"></div>
+                  <div className="curChanceLeft"></div>
+                </div>
+              </div>
             </div>
             <div className="spots">
             </div>
           </div>
           <div className="userSpotsRight">
             <div className="spots">
+              {/* Testing Purpose / Need to rightside layout */}
+              <div className="userCardRight row">
+                <div className="userCardInfoRightWrapper">
+                  <div className="profileNameRight"></div>
+                  <div className="gameInfoRight"></div>
+                  <div className="curChanceRight"></div>
+                </div>
+                <div className="userPicsRight"></div>
+              </div>
+              {/* Testing Purpose */}
+              <div className="chatDisplayRight arrow_box_right">hey, This is chat postion testing</div>              
             </div>
             <div className="spots">
             </div>
