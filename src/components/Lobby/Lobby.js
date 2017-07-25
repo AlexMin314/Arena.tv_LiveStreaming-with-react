@@ -31,7 +31,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
       const rooms = snapshot.val();
 
-      // empty arrays for storing available rooms
+      // empty array for storing available rooms
       let availableRooms = [];
       // Iterate over rooms
       for (const key in rooms) {
