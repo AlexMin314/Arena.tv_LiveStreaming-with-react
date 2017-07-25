@@ -58,7 +58,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     if (roomName === '') roomName = roomkey;
 
     // User info updating
-    userRoomUpdating(this.props.user[0].id, roomName);
+    userRoomUpdating(this.props.user[0].id, roomkey, roomName);
 
     // Store to firebase (for testing)
     const newRoom = {};
@@ -67,8 +67,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     newRoom.members = {}
     newRoom.members['1'] = this.props.user[0];
 
-    // redirect to room.
-    firebase.database().ref('rooms').push(newRoom).then(() => {
+    // Make new room to firebase, redirect to room.
+    firebase.database().ref('rooms').child(roomkey).set(newRoom).then(() => {
       window.location.href = '/room/' + roomName;
     });
   }

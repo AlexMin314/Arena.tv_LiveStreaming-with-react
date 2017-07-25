@@ -14,7 +14,7 @@ firebase.initializeApp(config);
 export const firebaseDB = firebase.database();
 
 // This helper is for updating the 'room' name in user object.
-export const userRoomUpdating = (uid, roomkey) => {
+export const userRoomUpdating = (uid, roomkey, roomname) => {
     const updates = {};
     updates.room = roomkey;
 
