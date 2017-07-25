@@ -41,8 +41,12 @@
   margin-top: 5px;
 }
 
-#skipTurnBtn, #clearBtn {
+#skipTurnBtn, #clearBtn, #leaveBtn {
   font-size: 12px;
+}
+
+#clearBtn {
+  margin-right: 10px;  
 }
 
 /* Canvas */

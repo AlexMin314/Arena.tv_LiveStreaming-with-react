@@ -53,6 +53,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     this.setState({ 'msg': '' });
   }
 
+  leaveRoom = () => {
+      window.location.href = '/lobby';
+  }
 
   render() {
 
@@ -124,6 +127,12 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                         id="clearBtn"
                         className="btn btn-primary">
                         Clear
+                </button>
+                <button type="button"
+                        id="leaveBtn"
+                        className="btn btn-primary"
+                        onClick={this.leaveRoom}>
+                        Leave Room
                 </button>
               </div>
               {/* Input & Btn Section */}
