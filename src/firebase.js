@@ -10,5 +10,17 @@ const config = {
   messagingSenderId: "838269703483"
 };
 firebase.initializeApp(config);
+
 export const firebaseDB = firebase.database();
+
+// This helper is for updating the 'room' name in user object.
+export const userRoomUpdating = (uid, roomkey) => {
+    const updates = {};
+    updates.room = roomkey;
+
+    firebase.database().ref('users/' + uid).update(updates);
+  };
+
+
+
 export default firebase;
