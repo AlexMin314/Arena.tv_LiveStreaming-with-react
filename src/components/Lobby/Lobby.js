@@ -52,12 +52,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     e.preventDefault();
 
     const roomkey = firebase.database().ref().child('rooms').push().key;
-    // User info updating
-    userRoomUpdating(this.props.user[0].id, roomkey);
 
     // Get roomName
     let roomName = this.state.roomName.split(' ').join('');
     if (roomName === '') roomName = roomkey;
+
+    // User info updating
+    userRoomUpdating(this.props.user[0].id, roomName);
 
     // Store to firebase (for testing)
     const newRoom = {};
