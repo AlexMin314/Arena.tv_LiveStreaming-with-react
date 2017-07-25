@@ -19,22 +19,48 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     }
   }
 
+  // Function to return a random number between a specified range
+  getRandomIntInRange = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+  }
+
   onQuickJoin = (e) => {
     e.preventDefault();
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
       const rooms = snapshot.val();
-      // Iterating over rooms.
+
+      // empty array for storing available rooms
+      let availableRooms = [];
+      // Iterate over rooms
       for (const key in rooms) {
-
-        /* Need a condition which is checking room status(full or not) */
-        if (true) {
-          const roomName = rooms[key].roomName;
-
-          /* Need a logic for room, user updating */
-
-          window.location.href = '/room/' + roomName;
+        // Check for available rooms
+        if (rooms[key].memberCount > 0) {
+          availableRooms.push({
+            roomInfo: rooms[key],
+            _key: key
+          })
         }
       }
+      // Get a random number within the range of the size of the availableRooms array
+      const randomNum = this.getRandomIntInRange(0, availableRooms.length);
+      // Assign the filtered room to variable
+      const roomName = availableRooms[randomNum].roomInfo.roomName;
+      // Add member count of the filtered room
+      const memberCount = availableRooms[randomNum].roomInfo.memberCount + 1;
+      // Get ID of current user
+      const userId = firebase.auth().currentUser.uid;
+
+      firebase.database().ref('/users/' + userId).update({
+        roomName: roomName
+      })
+
+      firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}`).update({
+        memberCount: memberCount
+      })
+
+      window.location.href = '/room/' + roomName;
     });
   }
 

@@ -53,6 +53,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     this.setState({ 'msg': '' });
   }
 
+  leaveRoom = () => {
+      window.location.href = '/lobby';
+  }
 
   render() {
 
