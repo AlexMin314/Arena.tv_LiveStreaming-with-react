@@ -33,23 +33,33 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
       // empty array for storing available rooms
       let availableRooms = [];
-
       // Iterate over rooms
       for (const key in rooms) {
         // Check for available rooms
-        if (rooms[key].memberCount) {
-          availableRooms.push(rooms[key]);
-          // const roomName = rooms[key].roomName;
-          /* Need a logic for room, user updating */
-          // window.location.href = '/room/' + roomName;
+        if (rooms[key].memberCount > 0) {
+          availableRooms.push({
+            roomInfo: rooms[key],
+            _key: key
+          })
         }
       }
-      const maxNum = this.getRandomIntInRange(0, availableRooms.length);
-      const roomName = availableRooms[maxNum].roomName;
+      // Get a random number within the range of the size of the availableRooms array
+      const randomNum = this.getRandomIntInRange(0, availableRooms.length);
+      // Assign the filtered room to variable
+      const roomName = availableRooms[randomNum].roomInfo.roomName;
+      // Add member count of the filtered room
+      const memberCount = availableRooms[randomNum].roomInfo.memberCount + 1;
+      // Get ID of current user
       const userId = firebase.auth().currentUser.uid;
+
       firebase.database().ref('/users/' + userId).update({
         roomName: roomName
       })
+
+      firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}`).update({
+        memberCount: memberCount
+      })
+
       window.location.href = '/room/' + roomName;
     });
   }
