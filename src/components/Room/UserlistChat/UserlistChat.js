@@ -1,17 +1,40 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import './Userlist.css';
+// Import firebase
+import { firebaseDB, userRoomUpdating } from '../../../firebase';
+import firebase from '../../../firebase';
+
+import './UserlistChat.css';
 
 // Import child Components
 
-/**
- * Login
- */
 export class Userlist extends Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props){
     super(props)
+
+    this.index = 0;
+    this.state = {
+      messageInfo: [],
+      messages: []
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // chat testing purpose
+    const messageRef = firebase.database().ref('rooms/' + nextProps.room + '/message');
+    messageRef.on('child_added', (data) => {
+      const newInfo = this.state.messageInfo;
+      newInfo.push(data.val());
+      const newChat = this.state.messages;
+      newChat.push(<div className="chatDisplayLeft arrow_box_left"
+                                                    key={this.index++}>{data.val().text}</div>);
+      this.setState({
+        messageInfo: newInfo,
+        messages: newChat
+      });
+    });
   }
 
   render() {
@@ -31,7 +54,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
                 </div>
               </div>
               {/* Testing Purpose */}
-              <div className="chatDisplayLeft arrow_box_left">hey, This is chat postion testing</div>
+              {this.state.messages[this.state.messages.length - 1]}
             </div>
             <div className="spots">
               {/* Testing Purpose */}
@@ -59,7 +82,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
                 <div className="userPicsRight"></div>
               </div>
               {/* Testing Purpose */}
-              <div className="chatDisplayRight arrow_box_right">hey, This is chat postion testing</div>              
+              <div className="chatDisplayRight arrow_box_right">hey, This is chat postion testing</div>
             </div>
             <div className="spots">
             </div>
@@ -74,7 +97,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
 const mapStateToProps = (state) => {
     return {
-
+      user: state.user
     }
 }
 

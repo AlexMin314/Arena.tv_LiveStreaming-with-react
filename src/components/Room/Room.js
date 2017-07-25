@@ -8,8 +8,7 @@ import firebase from '../../firebase';
 import './Room.css';
 
 // Import child Components
-import Userlist from './Userlist/Userlist';
-import Chat from './Chat/Chat';
+import UserlistChat from './UserlistChat/UserlistChat';
 
 /**
  * Login
@@ -31,6 +30,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     // get current room key and store to the state.
     firebase.database().ref('/users/' + uid + '/room').once('value')
       .then((snapshot) => {
+
       this.setState({ 'room': snapshot.val() });
     })
   }
@@ -42,6 +42,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   sendChat = (e) => {
     const message = {};
+    /* If possible, change this Id part to slot number of the sender */
     message.senderID = this.props.user[0].id;
     message.senderName = this.props.user[0].displayName;
     message.text = this.state.msg;
@@ -59,7 +60,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       <div className="container-fluid contentBody">
         <div className="row roomContent">
           {/* Chat & User Grid */}
-          <Userlist/>
+          <UserlistChat room={this.state.room}/>
 
           <div className="col-lg-3 col-md-2 hidden-sm-down sectionWrapper">
           </div>
