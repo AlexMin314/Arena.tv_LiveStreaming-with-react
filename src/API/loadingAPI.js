@@ -5,7 +5,7 @@ export const setLoading = (isStillLoading) => {
 }
 
 export const getLoading = () => {
-  const isStillLoadingJSON = localStorage.getItem('isLoading');
+  const isStillLoadingJSON = localStorage.getItem('isStillLoading');
   let isStillLoading = [];
   try {
     isStillLoading = JSON.parse(isStillLoadingJSON);

@@ -66,6 +66,63 @@ class Login extends Component {
       }
     })
   }
+  
+  componentWillMount() {
+    // Firebase observer to listen if user has signed in
+    // If signed in, fire off action to add user to local store
+    firebase.auth().onAuthStateChanged(user => {
+      if(user && user.providerData[0].providerId == "facebook.com" || user.providerData[0].providerId === "twitter.com" || user.providerData[0].providerId === "google.com") {
+        // Set the reference to the users object in firebase
+        const usersRef = firebaseDB.ref('users');
+
+        // store all received auth info in variables
+        const email = user.providerData[0].email || '';
+        const displayName = user.providerData[0].displayName;
+        const photo = user.providerData[0].photoURL;
+        const userId = user.uid;
+        const fbtwUser = {
+          email: email,
+          displayName: displayName,
+          photo: photo
+        }
+
+        // Listener for changes to users object
+        usersRef.on('value',(snapshot) => {
+          // get all the users by id from firebase
+          console.log(snapshot);
+          const users = snapshot.val();
+          // Boolean to check if user exists in database
+          let userExistsInDB = false;
+          // Loop through users object to check if user exists
+          for (let id in users) {
+            if (userId == id) {
+              console.log("Loop to check ID is running");
+              userExistsInDB = true;
+            }
+          }
+
+          // If user exists, just add the user to local storage
+          if(userExistsInDB) {
+            console.log("User Exists in Database");
+            fbtwUser.id = userId;
+            this.props.addUser(fbtwUser);
+            this.props.triggerLoading(false);
+          }
+
+          // If user does not exist, add the user to database and local storage
+          else{
+            console.log("User does not Exist in Database, create new user");
+            usersRef.child(userId).set(fbtwUser);
+            this.props.addUser(fbtwUser);
+            this.props.triggerLoading(false);
+          }
+        });
+
+      } else {
+      console.log('Sign in locally');
+      }
+    })
+  }
 
   render() {
     return (
