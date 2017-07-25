@@ -49,24 +49,7 @@ class Login extends Component {
           password: '',
           error});
       })
-    // Firebase observer to listen if user has signed in
-    // If signed in, fire off action to add user to local store
-    firebase.auth().onAuthStateChanged(user => {
-      if(user) {
-        const userRef = firebaseDB.ref('users/' + user.uid);
-        userRef.on('value', (snapshot) => {
-          const currentUser = snapshot.val();
-          currentUser.id = user.uid;
-        this.props.addUser(currentUser);
-        this.props.triggerLoading(false);
-        })
-
-      } else {
-        console.log('No user is signed in');
-      }
-    })
-  }
-  
+    }
   componentWillMount() {
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
@@ -119,7 +102,15 @@ class Login extends Component {
         });
 
       } else {
-      console.log('Sign in locally');
+        if(user) {
+          const userRef = firebaseDB.ref('users/' + user.uid);
+          userRef.on('value', (snapshot) => {
+            const currentUser = snapshot.val();
+            currentUser.id = user.uid;
+          this.props.addUser(currentUser);
+          this.props.triggerLoading(false);
+          })
+        }
       }
     })
   }
