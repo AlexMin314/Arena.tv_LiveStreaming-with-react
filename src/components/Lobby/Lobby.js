@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 import { firebaseDB, userRoomUpdating } from '../../firebase';
 import firebase from '../../firebase';
 
+// Import Actions
+import { updateRoom } from '../../actions/roomActions';
+
 import './Lobby.css';
 
 // Import child Components
@@ -116,6 +119,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
     // User info updating
     userRoomUpdating(this.props.user[0].id, roomkey);
+    this.props.roomUpdating(roomkey);
 
     // Updating object
     const newRoom = {};
@@ -236,7 +240,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-
+    roomUpdating: (room) => {
+      dispatch(updateRoom(room))
+    }
   }
 }
 

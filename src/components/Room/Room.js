@@ -55,18 +55,18 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   leaveRoom = () => {
 
-      firebase.database().ref('/rooms/' + this.state.room + '/members')
-        .once('value')
-        .then((snapshot) => {
-          const members = snapshot.val();
-          for(const key in members) {
-            if (members[key].id === this.props.user[0].id) {
-              roomMemberUpdating(this.state.room, key, {}, true);
-            }
+    firebase.database().ref('/rooms/' + this.state.room + '/members')
+      .once('value')
+      .then((snapshot) => {
+        const members = snapshot.val();
+        for(const key in members) {
+          if (members[key].id === this.props.user[0].id) {
+            roomMemberUpdating(this.state.room, key, {}, true, '/lobby')
           }
-          window.location.href = '/lobby';
-        })
+        }
+      });
   }
+
 
   render() {
 

@@ -20,9 +20,9 @@ export const userRoomUpdating = (uid, roomkey) => {
 
     firebase.database().ref('users/' + uid).update(updates);
   };
-  
+
 // This helper is for updating/removing the members info.
-export const roomMemberUpdating = (roomkey, memberKey, updateObj, remove) => {
+export const roomMemberUpdating = (roomkey, memberKey, updateObj, remove, path) => {
     const updates = updateObj;
 
     if(remove) {
@@ -35,11 +35,12 @@ export const roomMemberUpdating = (roomkey, memberKey, updateObj, remove) => {
       .then((snapshot) => {
         let memberCount = snapshot.val();
         firebase.database().ref('rooms/' + roomkey)
-          .update({ 'memberCount': memberCount - 1 });
+                .update({ 'memberCount': memberCount - 1 })
+      })
+      .then(() => {
+        window.location.href = path;
       })
     }
   };
-
-
 
 export default firebase;
