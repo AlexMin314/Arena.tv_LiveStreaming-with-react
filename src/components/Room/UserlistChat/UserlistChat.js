@@ -27,9 +27,18 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     const messageRef = firebase.database().ref('rooms/' + this.props.roomkey + '/message');
 
     messageRef.on('child_added', (data) => {
-      const newMessages = this.state.messages;
-      newMessages.push(data.val());
-      this.setState({ messages: newMessages });
+      const messages = this.state.messages;
+      const userList = this.state.userList;
+      const newMsgObj = data.val();
+      // Sorting the new chat for assigning slotNum.
+      userList.forEach((e) => {
+        if (e.id === newMsgObj.senderID) {
+          newMsgObj.slotNum = e.slotNum;
+        }
+      });
+      // Storing the sorted chat.
+      messages.push(newMsgObj);
+      this.setState({ messages: messages });
     });
 
 
@@ -40,11 +49,10 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       const userList = this.state.userList;
       userList.push(data.val());
 
+      // Assign slot number to user.
       userList.forEach((e, idx) => {
         if (e.id === data.val().id) e.slotNum = idx;
       });
-
-      console.log(userList);
       this.setState({ userList: userList });
     });
 
