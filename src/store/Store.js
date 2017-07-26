@@ -5,13 +5,15 @@ import thunk from 'redux-thunk';
 // Import reducers
 import userReducer from '../reducers/userReducer';
 import loadingReducer from '../reducers/loadingReducer';
+import roomReducer from '../reducers/roomReducer';
 
 export let initStore = () => {
 
   // Combine reducers
   const reducer = combineReducers({
     user: userReducer,
-    isStillLoading: loadingReducer
+    isStillLoading: loadingReducer,
+    room: roomReducer
   });
 
   // Create the store with all the reducers and allow for chrome redux dev tools to run and read reducers

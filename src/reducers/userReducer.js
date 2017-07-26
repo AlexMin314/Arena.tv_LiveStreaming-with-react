@@ -1,4 +1,4 @@
-import {getUsers, removeUser} from '../API/userAPI';
+import { getUsers, removeUser } from '../API/userAPI';
 
 const initialUser = getUsers();
 
