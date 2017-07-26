@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Import firebase
-import { firebaseDB,
-         userRoomUpdating,
+import { userRoomUpdating,
          roomMemberUpdating } from '../../firebase';
 import firebase from '../../firebase';
 
@@ -20,21 +19,17 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
     this.state = {
       'msg': '',
-      'room': ''
     }
   }
 
   componentDidMount() {
-    // get uid from redux
-    const uid = this.props.user[0].id;
-    // get current room key and store to the state.
-    firebase.database().ref('/users/' + uid + '/room').once('value')
-      .then((snapshot) => {
-        console.log(snapshot.val());
-        this.setState({ 'room': snapshot.val() });
-    })
+
   }
 
+
+  /**
+   * Chat related.
+   */
   onChangeChat = (e) => {
     // saving current chat msg to the state.
     this.setState({ 'msg': e.target.value });
@@ -48,23 +43,24 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     message.text = this.state.msg;
 
     // saving msg to the room object in firebase.
-    firebase.database().ref('rooms/' + this.state.room + '/message').push(message);
+    firebase.database().ref('rooms/' + this.props.roomkey + '/message').push(message);
     // resetting the state and input field.
     this.setState({ 'msg': '' });
   }
 
   leaveRoom = () => {
 
-    firebase.database().ref('/rooms/' + this.state.room + '/members')
+    firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
       .once('value')
       .then((snapshot) => {
         const members = snapshot.val();
         for(const key in members) {
           if (members[key].id === this.props.user[0].id) {
-            roomMemberUpdating(this.state.room, key, {}, true, '/lobby')
+            roomMemberUpdating(this.props.roomkey, key, {}, true, '/lobby')
           }
         }
-      });
+      }
+    );
   }
 
 
@@ -113,7 +109,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
 const mapStateToProps = (state) => {
     return {
-      user: state.user
+      user: state.user,
+      roomkey: state.room
     }
 }
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Import firebase
-import { firebaseDB, userRoomUpdating } from '../../firebase';
+import { userRoomUpdating } from '../../firebase';
 import firebase from '../../firebase';
 
 // Import Actions
@@ -78,6 +78,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
               this.setState({'roomName': availableRooms[randomNum]._key})
             })
             .then(() => {
+              // Room Key updating on redux
+              this.props.roomUpdating(availableRooms[randomNum]._key);
               // user info updating with room key.
               userRoomUpdating(this.props.user[0].id, availableRooms[randomNum]._key);
               window.location.href = '/room/' + roomName;
@@ -119,6 +121,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
     // User info updating
     userRoomUpdating(this.props.user[0].id, roomkey);
+    // Room Key updating on redux
     this.props.roomUpdating(roomkey);
 
     // Updating object
@@ -234,7 +237,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
 const mapStateToProps = (state) => {
     return {
-      user: state.user
+      user: state.user,
+      roomkey: state.room
     }
 }
 
