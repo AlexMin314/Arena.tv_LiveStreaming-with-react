@@ -45,3 +45,20 @@
   font-size: 15px;
   color: white;
 }
+
+.arrowBox {
+	position: relative;
+	background: rgb(246, 208, 252);
+}
+.arrowBox:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-width: 30px;
+	margin-left: -30px;
+}

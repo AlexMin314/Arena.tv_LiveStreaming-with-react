@@ -16,68 +16,66 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
     this.index = 0;
     this.state = {
-      messageInfo: [],
       messages: [],
       userList: []
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    // chat testing purpose
-    const messageRef = firebase.database().ref('rooms/' + nextProps.room + '/message');
+  componentDidMount() {
+
+    /* Chat Event Listening */
+    const messageRef = firebase.database().ref('rooms/' + this.props.roomkey + '/message');
+
     messageRef.on('child_added', (data) => {
-      console.log(data.val());
-      const newInfo = this.state.messageInfo;
-      newInfo.push(data.val());
-      const newChat = this.state.messages;
-      newChat.push(<div className="chatDisplayLeft arrow_box_left"
-                                                    key={this.index++}>{data.val().text}</div>);
-      this.setState({
-        messageInfo: newInfo,
-        messages: newChat,
-      });
+      const newMessages = this.state.messages;
+      newMessages.push(data.val());
+      this.setState({ messages: newMessages });
     });
 
-    /* need to change */
-    const membersRef = firebase.database().ref('rooms/' + nextProps.room + '/members');
 
-    console.log(membersRef)
-    console.log(nextProps.room)
+    /* User List */
+    const membersRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
 
-    membersRef.on('child_changed', (data) => {
-      console.log('entered1')
-      console.log(data.val())
-    })
-    membersRef.on('child_removed', (data) => {
-      console.log('entered2')
-      console.log(data.val())
-    })
     membersRef.on('child_added', (data) => {
-      console.log('entered3')
-      console.log(data.val())
-    })
+      const userList = this.state.userList;
+      userList.push(data.val());
+
+      userList.forEach((e, idx) => {
+        if (e.id === data.val().id) e.slotNum = idx;
+      });
+
+      console.log(userList);
+      this.setState({ userList: userList });
+    });
+
+    membersRef.on('child_removed', (data) => {
+      const userList = this.state.userList;
+      userList.forEach((e, idx) => {
+        if (e.id === data.val().id) userList.splice(idx, 1);
+      });
+      this.setState({ userList: userList });
+    });
+
   }
 
-  componentDidMount() {
-    console.log(this.state)
-
-  }
-
+ /**
+  * Rendering UserList
+  */
   renderUserList = () => {
-
     const renderList = [];
 
     for(let i = 0; i < 6; i++) {
       if(!this.state.userList[i]) {
         renderList.push(<div className="nameCardsBG shadowOut"
-                             key={this.index++}>&#43;</div>);
+                             key={this.index++}
+                             id={i}>&#43;</div>);
       } else {
         renderList.push(<div className="nameCard shadowOut"
-                             key={this.index++}>{this.state.userList[i].name}
-                        </div>);
+                             key={this.index++}
+                             id={i}>
+                             {this.state.userList[i].displayName}</div>);
       }
     }
-
     return renderList;
   }
 
@@ -93,7 +91,8 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
 const mapStateToProps = (state) => {
     return {
-      user: state.user
+      user: state.user,
+      roomkey: state.room
     }
 }
 
