@@ -4,7 +4,8 @@ import uuid from 'uuid/v4';
 
 // Import firebase
 import { userRoomUpdating,
-         roomMemberUpdating } from '../../firebase';
+         roomMemberUpdating,
+         readyUpdating } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Room.css';
@@ -44,9 +45,12 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     );
   }
 
+  /**
+   * GameLogic related
+   */
   gameReady = () => {
     this.setState({ ready: true });
-
+    readyUpdating(true);
   }
 
   /**

@@ -34,16 +34,12 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       const newMsgObj = data.val();
       // Sorting the new chat for assigning slotNum.
       userList.forEach((e) => {
-        if (e.id === newMsgObj.senderID) {
-          newMsgObj.slotNum = e.slotNum;
-        }
+        if (e.id === newMsgObj.senderID) newMsgObj.slotNum = e.slotNum;
       });
 
       // Storing the sorted chat. - for the entire chat list.
       messages.push(newMsgObj);
-      this.setState({
-        messages: messages
-      });
+      this.setState({ messages: messages });
     });
 
 
