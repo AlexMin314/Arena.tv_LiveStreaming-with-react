@@ -11,6 +11,8 @@ import './Room.css';
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
 
+// Global variables
+let typedTextArray = [];
 
 export class Room extends Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -18,14 +20,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     super(props)
 
     this.state = {
-      'msg': '',
+      msg: '',
+      chatInput: ''
     }
   }
 
   componentDidMount() {
 
   }
-
 
   /**
    * Chat related.
@@ -35,17 +37,16 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     this.setState({ 'msg': e.target.value });
   };
 
-  sendChat = (e) => {
+  sendChat = (finalInput) => {
     const message = {};
     /* If possible, change this Id part to slot number of the sender */
     message.senderID = this.props.user[0].id;
     message.senderName = this.props.user[0].displayName;
-    message.text = this.state.msg;
+    message.text = finalInput;
 
     // saving msg to the room object in firebase.
     firebase.database().ref('rooms/' + this.props.roomkey + '/message').push(message);
-    // resetting the state and input field.
-    this.setState({ 'msg': '' });
+
   }
 
   leaveRoom = () => {
@@ -59,13 +60,53 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             roomMemberUpdating(this.props.roomkey, key, {}, true, '/lobby')
           }
         }
-      }
-    );
+      });
   }
 
+  textTyped = (textTyped) => {
+    if(textTyped !== "Enter") {
+      typedTextArray.push(textTyped);
+      const textString = typedTextArray.join('');
+      document.getElementsByClassName('userTextInput')[0].innerHTML = textString;
+    }
+  }
+
+  removeLastCharInput = () => {
+    typedTextArray.pop();
+    const textString = typedTextArray.join('');
+    document.getElementsByClassName('userTextInput')[0].innerHTML = textString;
+  }
+
+  clearInput = () => {
+    typedTextArray = [];
+  }
+
+  sendInput = () => {
+    const finalInput = typedTextArray.join('');
+    typedTextArray = [];
+    document.getElementsByClassName('userTextInput')[0].innerHTML = '';
+    this.sendChat(finalInput);
+  }
 
   render() {
+    window.addEventListener("keypress", (e) => {
+      this.textTyped(e.key)
+    })
 
+    window.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'Backspace':
+          this.removeLastCharInput()
+          break;
+        case 'Escape':
+          this.clearInput()
+          break;
+        case 'Enter':
+          this.sendInput()
+        default:
+          break;
+      }
+    })
     return (
       <div className="container-fluid contentBody">
         <div className="row roomContent">
@@ -73,7 +114,10 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           <div className="col-lg-8 col-md-12 sectionDivider">
             <div className="" id="mainContentWrapper">
               <div className="sidebars"></div>
-              <div className="canvasWrapper shadowOut"></div>
+              <div className="canvasWrapper shadowOut">
+                <div className="userTextInput"></div>
+              </div>
+
               <div className="sidebars">
                 <div>
                   <button type="button"
