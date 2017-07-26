@@ -17,7 +17,8 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     this.index = 0;
     this.state = {
       messageInfo: [],
-      messages: []
+      messages: [],
+      userList: []
     }
   }
 
@@ -25,6 +26,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     // chat testing purpose
     const messageRef = firebase.database().ref('rooms/' + nextProps.room + '/message');
     messageRef.on('child_added', (data) => {
+      console.log(data.val());
       const newInfo = this.state.messageInfo;
       newInfo.push(data.val());
       const newChat = this.state.messages;
@@ -32,64 +34,58 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
                                                     key={this.index++}>{data.val().text}</div>);
       this.setState({
         messageInfo: newInfo,
-        messages: newChat
+        messages: newChat,
       });
     });
+
+    /* need to change */
+    const membersRef = firebase.database().ref('rooms/' + nextProps.room + '/members');
+
+    console.log(membersRef)
+    console.log(nextProps.room)
+
+    membersRef.on('child_changed', (data) => {
+      console.log('entered1')
+      console.log(data.val())
+    })
+    membersRef.on('child_removed', (data) => {
+      console.log('entered2')
+      console.log(data.val())
+    })
+    membersRef.on('child_added', (data) => {
+      console.log('entered3')
+      console.log(data.val())
+    })
+  }
+
+  componentDidMount() {
+    console.log(this.state)
+
+  }
+
+  renderUserList = () => {
+
+    const renderList = [];
+
+    for(let i = 0; i < 6; i++) {
+      if(!this.state.userList[i]) {
+        renderList.push(<div className="nameCardsBG shadowOut"
+                             key={this.index++}>&#43;</div>);
+      } else {
+        renderList.push(<div className="nameCard shadowOut"
+                             key={this.index++}>{this.state.userList[i].name}
+                        </div>);
+      }
+    }
+
+    return renderList;
   }
 
   render() {
 
     return (
-      <div className="container-fluid hidden-sm-down">
-        <div id="userListWrapper">
-          <div className="userSpotsLeft">
-            <div className="spots">
-              {/* Testing Purpose */}
-              <div className="userCardLeft row">
-                <div className="userPicsLeft"></div>
-                <div className="">
-                  <div className="profileNameLeft"></div>
-                  <div className="gameInfoLeft"></div>
-                  <div className="curChanceLeft"></div>
-                </div>
-              </div>
-              {/* Testing Purpose */}
-              {this.state.messages[this.state.messages.length - 1]}
-            </div>
-            <div className="spots">
-              {/* Testing Purpose */}
-              <div className="userCardLeft row">
-                <div className="userPicsLeft"></div>
-                <div className="">
-                  <div className="profileNameLeft"></div>
-                  <div className="gameInfoLeft"></div>
-                  <div className="curChanceLeft"></div>
-                </div>
-              </div>
-            </div>
-            <div className="spots">
-            </div>
-          </div>
-          <div className="userSpotsRight">
-            <div className="spots">
-              {/* Testing Purpose / Need to rightside layout */}
-              <div className="userCardRight row">
-                <div className="userCardInfoRightWrapper">
-                  <div className="profileNameRight"></div>
-                  <div className="gameInfoRight"></div>
-                  <div className="curChanceRight"></div>
-                </div>
-                <div className="userPicsRight"></div>
-              </div>
-              {/* Testing Purpose */}
-              <div className="chatDisplayRight arrow_box_right">hey, This is chat postion testing</div>
-            </div>
-            <div className="spots">
-            </div>
-            <div className="spots">
-            </div>
-          </div>
-        </div>
+      <div className="userListWrapper">
+        {this.renderUserList()}
       </div>
     );
   }

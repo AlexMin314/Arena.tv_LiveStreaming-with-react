@@ -4,89 +4,29 @@
   width: 100%;
 }
 
-.sectionWrapper {
-  position: relative;
+.sectionDivider {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-#centerWrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  -ms-transform: translateX(-50%) translateY(-50%);
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translate(-50%, -50%);
+#mainContentWrapper {
+  display: flex;
+  width: 100%;
+  flex: 10;
+  flex-direction: row;
 }
 
-#infoBoard, #toolBoard {
-  height: 40px;
+
+.sidebars {
+  display: flex;
+  height: 100%;
+  flex: 2;
 }
 
-#turnMasterWrapper {
-  float: right;
-}
-#keyword, #skipTurnBtn, #whosTurn {
-  display: inline-block;
-}
-
-#whosTurn {
-  font-size: 18px;
-  margin-top: 5px;
-}
-
-#keyword {
-  font-size: 18px;
-  margin: 0 20px;
-  margin-top: 5px;
-}
-
-#skipTurnBtn, #clearBtn, #leaveBtn {
-  font-size: 12px;
-}
-
-#clearBtn {
-  margin-right: 10px;  
-}
-
-/* Canvas */
-
-#whiteBoard {
-  border: 1px solid black;
-  margin: auto;
-  display: block;
-  width: 640px;
-  height: 360px;
-}
-
-/* tool bar */
-.colorPicker {
-  margin-right: 50px;
-}
-#colBlack {
-  background-color: black;
-}
-#colBlue {
-  background-color: blue;
-}
-#colGreen {
-  background-color: green;
-}
-#colRed {
-  background-color: red;
-}
-#colYellow {
-  background-color: yellow;
-}
-#colBlack, #colBlue, #colGreen, #colRed, #colYellow {
-  height: 15px;
-  width: 20px;
-}
-#colorTool {
-  padding: 3px;
-}
-
-/* Input Section */
-#inputSection {
-  height: 40px;
+.canvasWrapper {
+  display: flex;
+  border: 2px solid rgb(219, 219, 219);
+  height: 100%;
+  flex: 8;
 }
