@@ -64,10 +64,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               roomMemberUpdating(this.state.room, key, {}, true);
             }
           }
-
-        })
-        .then(() => {
-          //window.location.href = '/lobby';
+          window.location.href = '/lobby';
         })
   }
 
