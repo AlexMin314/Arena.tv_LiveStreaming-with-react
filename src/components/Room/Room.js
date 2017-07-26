@@ -124,21 +124,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                           className="btn btn-primary"
                           onClick={this.leaveRoom}>
                           Leave Room</button>
-
-                          <div className="input-group">
-                            <input type="text"
-                                   className="form-control"
-                                   placeholder="Type Messages..."
-                                   value={this.state.msg}
-                                   onChange={this.onChangeChat}/>
-                            <span className="input-group-btn">
-                              <button className="btn btn-secondary"
-                                      type="button"
-                                      onClick={this.sendChat}>Testing</button>
-                            </span>
-                          </div>
-
-
                 </div>
               </div>
             </div>
