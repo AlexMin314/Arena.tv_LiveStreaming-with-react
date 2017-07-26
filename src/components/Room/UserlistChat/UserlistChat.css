@@ -33,8 +33,8 @@
 
 .nameCard {
   display: flex;
-  height: 30%;
   flex: 1;
+  height: 30%;
   align-self: flex-end;
   margin: 10px;
   margin-bottom: 20px;
@@ -46,11 +46,11 @@
   color: white;
 }
 
-.arrowBox {
+.arrow_box {
 	position: relative;
-	background: rgb(246, 208, 252);
+	background: #88b7d5;
 }
-.arrowBox:after {
+.arrow_box:after {
 	top: 100%;
 	left: 50%;
 	border: solid transparent;
@@ -59,6 +59,31 @@
 	width: 0;
 	position: absolute;
 	pointer-events: none;
-	border-width: 30px;
-	margin-left: -30px;
+	border-color: rgba(136, 183, 213, 0);
+	border-top-color: #88b7d5;
+	border-width: 12px;
+	margin-left: -12px;
+}
+
+.chatWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.chatPosition{
+  display: flex;
+  flex: 1;
+  height: 20%;
+  align-self: center;
+}
+
+.chatBubble {
+  position: relative;
+  font-size: 15px;
+  max-width: 150px;
+  word-break: break-all;
+  padding: 10px;
 }
