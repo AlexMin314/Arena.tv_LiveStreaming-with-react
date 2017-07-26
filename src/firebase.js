@@ -34,8 +34,17 @@ export const roomMemberUpdating = (roomkey, memberKey, updateObj, remove, path) 
       .once('value')
       .then((snapshot) => {
         let memberCount = snapshot.val();
-        firebase.database().ref('rooms/' + roomkey)
-                .update({ 'memberCount': memberCount - 1 })
+        // If memberCount is 0 after user leaves, delete the whole room object from firebase
+        if (memberCount === 1) {
+          firebase.database().ref('rooms/' + roomkey)
+                  .remove()
+        }
+        else {
+        // If memberCount is more than 0 after leaves, just decrement memberCount by 1
+          firebase.database().ref('rooms/' + roomkey)
+                  .update({ 'memberCount': memberCount - 1 })
+        }
+
       })
       .then(() => {
         window.location.href = path;
