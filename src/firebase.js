@@ -13,13 +13,14 @@ firebase.initializeApp(config);
 
 export const firebaseDB = firebase.database();
 
-// This helper is for updating the 'room' name in user object.
+//
+//  This helper is for updating the 'room' name in user object.
 export const userRoomUpdating = (uid, roomkey) => {
     const updates = {};
     updates.room = roomkey;
-
     firebase.database().ref('users/' + uid).update(updates);
   };
+
 
 // This helper is for updating/removing the members info.
 export const roomMemberUpdating = (roomkey, memberKey, updateObj, remove, path) => {
@@ -36,20 +37,21 @@ export const roomMemberUpdating = (roomkey, memberKey, updateObj, remove, path) 
         let memberCount = snapshot.val();
         // If memberCount is 0 after user leaves, delete the whole room object from firebase
         if (memberCount === 1) {
-          firebase.database().ref('rooms/' + roomkey)
-                  .remove()
-        }
-        else {
+          firebase.database().ref('rooms/' + roomkey).remove()
+        } else {
         // If memberCount is more than 0 after leaves, just decrement memberCount by 1
           firebase.database().ref('rooms/' + roomkey)
-                  .update({ 'memberCount': memberCount - 1 })
+            .update({ 'memberCount': memberCount - 1 })
         }
-
       })
       .then(() => {
         window.location.href = path;
-      })
+      });
     }
   };
+
+export const readyUpdating = () => {
+
+}
 
 export default firebase;

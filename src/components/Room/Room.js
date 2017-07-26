@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import uuid from 'uuid/v4';
 
 // Import firebase
 import { userRoomUpdating,
-         roomMemberUpdating } from '../../firebase';
+         roomMemberUpdating,
+         readyUpdating } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Room.css';
@@ -21,36 +23,15 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
     this.state = {
       msg: '',
-      chatInput: ''
+      chatInput: '',
+      ready: false
     }
   }
 
-  componentDidMount() {
-
-  }
-
   /**
-   * Chat related.
+   * Room related.
    */
-  onChangeChat = (e) => {
-    // saving current chat msg to the state.
-    this.setState({ 'msg': e.target.value });
-  };
-
-  sendChat = (finalInput) => {
-    const message = {};
-    /* If possible, change this Id part to slot number of the sender */
-    message.senderID = this.props.user[0].id;
-    message.senderName = this.props.user[0].displayName;
-    message.text = finalInput;
-
-    // saving msg to the room object in firebase.
-    firebase.database().ref('rooms/' + this.props.roomkey + '/message').push(message);
-
-  }
-
   leaveRoom = () => {
-
     firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
       .once('value')
       .then((snapshot) => {
@@ -60,7 +41,34 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             roomMemberUpdating(this.props.roomkey, key, {}, true, '/lobby')
           }
         }
-      });
+      }
+    );
+  }
+
+  /**
+   * GameLogic related
+   */
+  gameReady = () => {
+    this.setState({ ready: true });
+    readyUpdating(true);
+  }
+
+  /**
+   * Chat related.
+   */
+  onChangeChat = (e) => {
+    // saving current chat msg to the state.
+    this.setState({ msg: e.target.value });
+  };
+
+  sendChat = (finalInput) => {
+    const message = {};
+    message.key = uuid();
+    message.senderID = this.props.user[0].id;
+    message.senderName = this.props.user[0].displayName;
+    message.text = finalInput;
+    // saving msg to the room object in firebase.
+    firebase.database().ref('rooms/' + this.props.roomkey + '/message').push(message);
   }
 
   textTyped = (textTyped) => {
@@ -112,6 +120,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           break;
       }
     })
+
     return (
       <div className="container-fluid contentBody">
         <div className="row roomContent">
@@ -123,11 +132,24 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               </div>
 
               <div className="sidebars">
-                <div>
+                <div className="sideRow">
                   <button type="button"
                           className="btn btn-primary"
                           onClick={this.leaveRoom}>
                           Leave Room</button>
+                </div>
+                <div className="sideRow">
+                  {this.state.ready ? (
+                    <button type="button"
+                            className="btn btn-primary disabled"
+                            onClick={this.gameReady}>
+                            Waiting Others</button>
+                  ) : (
+                    <button type="button"
+                            className="btn btn-primary"
+                            onClick={this.gameReady}>
+                            Game Ready</button>
+                  )}
                 </div>
               </div>
             </div>

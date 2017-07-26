@@ -35,11 +35,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
       const rooms = snapshot.val();
       if (!rooms) {
-        this.setState({
-          errorMessage: 'Sorry, there are no rooms available, why don\'t you try creating one?'
-        })
-      }
-      else {
+        this.setState({ errorMessage: 'Sorry, there are no rooms available, why don\'t you try creating one?' });
+      } else {
         // empty array for storing available rooms
         let availableRooms = [];
         // Iterate over rooms
@@ -49,15 +46,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             availableRooms.push({
               roomInfo: rooms[key],
               _key: key
-            })
+            });
           }
         }
-        if (availableRooms.length === 0) {
-          this.setState({
-            errorMessage: 'All rooms are currently full, please wait and try again or create a room!'
-          })
-        }
-        else {
+
+      if (availableRooms.length === 0) {
+        this.setState({ errorMessage: 'All rooms are currently full, please wait and try again or create a room!' })
+      } else {
           // Get a random number within the range of the size of the availableRooms array
           const randomNum = this.getRandomIntInRange(0, availableRooms.length);
           // Assign the filtered room to variable
@@ -65,15 +60,18 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
           // Add member count of the filtered room
           const memberCount = availableRooms[randomNum].roomInfo.memberCount + 1;
           // Get ID of current user
-          const userId = firebase.auth().currentUser.uid;
+          const userId = this.props.user[0].id;
 
           firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}`).update({
             memberCount: memberCount
-          })
+          });
 
           // Push the new user into /rooms/roomkey/members
+          const userInfo = this.props.user[0];
+          userInfo.ready = false;
+
           firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}` + '/members')
-            .push(this.props.user[0])
+            .push(userInfo)
             .then(() => {
               this.setState({'roomName': availableRooms[randomNum]._key})
             })
@@ -83,7 +81,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
               // user info updating with room key.
               userRoomUpdating(this.props.user[0].id, availableRooms[randomNum]._key);
               window.location.href = '/room/' + roomName;
-            });
+            }
+          );
         }
       }
 
@@ -125,12 +124,15 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     this.props.roomUpdating(roomkey);
 
     // Updating object
+    const userInfo = this.props.user[0];
+    userInfo.ready = false;
+
     const newRoom = {};
     newRoom.roomTopic = this.state.roomTopic;
     newRoom.roomName = roomName;
     newRoom.members = {}
     newRoom.memberCount = 1;
-    newRoom.members['1'] = this.props.user[0];
+    newRoom.members['1'] = userInfo;
 
     // Make new room to firebase, redirect to room.
     firebase.database().ref('rooms').child(roomkey).set(newRoom).then(() => {
