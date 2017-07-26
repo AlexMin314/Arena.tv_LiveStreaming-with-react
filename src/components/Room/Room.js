@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Import firebase
-import { firebaseDB, userRoomUpdating } from '../../firebase';
+import { firebaseDB,
+         userRoomUpdating,
+         roomMemberUpdating } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Room.css';
@@ -10,9 +12,7 @@ import './Room.css';
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
 
-/**
- * Login
- */
+
 export class Room extends Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props){
@@ -30,8 +30,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     // get current room key and store to the state.
     firebase.database().ref('/users/' + uid + '/room').once('value')
       .then((snapshot) => {
-
-      this.setState({ 'room': snapshot.val() });
+        console.log(snapshot.val());
+        this.setState({ 'room': snapshot.val() });
     })
   }
 
@@ -54,7 +54,21 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   leaveRoom = () => {
-      window.location.href = '/lobby';
+
+      firebase.database().ref('/rooms/' + this.state.room + '/members')
+        .once('value')
+        .then((snapshot) => {
+          const members = snapshot.val();
+          for(const key in members) {
+            if (members[key].id === this.props.user[0].id) {
+              roomMemberUpdating(this.state.room, key, {}, true);
+            }
+          }
+
+        })
+        .then(() => {
+          //window.location.href = '/lobby';
+        })
   }
 
   render() {
@@ -67,7 +81,29 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             <div className="" id="mainContentWrapper">
               <div className="sidebars"></div>
               <div className="canvasWrapper shadowOut"></div>
-              <div className="sidebars"></div>
+              <div className="sidebars">
+                <div>
+                  <button type="button"
+                          className="btn btn-primary"
+                          onClick={this.leaveRoom}>
+                          Leave Room</button>
+
+                          <div className="input-group">
+                            <input type="text"
+                                   className="form-control"
+                                   placeholder="Type Messages..."
+                                   value={this.state.msg}
+                                   onChange={this.onChangeChat}/>
+                            <span className="input-group-btn">
+                              <button className="btn btn-secondary"
+                                      type="button"
+                                      onClick={this.sendChat}>Testing</button>
+                            </span>
+                          </div>
+
+
+                </div>
+              </div>
             </div>
             <UserlistChat/>
           </div>

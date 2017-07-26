@@ -15,11 +15,10 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     super(props)
 
     this.index = 0;
-    this.indexUser = 0;
     this.state = {
       messageInfo: [],
       messages: [],
-      userList: [{'name':'alex'}]
+      userList: []
     }
   }
 
@@ -27,6 +26,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     // chat testing purpose
     const messageRef = firebase.database().ref('rooms/' + nextProps.room + '/message');
     messageRef.on('child_added', (data) => {
+      console.log(data.val());
       const newInfo = this.state.messageInfo;
       newInfo.push(data.val());
       const newChat = this.state.messages;
@@ -34,9 +34,33 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
                                                     key={this.index++}>{data.val().text}</div>);
       this.setState({
         messageInfo: newInfo,
-        messages: newChat
+        messages: newChat,
       });
     });
+
+    /* need to change */
+    const membersRef = firebase.database().ref('rooms/' + nextProps.room + '/members');
+
+    console.log(membersRef)
+    console.log(nextProps.room)
+
+    membersRef.on('child_changed', (data) => {
+      console.log('entered1')
+      console.log(data.val())
+    })
+    membersRef.on('child_removed', (data) => {
+      console.log('entered2')
+      console.log(data.val())
+    })
+    membersRef.on('child_added', (data) => {
+      console.log('entered3')
+      console.log(data.val())
+    })
+  }
+
+  componentDidMount() {
+    console.log(this.state)
+
   }
 
   renderUserList = () => {
@@ -46,14 +70,13 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     for(let i = 0; i < 6; i++) {
       if(!this.state.userList[i]) {
         renderList.push(<div className="nameCardsBG shadowOut"
-                             key={this.indexUser++}>&#43;</div>);
+                             key={this.index++}>&#43;</div>);
       } else {
         renderList.push(<div className="nameCard shadowOut"
-                             key={this.indexUser++}>{this.state.userList[i].name}
+                             key={this.index++}>{this.state.userList[i].name}
                         </div>);
       }
     }
-    console.log(renderList);
 
     return renderList;
   }

@@ -19,11 +19,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     }
   }
 
-  // Function to return a random number between a specified range
+  // Helper Function to return a random number between a specified range
   getRandomIntInRange = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
   }
 
   onQuickJoin = (e) => {
@@ -52,28 +52,43 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       // Get ID of current user
       const userId = firebase.auth().currentUser.uid;
 
-      firebase.database().ref('/users/' + userId).update({
-        roomName: roomName
-      })
-
       firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}`).update({
         memberCount: memberCount
       })
 
-      window.location.href = '/room/' + roomName;
+      // Push the new user into /rooms/roomkey/members
+      firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}` + '/members')
+        .push(this.props.user[0])
+        .then(() => {
+          this.setState({'roomName': availableRooms[randomNum]._key})
+        })
+        .then(() => {
+          // user info updating with room key.
+          userRoomUpdating(this.props.user[0].id, availableRooms[randomNum]._key);
+          window.location.href = '/room/' + roomName;
+        });
     });
   }
 
+  /**
+   * Topic Selection
+   */
   onRadioSelect = (e) => {
     // store room topic.
     this.setState({ roomTopic: e.target.innerHTML });
   }
 
+  /**
+   * Room Creation - room name storing into the state
+   */
   onRoomName = (e) => {
     // store room name.
     this.setState({ roomName: e.target.value });
   }
 
+  /**
+   * Room Creation main logic
+   */
   onRoomCreation = (e) => {
     e.preventDefault();
 
@@ -81,12 +96,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
     // Get roomName
     let roomName = this.state.roomName.split(' ').join('');
+    // If input field was empty, room name is room key.
     if (roomName === '') roomName = roomkey;
 
     // User info updating
-    userRoomUpdating(this.props.user[0].id, roomkey, roomName);
+    userRoomUpdating(this.props.user[0].id, roomkey);
 
-    // Store to firebase (for testing)
+    // Updating object
     const newRoom = {};
     newRoom.roomTopic = this.state.roomTopic;
     newRoom.roomName = roomName;
