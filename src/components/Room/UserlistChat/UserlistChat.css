@@ -48,7 +48,7 @@
 
 .arrow_box {
 	position: relative;
-	background: white;
+	background: rgb(45, 45, 45);
 }
 .arrow_box:after {
 	top: 100%;
@@ -60,7 +60,7 @@
 	position: absolute;
 	pointer-events: none;
 	border-color: rgba(136, 183, 213, 0);
-	border-top-color: white;
+	border-top-color: rgb(45, 45, 45);
 	border-width: 5px;
 	margin-left: -5px;
 }
@@ -81,6 +81,7 @@
 }
 
 .chatBubble {
+  color: white;
   position: absolute;
   font-size: 15px;
   max-width: 150px;
@@ -90,8 +91,8 @@
 }
 
 .hideMe {
-    -webkit-animation: fadeout 3s forwards;
-    animation: fadeout 3s forwards;
+    -webkit-animation: fadeout 5s forwards;
+    animation: fadeout 5s forwards;
 }
 
 @keyframes fadeout {
