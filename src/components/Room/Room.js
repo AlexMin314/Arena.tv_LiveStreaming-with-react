@@ -11,7 +11,9 @@ import './Room.css';
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
 
-  let typedTextArray = [];
+// Global variables
+let typedTextArray = [];
+
 export class Room extends Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props){
