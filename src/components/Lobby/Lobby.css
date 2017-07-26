@@ -14,6 +14,16 @@
   transform: translate(-50%, -50%);
 }
 
+.errorContentWrapper {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  -moz-transform: translateX(-50%) translateY(-50%);
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translate(-50%, -50%);
+}
+
 .subtitleText {
   font-size: 30px;
   margin: auto;
@@ -40,6 +50,11 @@
 .category:hover {
   border-radius: 10px;
   background-color: rgba(99, 99, 99, 0.5);
+}
+
+.errorMessage {
+  padding: 5px;
+  margin: 0 auto;
 }
 
 .TV {
