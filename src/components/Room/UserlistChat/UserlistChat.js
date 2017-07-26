@@ -30,7 +30,6 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
     messageRef.on('child_added', (data) => {
       const messages = this.state.messages;
-      const m5 = this.state.m5;
       const userList = this.state.userList;
       const newMsgObj = data.val();
       // Sorting the new chat for assigning slotNum.
