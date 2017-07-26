@@ -18,7 +18,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     super(props)
     this.state = {
       roomName: '',
-      roomTopic: 'TV'
+      roomTopic: 'TV',
+      errorMessage: ''
     }
   }
 
@@ -33,43 +34,57 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     e.preventDefault();
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
       const rooms = snapshot.val();
-
-      // empty array for storing available rooms
-      let availableRooms = [];
-      // Iterate over rooms
-      for (const key in rooms) {
-        // Check for available rooms
-        if (rooms[key].memberCount > 0) {
-          availableRooms.push({
-            roomInfo: rooms[key],
-            _key: key
+      if (!rooms) {
+        this.setState({
+          errorMessage: 'Sorry, there are no rooms available, why don\'t you try creating one?'
+        })
+      }
+      else {
+        // empty array for storing available rooms
+        let availableRooms = [];
+        // Iterate over rooms
+        for (const key in rooms) {
+          // Check for available rooms
+          if (rooms[key].memberCount > 0 && rooms[key].memberCount < 6) {
+            availableRooms.push({
+              roomInfo: rooms[key],
+              _key: key
+            })
+          }
+        }
+        if (availableRooms.length === 0) {
+          this.setState({
+            errorMessage: 'All rooms are currently full, please wait and try again or create a room!'
           })
         }
+        else {
+          // Get a random number within the range of the size of the availableRooms array
+          const randomNum = this.getRandomIntInRange(0, availableRooms.length);
+          // Assign the filtered room to variable
+          const roomName = availableRooms[randomNum].roomInfo.roomName;
+          // Add member count of the filtered room
+          const memberCount = availableRooms[randomNum].roomInfo.memberCount + 1;
+          // Get ID of current user
+          const userId = firebase.auth().currentUser.uid;
+
+          firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}`).update({
+            memberCount: memberCount
+          })
+
+          // Push the new user into /rooms/roomkey/members
+          firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}` + '/members')
+            .push(this.props.user[0])
+            .then(() => {
+              this.setState({'roomName': availableRooms[randomNum]._key})
+            })
+            .then(() => {
+              // user info updating with room key.
+              userRoomUpdating(this.props.user[0].id, availableRooms[randomNum]._key);
+              window.location.href = '/room/' + roomName;
+            });
+        }
       }
-      // Get a random number within the range of the size of the availableRooms array
-      const randomNum = this.getRandomIntInRange(0, availableRooms.length);
-      // Assign the filtered room to variable
-      const roomName = availableRooms[randomNum].roomInfo.roomName;
-      // Add member count of the filtered room
-      const memberCount = availableRooms[randomNum].roomInfo.memberCount + 1;
-      // Get ID of current user
-      const userId = firebase.auth().currentUser.uid;
 
-      firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}`).update({
-        memberCount: memberCount
-      })
-
-      // Push the new user into /rooms/roomkey/members
-      firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}` + '/members')
-        .push(this.props.user[0])
-        .then(() => {
-          this.setState({'roomName': availableRooms[randomNum]._key})
-        })
-        .then(() => {
-          // user info updating with room key.
-          userRoomUpdating(this.props.user[0].id, availableRooms[randomNum]._key);
-          window.location.href = '/room/' + roomName;
-        });
     });
   }
 
@@ -145,9 +160,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             <button type="button"
                     className="btn btn-primary"
                     onClick={this.onQuickJoin}>QUICK JOIN</button>
+            <br/>
+            <br/>
           </div>
         </div> {/* Wrapper End*/}
-
+        <div className="errorContentWrapper">
+        <h5 className="errorMessage">{this.state.errorMessage}</h5>
+        </div>
         {/* Modal */}
         <div className="modal" id="createRoomModal" role="dialog"
              aria-labelledby="createRoomModalLabel" aria-hidden="true">
