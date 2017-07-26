@@ -15,6 +15,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     super(props)
 
     this.index = 0;
+    this.chatIndex = 0;
     this.state = {
       messages: [],
       userList: []
@@ -36,7 +37,8 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
           newMsgObj.slotNum = e.slotNum;
         }
       });
-      // Storing the sorted chat.
+
+      // Storing the sorted chat. - for the entire chat list.
       messages.push(newMsgObj);
       this.setState({ messages: messages });
     });
@@ -75,22 +77,40 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     for(let i = 0; i < 6; i++) {
       if(!this.state.userList[i]) {
         renderList.push(<div className="nameCardsBG shadowOut"
-                             key={this.index++}
-                             id={i}>&#43;</div>);
+                             key={this.index++}>&#43;</div>);
       } else {
         renderList.push(<div className="nameCard shadowOut"
-                             key={this.index++}
-                             id={i}>
-                             {this.state.userList[i].displayName}</div>);
+                              key={this.index++}>
+                              {this.state.userList[i].displayName}</div>);
       }
     }
     return renderList;
+  }
+
+  renderChat = (filter) => {
+    const chatList = [];
+
+    this.state.messages.forEach((e) => {
+      if (e.slotNum == filter) {
+        chatList.push(<div className="chatBubble arrow_box shadowOut">{e.text}</div>)
+      }
+    })
+
+    return chatList[chatList.length - 1];
   }
 
   render() {
 
     return (
       <div className="userListWrapper">
+        <div className="chatWrapper">
+          <div className="chatPosition" id="0">{this.renderChat('0')}</div>
+          <div className="chatPosition" id="1">{this.renderChat('1')}</div>
+          <div className="chatPosition" id="2">{this.renderChat('2')}</div>
+          <div className="chatPosition" id="3">{this.renderChat('3')}</div>
+          <div className="chatPosition" id="4">{this.renderChat('4')}</div>
+          <div className="chatPosition" id="5">{this.renderChat('5')}</div>
+        </div>
         {this.renderUserList()}
       </div>
     );
