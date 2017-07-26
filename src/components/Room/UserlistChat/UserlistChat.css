@@ -48,7 +48,7 @@
 
 .arrow_box {
 	position: relative;
-	background: #88b7d5;
+	background: white;
 }
 .arrow_box:after {
 	top: 100%;
@@ -60,9 +60,9 @@
 	position: absolute;
 	pointer-events: none;
 	border-color: rgba(136, 183, 213, 0);
-	border-top-color: #88b7d5;
-	border-width: 12px;
-	margin-left: -12px;
+	border-top-color: white;
+	border-width: 5px;
+	margin-left: -5px;
 }
 
 .chatWrapper {
@@ -81,9 +81,26 @@
 }
 
 .chatBubble {
-  position: relative;
+  position: absolute;
   font-size: 15px;
   max-width: 150px;
   word-break: break-all;
   padding: 10px;
+  bottom: 35%;
+}
+
+.hideMe {
+    -webkit-animation: fadeout 3s forwards;
+    animation: fadeout 3s forwards;
+}
+
+@keyframes fadeout {
+    0%   {opacity: 1;}
+    85%  {opacity: 1;}
+    100% {opacity: 0;}
+}
+@-webkit-keyframes fadeout {
+    0%   {opacity: 1;}
+    85%  {opacity: 1;}
+    100% {opacity: 0;}
 }

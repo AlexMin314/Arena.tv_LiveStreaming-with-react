@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import uuid from 'uuid/v4';
 
 // Import firebase
 import { userRoomUpdating,
@@ -39,7 +40,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   sendChat = (finalInput) => {
     const message = {};
-    /* If possible, change this Id part to slot number of the sender */
+    message.key = uuid();
     message.senderID = this.props.user[0].id;
     message.senderName = this.props.user[0].displayName;
     message.text = finalInput;
