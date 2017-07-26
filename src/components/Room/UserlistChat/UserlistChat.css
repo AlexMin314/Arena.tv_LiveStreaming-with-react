@@ -6,6 +6,10 @@
   flex-direction: row;
 }
 
+/**********
+ namecard related
+ **********/
+
 .nameCardsBG {
   display: flex;
   height: 30%;
@@ -46,6 +50,37 @@
   color: white;
 }
 
+
+
+/**********
+ Chat related
+ **********/
+
+.chatWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.chatPosition{
+  display: flex;
+  flex: 1;
+  height: auto;
+  align-self: center;
+}
+
+.chatBubble {
+  color: white;
+  position: absolute;
+  font-size: 15px;
+  max-width: 150px;
+  word-break: break-all;
+  padding: 10px;
+  bottom: 35%;
+}
+
 .arrow_box {
 	position: relative;
 	background: rgb(45, 45, 45);
@@ -65,30 +100,6 @@
 	margin-left: -5px;
 }
 
-.chatWrapper {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-}
-
-.chatPosition{
-  display: flex;
-  flex: 1;
-  height: 20%;
-  align-self: center;
-}
-
-.chatBubble {
-  color: white;
-  position: absolute;
-  font-size: 15px;
-  max-width: 150px;
-  word-break: break-all;
-  padding: 10px;
-  bottom: 35%;
-}
 
 .hideMe {
     -webkit-animation: fadeout 5s forwards;
@@ -104,4 +115,44 @@
     0%   {opacity: 1;}
     85%  {opacity: 1;}
     100% {opacity: 0;}
+}
+
+/**********
+ User Info related
+ **********/
+
+.userInfoWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.infoPosition {
+  position: relative;
+  display: flex;
+  flex: 1;
+  height: 30%;
+  align-self: flex-end;
+  margin: 10px;
+  margin-bottom: 20px;
+}
+
+.readyCheker {
+  display: flex;
+  position: absolute;
+  right: -3%;
+  top: -10%;
+  width: 20px;
+  height: 20px;
+  background: rgb(233, 233, 233);
+  padding-left: 2px;
+}
+
+.fa-check {
+  color: rgb(1, 171, 107);
+  display: none;
+  align-items: center;
+  justify-content: center;
 }
