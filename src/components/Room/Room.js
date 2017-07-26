@@ -73,27 +73,35 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   textTyped = (textTyped) => {
     if(textTyped !== "Enter") {
-      typedTextArray.push(textTyped);
-      const textString = typedTextArray.join('');
-      document.getElementsByClassName('userTextInput')[0].innerHTML = textString;
+    let canvasDiv = document.getElementsByClassName('canvasWrapper')[0];
+    canvasDiv.style.backgroundColor = 'rgba(16, 16, 17, 0.54)';
+    let inputDiv = document.getElementsByClassName('textInputDiv')[0];
+    inputDiv.style.display = 'flex';
+    let inputField = document.getElementsByClassName('userTextInput')[0];
+    inputField.focus();
     }
   }
 
-  removeLastCharInput = () => {
-    typedTextArray.pop();
-    const textString = typedTextArray.join('');
-    document.getElementsByClassName('userTextInput')[0].innerHTML = textString;
-  }
-
   clearInput = () => {
-    typedTextArray = [];
+    document.getElementsByClassName('userTextInput')[0].value = '';
+    let canvasDiv = document.getElementsByClassName('canvasWrapper')[0];
+    canvasDiv.style.backgroundColor = 'white';
+    let inputDiv = document.getElementsByClassName('textInputDiv')[0];
+    inputDiv.style.display = 'none';
   }
 
   sendInput = () => {
-    const finalInput = typedTextArray.join('');
-    typedTextArray = [];
-    document.getElementsByClassName('userTextInput')[0].innerHTML = '';
-    this.sendChat(finalInput);
+    let finalInput = document.getElementsByClassName('userTextInput')[0].value;
+    let inputDiv = document.getElementsByClassName('textInputDiv')[0];
+    let inputField = document.getElementsByClassName('userTextInput')[0];
+    let canvasDiv = document.getElementsByClassName('canvasWrapper')[0];
+    canvasDiv.style.backgroundColor = 'white';
+    inputField.value = '';
+    inputField.autofocus = false;
+    inputDiv.style.display = 'none';
+    if(finalInput !== '') {
+      this.sendChat(finalInput);
+    }
   }
 
   render() {
@@ -103,9 +111,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
     window.addEventListener('keydown', (e) => {
       switch (e.key) {
-        case 'Backspace':
-          this.removeLastCharInput()
-          break;
         case 'Escape':
           this.clearInput()
           break;
@@ -124,7 +129,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             <div className="" id="mainContentWrapper">
               <div className="sidebars"></div>
               <div className="canvasWrapper shadowOut">
-                <div className="userTextInput"></div>
               </div>
 
               <div className="sidebars">
@@ -152,6 +156,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             <UserlistChat/>
           </div>
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
+        </div>
+        <div className="input-group input-group-lg textInputDiv">
+          <input type="text" className="form-control userTextInput" aria-describedby="sizing-addon1"/>
         </div>
       </div>
     );
