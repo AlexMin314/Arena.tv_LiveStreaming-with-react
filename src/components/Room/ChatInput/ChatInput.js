@@ -11,7 +11,7 @@ import firebase from '../../../firebase';
 import './ChatInput.css';
 
 // Import uuid
-import uuid from 'uuid';
+import uuid from 'uuid/v4';
 
 // Global variables
 let typedTextArray = [];
@@ -23,75 +23,99 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
 
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      textInput: ''
+    }
   }
 
   /**
    * Chat related.
    */
 
+  // Focus on the input field
+  focus = () => {
+    this.textInput.focus();
+  }
+
+  // Remove focus from the input field
+  blur = () => {
+    this.textInput.blur();
+  }
+
+  // Show the div which contains the input field
+  show = () => {
+    this.inputDiv.style.display = 'flex';
+  }
+
+  // Hide the div which contains the input field
+  hide = () => {
+    this.inputDiv.style.display = 'none';
+  }
+
+  // Send chat message to firebase and clear input field
   sendChat = (finalInput) => {
-    const message = {};
-    message.key = uuid();
-    message.senderID = this.props.user[0].id;
-    message.senderName = this.props.user[0].displayName;
-    message.text = finalInput;
-    // saving msg to the room object in firebase.
-    firebase.database().ref('rooms/' + this.props.roomkey + '/message').push(message);
+      this.blur();
+      this.hide();
+      this.setState({
+        textInput: ''
+      })
+      const message = {};
+      message.key = uuid();
+      message.senderID = this.props.user[0].id;
+      message.senderName = this.props.user[0].displayName;
+      message.text = finalInput;
+      // saving msg to the room object in firebase.
+      firebase.database().ref('rooms/' + this.props.roomkey + '/message').push(message);
   }
 
-  textTyped = (textTyped) => {
-    if(textTyped !== "Enter") {
-    let canvasDiv = document.getElementsByClassName('canvasWrapper')[0];
-    canvasDiv.style.backgroundColor = 'rgba(16, 16, 17, 0.54)';
-    let inputDiv = document.getElementsByClassName('textInputDiv')[0];
-    inputDiv.style.display = 'flex';
-    let inputField = document.getElementsByClassName('userTextInput')[0];
-    inputField.focus();
+  // Any typing from user will trigger set focus on input field
+  handleKeyPress = (e) => {
+    this.show();
+    this.focus();
+  }
+
+  // function to handle keys such as "Enter" and "Escape"
+  handleKeyDown = (e) => {
+    if(e.key === "Enter" && this.state.textInput === '') {
+      this.focus();
     }
-  }
-
-  clearInput = () => {
-    document.getElementsByClassName('userTextInput')[0].value = '';
-    let canvasDiv = document.getElementsByClassName('canvasWrapper')[0];
-    canvasDiv.style.backgroundColor = 'white';
-    let inputDiv = document.getElementsByClassName('textInputDiv')[0];
-    inputDiv.style.display = 'none';
-  }
-
-  sendInput = () => {
-    let finalInput = document.getElementsByClassName('userTextInput')[0].value;
-    let inputDiv = document.getElementsByClassName('textInputDiv')[0];
-    let inputField = document.getElementsByClassName('userTextInput')[0];
-    let canvasDiv = document.getElementsByClassName('canvasWrapper')[0];
-    canvasDiv.style.backgroundColor = 'white';
-    inputField.value = '';
-    inputField.autofocus = false;
-    inputDiv.style.display = 'none';
-    if(finalInput !== '') {
-      this.sendChat(finalInput);
+    else if(e.key === "Escape") {
+      this.setState({
+        textInput: ''
+      })
+      this.blur();
+      this.hide();
     }
+    else if(e.key === "Enter" && this.state.textInput !== '') {
+      this.sendChat(this.state.textInput);
+    }
+
+  }
+
+  // updates the text input state of user everytime there is a change in input field
+  handleInput = (e) => {
+      this.setState({
+        textInput: e.target.value
+      })
+  }
+
+  componentDidMount() {
+  // Event listeners for keypress and keydown
+  window.addEventListener('keypress', this.handleKeyPress);
+  window.addEventListener('keydown', this.handleKeyDown);
   }
 
   render() {
-    window.addEventListener("keypress", (e) => {
-      this.textTyped(e.key)
-    })
 
-    window.addEventListener('keydown', (e) => {
-      switch (e.key) {
-        case 'Escape':
-          this.clearInput()
-          break;
-        case 'Enter':
-          this.sendInput()
-        default:
-          break;
-      }
-    })
       return (
-        <div className="input-group input-group-lg textInputDiv">
-          <input type="text" className="form-control userTextInput" aria-describedby="sizing-addon1"/>
+        <div className="input-group input-group-lg textInputDiv"
+             ref={(div) => { this.inputDiv = div; }}>
+          <input type="text"
+                 className="form-control userTextInput"
+                 aria-describedby="sizing-addon1"
+                 onChange={this.handleInput}
+                 value={this.state.textInput}
+                 ref={(input) => { this.textInput = input; }}/>
         </div>
       );
   }
