@@ -59,6 +59,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   gameReady = () => {
     this.setState({ ready: true });
     readyUpdating(this.props.roomkey, this.state.memberKey, true);
+    // 전체 ready상태 확인 로직 -> 게임 스타팅
   }
 
   /**

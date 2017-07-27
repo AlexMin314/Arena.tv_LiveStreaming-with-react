@@ -78,12 +78,11 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       const userList = this.state.userList;
       userList.forEach((e, idx) => {
         if (e.id === data.val().id) {
+          // change ready checker(green)
           this.readyCheker[idx].style.display = 'flex';
         }
-      })
-      console.log(this.readyCheker);
-
-    })
+      });
+    });
   }
 
  /**
