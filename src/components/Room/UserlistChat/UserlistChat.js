@@ -135,7 +135,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
                             <i className="fa fa-check fa-lg"
                                aria-hidden="true"
                                id={'checker' + i}
-                               ref={(e) => { this.readyCheker[i] = e; }}></i>
+                               ref={(e) => this.readyCheker[i] = e}></i>
                           </div>
                         </div>);
       }
@@ -156,7 +156,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
           <div className="chatPosition">{this.renderChat(5)}</div>
         </div>
         <div className="userInfoWrapper">
-          {true ? this.userinfoRender() : null}
+          {this.props.gameStart ? null : this.userinfoRender()}
         </div>
         {this.renderUserList()}
       </div>
@@ -167,7 +167,8 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 const mapStateToProps = (state) => {
     return {
       user: state.user,
-      roomkey: state.room
+      roomkey: state.room,
+      gameStart: state.gameStart
     }
 }
 

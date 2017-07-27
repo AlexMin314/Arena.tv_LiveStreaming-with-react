@@ -7,6 +7,7 @@ import firebase from '../../firebase';
 
 // Import Actions
 import { updateRoom } from '../../actions/roomActions';
+import { updateGameStart } from '../../actions/gameActions';
 
 import './Lobby.css';
 
@@ -21,6 +22,10 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       roomTopic: 'TV',
       errorMessage: ''
     }
+  }
+
+  componentDidMount() {
+    this.props.gameStart(false)
   }
 
   // Helper Function to return a random number between a specified range
@@ -253,6 +258,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     roomUpdating: (room) => {
       dispatch(updateRoom(room))
+    },
+    gameStart: (checker) => {
+      dispatch(updateGameStart(checker))
     }
   }
 }

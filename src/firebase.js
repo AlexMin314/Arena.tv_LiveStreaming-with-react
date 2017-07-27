@@ -13,7 +13,12 @@ firebase.initializeApp(config);
 
 export const firebaseDB = firebase.database();
 
-//
+
+/**
+ * helper Functions
+ */
+
+
 //  This helper is for updating the 'room' name in user object.
 export const userRoomUpdating = (uid, roomkey) => {
     const updates = {};
@@ -61,6 +66,9 @@ export const updatingGameStart = (roomkey, data) => {
   firebase.database().ref('rooms/' + roomkey).update({ 'gameStart': data });
 }
 
+/**
+ * EventListener
+ */
 
 
 export default firebase;
