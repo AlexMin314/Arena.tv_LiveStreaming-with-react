@@ -5,7 +5,8 @@ import uuid from 'uuid/v4';
 // Import firebase
 import { userRoomUpdating,
          roomMemberUpdating,
-         readyUpdating } from '../../firebase';
+         readyUpdating,
+         updatingGameStart } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Room.css';
@@ -59,7 +60,21 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   gameReady = () => {
     this.setState({ ready: true });
     readyUpdating(this.props.roomkey, this.state.memberKey, true);
-    // 전체 ready상태 확인 로직 -> 게임 스타팅
+    // Checking ready status of members
+    firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
+      .once('value')
+      .then((snapshot) => {
+        const memeberList = snapshot.val();
+        let allReadyChecker = true;
+
+        for (const key in memeberList) {
+          if (!memeberList[key].ready) allReadyChecker = false;
+        }
+        // if all ready
+        if(allReadyChecker) {
+          updatingGameStart(this.props.roomkey, true);
+        }
+      })
   }
 
   /**

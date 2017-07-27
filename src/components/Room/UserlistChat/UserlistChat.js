@@ -125,7 +125,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     const renderList = [];
     for(let i = 0; i < 6; i++) {
       if(!this.state.userList[i]) {
-        renderList.push(<div className="infoPosition"key={uuid()}>
+        renderList.push(<div className="infoPosition" key={uuid()}>
                         </div>);
       } else {
         renderList.push(<div className="infoPosition" key={uuid()}>
