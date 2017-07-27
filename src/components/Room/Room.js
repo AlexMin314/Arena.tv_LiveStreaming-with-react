@@ -51,6 +51,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
     readyRef.on('value', (data) => this.props.gameStart(data.val()))
 
+
+
   }
 
 
