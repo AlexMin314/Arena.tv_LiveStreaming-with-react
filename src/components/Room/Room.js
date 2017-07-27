@@ -24,7 +24,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       msg: '',
       chatInput: '',
       ready: false,
-      memberKey: ''
+      memberKey: '',
+      playerId: 'RARscrpS0RcVvz9Mjt1OjrpvDtC3',
+      currentPlayerTurn: ''
     }
   }
 
@@ -40,8 +42,13 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             this.setState({ memberKey: key });
           }
         }
-      }
-    );
+      });
+    firebase.database().ref('/rooms/' + this.props.roomkey)
+      .once("value")
+      .then((snapshot) => {
+        const gameStartStatus = snapshot.val().gameStart;
+        console.log(gameStartStatus);
+      });
   }
 
 
@@ -62,11 +69,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
       .once('value')
       .then((snapshot) => {
-        const memeberList = snapshot.val();
+        const memberList = snapshot.val();
         let allReadyChecker = true;
 
-        for (const key in memeberList) {
-          if (!memeberList[key].ready) allReadyChecker = false;
+        for (const key in memberList) {
+          if (!memberList[key].ready) allReadyChecker = false;
         }
         // if all ready
         if(allReadyChecker) {
@@ -75,8 +82,34 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       })
   }
 
-  render() {
+  checkTurn = () => {
+    if(this.state.playerId === this.props.user[0].id) {
+      return true;
+    }
+    return false;
+  }
 
+  currentTurnPlayerInfo = () => {
+    firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
+    .once('value')
+    .then((snapshot) => {
+      const members = snapshot.val();
+      let memberNames = [];
+      for (const key in members) {
+        memberNames.push(members[key].displayName || members[key].username);
+      }
+      console.log(memberNames);
+      // console.log(Object.keys(members)[0]);
+    })
+
+  }
+
+  skipTurn = () => {
+
+  }
+
+  render() {
+    let isItYourTurn = this.checkTurn();
     return (
       <div className="container-fluid contentBody">
         <div className="row roomContent">
@@ -93,6 +126,26 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                           className="btn btn-primary"
                           onClick={this.leaveRoom}>
                           Leave Room</button>
+                  <div className="currentTurnRow">
+                    <p className="playerTurn">
+                      Current Turn:
+                      <br/>
+                      {this.state.currentPlayerTurn}
+                    </p>
+                  </div>
+                  <div className="currentTurnRow">
+                    <button type="button"
+                            className="btn btn-success"
+                            onClick={this.currentTurnPlayerInfo}>Game Start</button>
+                  </div>
+                  {isItYourTurn ? (
+                    <button type="button"
+                            className="btn btn-danger"
+                            onClick={this.skipTurn}>Skip Turn</button>
+                  ) : (
+                    <button type="button"
+                            className="btn btn-danger disabled">It is not your turn</button>
+                  )}
                 </div>
                 <div className="sideRow">
                   {this.state.ready ? (
