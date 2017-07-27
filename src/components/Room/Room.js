@@ -11,6 +11,9 @@ import firebase from '../../firebase';
 
 import './Room.css';
 
+// Import Actions
+import { updateGameStart } from '../../actions/gameActions';
+
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
 import ChatInput from './ChatInput/ChatInput';
@@ -43,12 +46,10 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           }
         }
       });
-    firebase.database().ref('/rooms/' + this.props.roomkey)
-      .once("value")
-      .then((snapshot) => {
-        const gameStartStatus = snapshot.val().gameStart;
-        console.log(gameStartStatus);
-      });
+
+    // Get gameStart status - game start!
+    const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
+    readyRef.on('value', (data) => this.props.gameStart(data.val()))
   }
 
 
@@ -64,6 +65,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    */
   gameReady = () => {
     this.setState({ ready: true });
+    console.log(this.state.memberKey)
     readyUpdating(this.props.roomkey, this.state.memberKey, true);
     // Checking ready status of members
     firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
@@ -71,7 +73,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       .then((snapshot) => {
         const memberList = snapshot.val();
         let allReadyChecker = true;
-
         for (const key in memberList) {
           if (!memberList[key].ready) allReadyChecker = false;
         }
@@ -80,7 +81,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           updatingGameStart(this.props.roomkey, true);
         }
       })
+
   }
+
 
   checkTurn = () => {
     if(this.state.playerId === this.props.user[0].id) {
@@ -101,12 +104,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       console.log(memberNames);
       // console.log(Object.keys(members)[0]);
     })
-
   }
 
   skipTurn = () => {
-
   }
+
 
   render() {
     let isItYourTurn = this.checkTurn();
@@ -148,17 +150,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                   )}
                 </div>
                 <div className="sideRow">
-                  {this.state.ready ? (
-                    <button type="button"
-                            className="btn btn-primary disabled"
-                            onClick={this.gameReady}>
-                            Waiting Others</button>
-                  ) : (
-                    <button type="button"
-                            className="btn btn-primary"
-                            onClick={this.gameReady}>
-                            Game Ready</button>
-                  )}
+                  {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
                 </div>
               </div>
             </div>
@@ -175,13 +167,16 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 const mapStateToProps = (state) => {
     return {
       user: state.user,
-      roomkey: state.room
+      roomkey: state.room,
+      gameStartInfo: state.gameStart
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // nothing to see here...
+    gameStart: (checker) => {
+      dispatch(updateGameStart(checker))
+    }
   }
 }
 

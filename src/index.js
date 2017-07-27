@@ -10,6 +10,7 @@ import './index.css';
 // Import API
 import { getUsers, setUsers } from './API/userAPI';
 import { getRoom, setRoom } from './API/roomAPI';
+import { getGame, setGame } from './API/gameAPI';
 import { setLoading } from './API/loadingAPI';
 
 import registerServiceWorker from './registerServiceWorker';
@@ -27,6 +28,7 @@ store.subscribe(() => {
   setUsers(state.user);
   setLoading(state.isStillLoading);
   setRoom(state.room);
+  setGame(state.gameStart)
 })
 
 // This dispatcher is for the flow of storing user login status.
