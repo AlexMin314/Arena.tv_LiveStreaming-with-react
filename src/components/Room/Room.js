@@ -23,6 +23,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   constructor(props){
     super(props)
 
+    this.startingNotice = null;
     this.state = {
       msg: '',
       chatInput: '',
@@ -49,6 +50,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     // Get gameStart status - game start!
     const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
     readyRef.on('value', (data) => this.props.gameStart(data.val()))
+
+
 
   }
 
@@ -99,7 +102,16 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               key={uuid()}>
               Game Ready</button>
     )}
+  }
 
+  gameStartNotice = () => {
+
+    setTimeout(() => {
+      this.startingNotice.style.display = 'none';
+    }, 2300)
+
+    return (<div className="gameStartNotice startHide"
+                 ref={(e) => this.startingNotice = e}>GAME START!</div>)
   }
 
 
@@ -113,6 +125,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             <div className="" id="mainContentWrapper">
               <div className="sidebars"></div>
               <div className="canvasWrapper shadowOut">
+                {this.props.gameStartInfo ? this.gameStartNotice() : null}
               </div>
 
               <div className="sidebars">
