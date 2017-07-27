@@ -31,3 +31,12 @@
   justify-content: center;
   align-items: center;
 }
+
+.gameStartNotice {
+  font-size: 30px;
+}
+
+.startHide {
+  -webkit-animation: fadeout 2s forwards;
+  animation: fadeout 2s forwards;
+}
