@@ -11,6 +11,9 @@ import firebase from '../../firebase';
 
 import './Room.css';
 
+// Import Actions
+import { updateGameStart } from '../../actions/gameActions';
+
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
 import ChatInput from './ChatInput/ChatInput';
@@ -42,6 +45,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         }
       }
     );
+
+    // Get gameStart status - game start!
+    const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
+    readyRef.on('value', (data) => this.props.gameStart(data.val()))
+
   }
 
 
@@ -62,11 +70,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
       .once('value')
       .then((snapshot) => {
-        const memeberList = snapshot.val();
+        const memberList = snapshot.val();
         let allReadyChecker = true;
 
-        for (const key in memeberList) {
-          if (!memeberList[key].ready) allReadyChecker = false;
+        for (const key in memberList) {
+          if (!memberList[key].ready) allReadyChecker = false;
         }
         // if all ready
         if(allReadyChecker) {
@@ -128,7 +136,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // nothing to see here...
+    gameStart: (checker) => {
+      dispatch(updateGameStart(checker))
+    }
   }
 }
 
