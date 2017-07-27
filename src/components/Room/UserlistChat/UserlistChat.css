@@ -6,6 +6,10 @@
   flex-direction: row;
 }
 
+/**********
+ namecard related
+ **********/
+
 .nameCardsBG {
   display: flex;
   height: 30%;
@@ -46,24 +50,11 @@
   color: white;
 }
 
-.arrow_box {
-	position: relative;
-	background: white;
-}
-.arrow_box:after {
-	top: 100%;
-	left: 50%;
-	border: solid transparent;
-	content: " ";
-	height: 0;
-	width: 0;
-	position: absolute;
-	pointer-events: none;
-	border-color: rgba(136, 183, 213, 0);
-	border-top-color: white;
-	border-width: 5px;
-	margin-left: -5px;
-}
+
+
+/**********
+ Chat related
+ **********/
 
 .chatWrapper {
   position: absolute;
@@ -76,11 +67,12 @@
 .chatPosition{
   display: flex;
   flex: 1;
-  height: 20%;
+  height: auto;
   align-self: center;
 }
 
 .chatBubble {
+  color: white;
   position: absolute;
   font-size: 15px;
   max-width: 150px;
@@ -89,9 +81,29 @@
   bottom: 35%;
 }
 
+.arrow_box {
+	position: relative;
+	background: rgb(45, 45, 45);
+}
+.arrow_box:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: rgba(136, 183, 213, 0);
+	border-top-color: rgb(45, 45, 45);
+	border-width: 5px;
+	margin-left: -5px;
+}
+
+
 .hideMe {
-    -webkit-animation: fadeout 3s forwards;
-    animation: fadeout 3s forwards;
+    -webkit-animation: fadeout 5s forwards;
+    animation: fadeout 5s forwards;
 }
 
 @keyframes fadeout {
@@ -103,4 +115,44 @@
     0%   {opacity: 1;}
     85%  {opacity: 1;}
     100% {opacity: 0;}
+}
+
+/**********
+ User Info related
+ **********/
+
+.userInfoWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.infoPosition {
+  position: relative;
+  display: flex;
+  flex: 1;
+  height: 30%;
+  align-self: flex-end;
+  margin: 10px;
+  margin-bottom: 20px;
+}
+
+.readyCheker {
+  display: flex;
+  position: absolute;
+  right: -3%;
+  top: -10%;
+  width: 20px;
+  height: 20px;
+  background: rgb(233, 233, 233);
+  padding-left: 2px;
+}
+
+.fa-check {
+  color: rgb(1, 171, 107);
+  display: none;
+  align-items: center;
+  justify-content: center;
 }

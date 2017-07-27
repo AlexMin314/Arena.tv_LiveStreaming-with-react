@@ -50,8 +50,17 @@ export const roomMemberUpdating = (roomkey, memberKey, updateObj, remove, path) 
     }
   };
 
-export const readyUpdating = () => {
-
+// For ready status updating.
+export const readyUpdating = (roomkey, memeberKey, data) => {
+  firebase.database().ref('rooms/' + roomkey + '/members/' + memeberKey)
+    .update({ 'ready': data });
 }
+
+// For ready status updating.
+export const updatingGameStart = (roomkey, data) => {
+  firebase.database().ref('rooms/' + roomkey).update({ 'gameStart': data });
+}
+
+
 
 export default firebase;

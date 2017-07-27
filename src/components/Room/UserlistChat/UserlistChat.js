@@ -15,6 +15,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
   constructor(props){
     super(props)
 
+    this.readyCheker = {};
     this.state = {
       messages: [],
       userList: []
@@ -67,6 +68,23 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       this.setState({ userList: userList });
     });
 
+    /**
+     * EventListener for Ready Status
+     */
+
+    // If we have some changed on user obj in members, need to change this.
+    const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
+    readyRef.on('child_changed', (data) => {
+      const userList = this.state.userList;
+      userList.forEach((e, idx) => {
+        if (e.id === data.val().id) {
+          // change ready checker(green)
+          this.readyCheker[idx].style.display = 'flex';
+        }
+      });
+    });
+
+
   }
 
  /**
@@ -102,17 +120,43 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     return chatList[chatList.length - 1];
   }
 
+  /**
+   * Rendering Ready Status to each slots.
+   */
+  userinfoRender = () => {
+    const renderList = [];
+    for(let i = 0; i < 6; i++) {
+      if(!this.state.userList[i]) {
+        renderList.push(<div className="infoPosition" key={uuid()}>
+                        </div>);
+      } else {
+        renderList.push(<div className="infoPosition" key={uuid()}>
+                          <div className="readyCheker shadowOut">
+                            <i className="fa fa-check fa-lg"
+                               aria-hidden="true"
+                               id={'checker' + i}
+                               ref={(e) => { this.readyCheker[i] = e; }}></i>
+                          </div>
+                        </div>);
+      }
+    }
+    return renderList;
+  }
+
   render() {
 
     return (
       <div className="userListWrapper">
         <div className="chatWrapper">
-        <div className="chatPosition" id="0">{this.renderChat(0)}</div>
-        <div className="chatPosition" id="1">{this.renderChat(1)}</div>
-        <div className="chatPosition" id="2">{this.renderChat(2)}</div>
-        <div className="chatPosition" id="3">{this.renderChat(3)}</div>
-        <div className="chatPosition" id="4">{this.renderChat(4)}</div>
-        <div className="chatPosition" id="5">{this.renderChat(5)}</div>
+          <div className="chatPosition">{this.renderChat(0)}</div>
+          <div className="chatPosition">{this.renderChat(1)}</div>
+          <div className="chatPosition">{this.renderChat(2)}</div>
+          <div className="chatPosition">{this.renderChat(3)}</div>
+          <div className="chatPosition">{this.renderChat(4)}</div>
+          <div className="chatPosition">{this.renderChat(5)}</div>
+        </div>
+        <div className="userInfoWrapper">
+          {true ? this.userinfoRender() : null}
         </div>
         {this.renderUserList()}
       </div>

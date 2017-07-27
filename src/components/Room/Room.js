@@ -5,7 +5,8 @@ import uuid from 'uuid/v4';
 // Import firebase
 import { userRoomUpdating,
          roomMemberUpdating,
-         readyUpdating } from '../../firebase';
+         readyUpdating,
+         updatingGameStart } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Room.css';
@@ -22,25 +23,33 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     this.state = {
       msg: '',
       chatInput: '',
-      ready: false
+      ready: false,
+      memberKey: ''
     }
   }
 
-  /**
-   * Room related.
-   */
-  leaveRoom = () => {
+  componentDidMount() {
+    /* Temporal Approach, can be changed into redux */
+    // Get member Key
     firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
       .once('value')
       .then((snapshot) => {
         const members = snapshot.val();
         for(const key in members) {
           if (members[key].id === this.props.user[0].id) {
-            roomMemberUpdating(this.props.roomkey, key, {}, true, '/lobby')
+            this.setState({ memberKey: key });
           }
         }
       }
     );
+  }
+
+
+  /**
+   * Room related.
+   */
+  leaveRoom = () => {
+    roomMemberUpdating(this.props.roomkey, this.state.memberKey, {}, true, '/lobby');
   }
 
   /**
@@ -48,7 +57,22 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    */
   gameReady = () => {
     this.setState({ ready: true });
-    readyUpdating(true);
+    readyUpdating(this.props.roomkey, this.state.memberKey, true);
+    // Checking ready status of members
+    firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
+      .once('value')
+      .then((snapshot) => {
+        const memeberList = snapshot.val();
+        let allReadyChecker = true;
+
+        for (const key in memeberList) {
+          if (!memeberList[key].ready) allReadyChecker = false;
+        }
+        // if all ready
+        if(allReadyChecker) {
+          updatingGameStart(this.props.roomkey, true);
+        }
+      })
   }
 
   render() {

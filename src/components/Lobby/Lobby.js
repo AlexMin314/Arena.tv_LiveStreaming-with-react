@@ -131,8 +131,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     newRoom.roomTopic = this.state.roomTopic;
     newRoom.roomName = roomName;
     newRoom.members = {}
+    newRoom.members['host'] = userInfo;
     newRoom.memberCount = 1;
-    newRoom.members['1'] = userInfo;
+    newRoom.stages = 0;
+    newRoom.gameStart = false;
+    newRoom.currentWord = 'Not Started';
+    newRoom.currentTurn = 1;
+
 
     // Make new room to firebase, redirect to room.
     firebase.database().ref('rooms').child(roomkey).set(newRoom).then(() => {
