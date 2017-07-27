@@ -25,7 +25,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   }
 
   componentDidMount() {
-    this.props.gameStart(false);
+    this.props.gameStart(false)
   }
 
   // Helper Function to return a random number between a specified range

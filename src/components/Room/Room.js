@@ -65,6 +65,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    */
   gameReady = () => {
     this.setState({ ready: true });
+    console.log(this.state.memberKey)
     readyUpdating(this.props.roomkey, this.state.memberKey, true);
     // Checking ready status of members
     firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
@@ -72,7 +73,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       .then((snapshot) => {
         const memberList = snapshot.val();
         let allReadyChecker = true;
-
         for (const key in memberList) {
           if (!memberList[key].ready) allReadyChecker = false;
         }
@@ -81,7 +81,27 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           updatingGameStart(this.props.roomkey, true);
         }
       })
+
   }
+
+  readyBtnDisplay = () => {
+    if (this.state.ready) {
+      return (
+      <button type="button"
+              className="btn btn-primary disabled"
+              onClick={this.gameReady}
+              key={uuid()}>
+              Waiting Others</button>
+    )} else { return (
+      <button type="button"
+              className="btn btn-primary"
+              onClick={this.gameReady}
+              key={uuid()}>
+              Game Ready</button>
+    )}
+
+  }
+
 
   render() {
 
@@ -103,17 +123,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                           Leave Room</button>
                 </div>
                 <div className="sideRow">
-                  {this.state.ready ? (
-                    <button type="button"
-                            className="btn btn-primary disabled"
-                            onClick={this.gameReady}>
-                            Waiting Others</button>
-                  ) : (
-                    <button type="button"
-                            className="btn btn-primary"
-                            onClick={this.gameReady}>
-                            Game Ready</button>
-                  )}
+                  {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
                 </div>
               </div>
             </div>
@@ -130,7 +140,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 const mapStateToProps = (state) => {
     return {
       user: state.user,
-      roomkey: state.room
+      roomkey: state.room,
+      gameStartInfo: state.gameStart
     }
 }
 
