@@ -13,6 +13,7 @@ import './Room.css';
 
 // Import Actions
 import { updateGameStart } from '../../actions/gameActions';
+import { updateCurrentTurn } from '../../actions/turnActions';
 
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
@@ -28,7 +29,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       chatInput: '',
       ready: false,
       memberKey: '',
-      playerId: 'RARscrpS0RcVvz9Mjt1OjrpvDtC3',
+      currentPlayerId: '',
       currentPlayerTurn: ''
     }
   }
@@ -49,7 +50,26 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
     // Get gameStart status - game start!
     const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
-    readyRef.on('value', (data) => this.props.gameStart(data.val()))
+    readyRef.on('value', (data) => {
+      this.props.gameStart(data.val())
+
+      if(data.val() === true) {
+        firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+          .once('value')
+          .then((snapshot) => {
+            const members = snapshot.val();
+            const membersArray = [];
+            for (const key in members) {
+              membersArray.push(members[key]);
+            }
+            this.props.currentTurn(membersArray[0].displayName || membersArray[0].username);
+            this.setState({
+              currentPlayerTurn: membersArray[0].displayName || membersArray[0].username,
+              currentPlayerId: membersArray[0].id
+            })
+          })
+      }
+    })
   }
 
 
@@ -81,37 +101,81 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           updatingGameStart(this.props.roomkey, true);
         }
       })
-
   }
 
 
   checkTurn = () => {
-    if(this.state.playerId === this.props.user[0].id) {
-      return true;
-    }
+    if(this.state.currentPlayerId === this.props.user[0].id) return true;
     return false;
   }
 
-  currentTurnPlayerInfo = () => {
-    firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
-    .once('value')
-    .then((snapshot) => {
-      const members = snapshot.val();
-      let memberNames = [];
-      for (const key in members) {
-        memberNames.push(members[key].displayName || members[key].username);
-      }
-      console.log(memberNames);
-      // console.log(Object.keys(members)[0]);
-    })
-  }
-
   skipTurn = () => {
-  }
+    const roomRef = firebase.database().ref('rooms/' + this.props.roomkey);
+    roomRef.on('value', (snapshot) => {
+      const memberCount = snapshot.val().memberCount;
+      let currentTurn = snapshot.val().currentTurn;
+      let nextTurn;
+      if(currentTurn < memberCount - 1) nextTurn = currentTurn + 1;
+      else nextTurn = 0
+        firebase.database().ref('rooms/' + this.props.roomkey).update({
+          'currentTurn': nextTurn
+        });
+        firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+        .on('value', (snapshot) => {
+          const members = snapshot.val();
+          let keyArray = [];
+          for (const key in members) {
+            keyArray.push(members[key]);
+          }
+          this.setState({
+            currentPlayerTurn: keyArray[nextTurn].displayName || keyArray[nextTurn].username,
+            currentPlayerId: keyArray[nextTurn].id
+          })
+        })
+      })
+    }
 
+    // firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
+    //   .once('value')
+    //   .then((snapshot) => {
+    //     const allCurrentPlayers = snapshot.val();
+    //     const allPlayerIds = [];
+    //     for (const key in allCurrentPlayers) {
+    //       allPlayerIds.push(allCurrentPlayers[key].id);
+    //     }
+    //     const indexOfCurrentPlayer = allPlayerIds.indexOf(this.state.playerId) + 1;
+    //     if (indexOfCurrentPlayer === allPlayerIds.length && allPlayerIds.length > 1) {
+    //       this.setState({
+    //         playerId: allPlayerIds[0]
+    //       })
+    //     }
+    //     else {
+    //       this.setState({
+    //         playerId: allPlayerIds[indexOfCurrentPlayer]
+    //       })
+    //     }
+    //   })
+
+
+  readyBtnDisplay = () => {
+  if (this.state.ready) {
+    return (
+    <button type="button"
+            className="btn btn-primary disabled"
+            onClick={this.gameReady}
+            key={uuid()}>
+            Waiting Others</button>
+  )} else { return (
+    <button type="button"
+            className="btn btn-primary"
+            onClick={this.gameReady}
+            key={uuid()}>
+            Game Ready</button>
+  )}
+}
 
   render() {
-    let isItYourTurn = this.checkTurn();
+    const isItYourTurn = this.checkTurn();
     return (
       <div className="container-fluid contentBody">
         <div className="row roomContent">
@@ -128,26 +192,39 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                           className="btn btn-primary"
                           onClick={this.leaveRoom}>
                           Leave Room</button>
-                  <div className="currentTurnRow">
-                    <p className="playerTurn">
-                      Current Turn:
-                      <br/>
-                      {this.state.currentPlayerTurn}
-                    </p>
-                  </div>
-                  <div className="currentTurnRow">
-                    <button type="button"
-                            className="btn btn-success"
-                            onClick={this.currentTurnPlayerInfo}>Game Start</button>
-                  </div>
-                  {isItYourTurn ? (
-                    <button type="button"
-                            className="btn btn-danger"
-                            onClick={this.skipTurn}>Skip Turn</button>
+                  {this.props.gameStartInfo ? isItYourTurn ? (
+                    <div className="turnContainer">
+                      <div className="turnDiv">
+                      <p className="playerTurn">
+                        Current Turn:
+                        <br/>
+                        {this.state.currentPlayerTurn}
+                      </p>
+                      </div>
+
+                      <div className="skipTurnDiv">
+                      <button type="button"
+                              className="btn btn-danger"
+                              onClick={this.skipTurn}>Skip Turn</button>
+                      </div>
+                    </div>
                   ) : (
-                    <button type="button"
-                            className="btn btn-danger disabled">It is not your turn</button>
-                  )}
+                    <div className="turnContainer">
+                      <div className="turnDiv">
+                      <p className="playerTurn">
+                        Current Turn:
+                        <br/>
+                        {this.state.currentPlayerTurn}
+                      </p>
+                      </div>
+
+                    <div className="skipTurnDiv">
+                      <button type="button"
+                              className="btn btn-danger disabled">It is not your turn</button>
+                    </div>
+
+                    </div>
+                  ) : null}
                 </div>
                 <div className="sideRow">
                   {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
@@ -168,7 +245,8 @@ const mapStateToProps = (state) => {
     return {
       user: state.user,
       roomkey: state.room,
-      gameStartInfo: state.gameStart
+      gameStartInfo: state.gameStart,
+      turnInfo: state.currentTurn
     }
 }
 
@@ -176,6 +254,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     gameStart: (checker) => {
       dispatch(updateGameStart(checker))
+    },
+    currentTurn: (username) => {
+      dispatch(updateCurrentTurn(username))
     }
   }
 }

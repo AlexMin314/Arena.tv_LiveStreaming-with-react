@@ -63,7 +63,10 @@ export const readyUpdating = (roomkey, memeberKey, data) => {
 
 // For ready status updating.
 export const updatingGameStart = (roomkey, data) => {
-  firebase.database().ref('rooms/' + roomkey).update({ 'gameStart': data });
+  firebase.database().ref('rooms/' + roomkey).update({
+    'gameStart': data,
+    'stages': 1
+  });
 }
 
 /**
