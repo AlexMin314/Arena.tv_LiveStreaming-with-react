@@ -30,6 +30,7 @@
   height: 80px;
   margin: 5px;
   width: 80px;
+  font-size: 16px;
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 90% 90%;
@@ -37,7 +38,7 @@
   padding-top: 30px;
   color: white;
   font-weight: 900;
-  text-shadow: #333333 2px 2px 2px;
+  text-shadow: #000000 1px 1px 1px, rgb(59, 59, 59) 2px 2px 2px;
 }
 
 .category:hover {
@@ -58,13 +59,42 @@
   background-image: url('../../img/game.png');
 }
 .IT {
-  background-image: url('../../img/IT.png');
+  background-image: url('../../img/anime.png');
 }
 .logos {
   background-image: url('../../img/brand.png');
 }
 .travel {
   background-image: url('../../img/travel.png');
+}
+
+
+/* Modal */
+#createRoomModalLabel {
+  font-size: 30px;
+  margin-top: 10px;
+}
+
+.modalSubtitle {
+  font-size: 18px;
+  margin-top: 30px;
+  margin-bottom: 5px;
+}
+
+.categoryModal {
+  height: 60px;
+  margin: 5px;
+  width: 60px;
+  padding-top: 20px;
+}
+
+#modalTopic {
+  width: 100%;
+}
+
+#mRadio1, #mRadio2, #mRadio3, #mRadio4, #mRadio5 {
+  margin: 0;
+  padding: 0;
 }
 
 @media screen and (max-width:450px) {
@@ -76,6 +106,13 @@
     width: 65px;
     height: 65px;
     font-size: 12px;
+  }
+  .categoryModal {
+    height: 40px;
+    width: 40px;
+  }
+  #modalTopic {
+    height: 70px;
   }
   #createRoomBtn, #quickJoinBtn {
     font-size: 11px;
@@ -100,30 +137,4 @@
   .lobbyContentWrapper {
     width: 60%;
   }
-}
-
-
-/* Modal */
-#createRoomModalLabel {
-  font-size: 30px;
-  margin-top: 10px;
-}
-
-.modalSubtitle {
-  font-size: 18px;
-  margin-top: 30px;
-  margin-bottom: 5px;
-}
-
-.categoryModal {
-  display: inline-block;
-  height: 60px;
-  margin: 5px;
-  width: 60px;
-  padding-top: 20px;
-}
-
-#mRadio1, #mRadio2, #mRadio3, #mRadio4, #mRadio5 {
-  margin: 0;
-  padding: 0;
 }

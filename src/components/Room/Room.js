@@ -77,7 +77,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             firebase.database().ref('rooms/' + this.props.roomkey + '/members')
             .once('value', (snapshot) => {
               const members = snapshot.val();
-              let keyArray = [];
+              const keyArray = [];
               for (const key in members) {
                 keyArray.push(members[key]);
               }
@@ -161,11 +161,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   skipTurn = () => {
     const roomRef = firebase.database().ref('rooms/' + this.props.roomkey);
     roomRef.once('value', (snapshot) => {
-      const memberCount = snapshot.val().memberCount;
-      let currentTurn = snapshot.val().currentTurn;
-      let nextTurn;
-      if(currentTurn < memberCount - 1) nextTurn = currentTurn + 1;
-      else nextTurn = 0
+        const memberCount = snapshot.val().memberCount;
+        let currentTurn = snapshot.val().currentTurn;
+        let nextTurn = currentTurn < memberCount - 1 ? currentTurn + 1 : 0;
         firebase.database().ref('rooms/' + this.props.roomkey).update({
           'currentTurn': nextTurn
         });
