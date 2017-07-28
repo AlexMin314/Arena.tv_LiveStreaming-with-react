@@ -120,11 +120,14 @@ class Login extends Component {
       <div className="container-fluid contentBody">
         { this.props.isStillLoading[0] && this.props.user.length === 0 ?
         (
-          <div className="container-fluid spinner">
+          <div className="spinnerWrapper">
             <div className="cssload-loader">
             	<div className="cssload-inner cssload-one"></div>
             	<div className="cssload-inner cssload-two"></div>
             	<div className="cssload-inner cssload-three"></div>
+            </div>
+            <div className="advice">
+              Cras justo odio, dapibus ac facilisis in, egestas eget quam.
             </div>
           </div>
         ) : (
