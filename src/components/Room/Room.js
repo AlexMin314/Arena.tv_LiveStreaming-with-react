@@ -13,6 +13,7 @@ import './Room.css';
 
 // Import Actions
 import { updateGameStart } from '../../actions/gameActions';
+import { updateCurrentTurn } from '../../actions/turnActions';
 
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
@@ -28,7 +29,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       msg: '',
       chatInput: '',
       ready: false,
-      memberKey: ''
+      memberKey: '',
+      currentPlayerId: '',
+      currentPlayerTurn: ''
     }
   }
 
@@ -44,12 +47,48 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             this.setState({ memberKey: key });
           }
         }
-      }
-    );
+      });
 
     // Get gameStart status - game start!
     const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
-    readyRef.on('value', (data) => this.props.gameStart(data.val()))
+    readyRef.on('value', (data) => {
+      this.props.gameStart(data.val())
+
+      if(data.val()) {
+        firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+          .once('value')
+          .then((snapshot) => {
+            const members = snapshot.val();
+            const membersArray = [];
+            for (const key in members) {
+              membersArray.push(members[key]);
+            }
+
+            this.setState({
+              currentPlayerTurn: membersArray[0].displayName || membersArray[0].username,
+              currentPlayerId: membersArray[0].id
+            })
+          });
+
+          // Listener for current turn change
+          const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
+          turnRef.on('value', (snapshot) => {
+            const nextTurn = snapshot.val();
+            firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+            .once('value', (snapshot) => {
+              const members = snapshot.val();
+              let keyArray = [];
+              for (const key in members) {
+                keyArray.push(members[key]);
+              }
+              this.setState({
+                currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
+                currentPlayerId: keyArray[nextTurn].id
+            });
+          });
+        });
+      }
+    });
   }
 
 
@@ -81,8 +120,10 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           updatingGameStart(this.props.roomkey, true);
         }
       })
-
   }
+
+  checkTurn = () => {
+    return this.state.currentPlayerId === this.props.user[0].id ? true : false;
 
   readyBtnDisplay = () => {
     if (this.state.ready) {
@@ -111,9 +152,39 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                  ref={(e) => this.startingNotice = e}>GAME START!</div>)
   }
 
+  skipTurn = () => {
+    const roomRef = firebase.database().ref('rooms/' + this.props.roomkey);
+    roomRef.once('value', (snapshot) => {
+      const memberCount = snapshot.val().memberCount;
+      let currentTurn = snapshot.val().currentTurn;
+      let nextTurn;
+      if(currentTurn < memberCount - 1) nextTurn = currentTurn + 1;
+      else nextTurn = 0
+        firebase.database().ref('rooms/' + this.props.roomkey).update({
+          'currentTurn': nextTurn
+        });
+      })
+    }
+
+  readyBtnDisplay = () => {
+  if (this.state.ready) {
+    return (
+    <button type="button"
+            className="btn btn-primary disabled"
+            onClick={this.gameReady}
+            key={uuid()}>
+            Waiting Others</button>
+  )} else { return (
+    <button type="button"
+            className="btn btn-primary"
+            onClick={this.gameReady}
+            key={uuid()}>
+            Game Ready</button>
+  )}
+}
 
   render() {
-
+    const isItYourTurn = this.checkTurn();
     return (
       <div className="container-fluid contentBody">
         <div className="row roomContent">
@@ -134,6 +205,39 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                           className="btn btn-primary"
                           onClick={this.leaveRoom}>
                           Leave Room</button>
+                  {this.props.gameStartInfo ? isItYourTurn ? (
+                    <div className="turnContainer">
+                      <div className="turnDiv">
+                      <p className="playerTurn">
+                        Current Turn:
+                        <br/>
+                        {this.state.currentPlayerTurn}
+                      </p>
+                      </div>
+
+                      <div className="skipTurnDiv">
+                      <button type="button"
+                              className="btn btn-danger"
+                              onClick={this.skipTurn}>Skip Turn</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="turnContainer">
+                      <div className="turnDiv">
+                      <p className="playerTurn">
+                        Current Turn:
+                        <br/>
+                        {this.state.currentPlayerTurn}
+                      </p>
+                      </div>
+
+                    <div className="skipTurnDiv">
+                      <button type="button"
+                              className="btn btn-danger disabled">It is not your turn</button>
+                    </div>
+
+                    </div>
+                  ) : null}
                 </div>
                 <div className="sideRow">
                   {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
@@ -154,7 +258,8 @@ const mapStateToProps = (state) => {
     return {
       user: state.user,
       roomkey: state.room,
-      gameStartInfo: state.gameStart
+      gameStartInfo: state.gameStart,
+      turnInfo: state.currentTurn
     }
 }
 
@@ -162,6 +267,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     gameStart: (checker) => {
       dispatch(updateGameStart(checker))
+    },
+    currentTurn: (username) => {
+      dispatch(updateCurrentTurn(username))
     }
   }
 }

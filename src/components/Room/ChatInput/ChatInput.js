@@ -62,7 +62,7 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
       const message = {};
       message.key = uuid();
       message.senderID = this.props.user[0].id;
-      message.senderName = this.props.user[0].displayName;
+      message.senderName = this.props.user[0].displayName || this.props.user[0].username;
       message.text = finalInput;
       // saving msg to the room object in firebase.
       firebase.database().ref('rooms/' + this.props.roomkey + '/message').push(message);
