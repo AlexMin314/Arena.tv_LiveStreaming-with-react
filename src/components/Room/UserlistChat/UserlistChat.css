@@ -59,29 +59,25 @@
 .chatWrapper {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: 65%;
+  top: 0;
   display: flex;
   flex-direction: row;
+}
+
+@media screen and (max-height:650px) {
+  .chatWrapper {
+    height: 60%;
+  }
 }
 
 .chatPosition{
   display: flex;
   flex: 1;
   height: auto;
-  align-self: center;
-  position: absolute;
-  bottom: 40%;
-}
-
-@media screen and (max-height:600px) {
-  .chatPosition {
-    bottom: 50%;
-  }
-}
-@media screen and (max-height:450px) {
-  .chatPosition {
-    bottom: 60%;
-  }
+  align-self: flex-end;
+  position: relative;
+  bottom: 0;
 }
 
 .chatBubble {

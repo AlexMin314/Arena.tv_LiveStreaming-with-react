@@ -124,6 +124,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   checkTurn = () => {
     return this.state.currentPlayerId === this.props.user[0].id ? true : false;
+  }
 
   readyBtnDisplay = () => {
     if (this.state.ready) {
@@ -150,7 +151,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
     return (<div className="gameStartNotice startHide"
                  ref={(e) => this.startingNotice = e}>GAME START!</div>)
-  }
+  };
 
   skipTurn = () => {
     const roomRef = firebase.database().ref('rooms/' + this.props.roomkey);
@@ -164,24 +165,25 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           'currentTurn': nextTurn
         });
       })
-    }
+  };
 
   readyBtnDisplay = () => {
-  if (this.state.ready) {
-    return (
-    <button type="button"
-            className="btn btn-primary disabled"
-            onClick={this.gameReady}
-            key={uuid()}>
-            Waiting Others</button>
-  )} else { return (
-    <button type="button"
-            className="btn btn-primary"
-            onClick={this.gameReady}
-            key={uuid()}>
-            Game Ready</button>
-  )}
-}
+    if (this.state.ready) {
+      return (
+        <button type="button"
+                className="btn btn-primary disabled"
+                onClick={this.gameReady}
+                id="waitingBtn">
+                Waiting Others</button>
+    )} else {
+      return (
+        <button type="button"
+                className="btn btn-primary"
+                onClick={this.gameReady}
+                id="gameReadyBtn">
+                Game Ready</button>
+    )}
+  };
 
   render() {
     const isItYourTurn = this.checkTurn();
@@ -191,64 +193,74 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
           <div className="col-lg-8 col-md-12 sectionDivider">
             <div className="" id="mainContentWrapper">
+              {/* Left SideBar */}
               <div className="sidebars">
                 <div className="toolWrapper"></div>
+                <div className="toolWrapper"></div>
+                <div className="toolWrapper"></div>
               </div>
+              {/* Center */}
               <div className="canvasWrapper shadowOut">
                 {this.props.gameStartInfo ? this.gameStartNotice() : null}
                 <canvas id="whiteBoard"></canvas>
+                <ChatInput/>
               </div>
-
+              {/* Right SideBar */}
               <div className="sidebars">
                 <div className="sideRow">
                   <button type="button"
                           className="btn btn-primary"
+                          id="leaveRoomBtn"
                           onClick={this.leaveRoom}>
                           Leave Room</button>
-                  {this.props.gameStartInfo ? isItYourTurn ? (
-                    <div className="turnContainer">
-                      <div className="turnDiv">
-                      <p className="playerTurn">
-                        Current Turn:
-                        <br/>
-                        {this.state.currentPlayerTurn}
-                      </p>
-                      </div>
-
-                      <div className="skipTurnDiv">
-                      <button type="button"
-                              className="btn btn-danger"
-                              onClick={this.skipTurn}>Skip Turn</button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="turnContainer">
-                      <div className="turnDiv">
-                      <p className="playerTurn">
-                        Current Turn:
-                        <br/>
-                        {this.state.currentPlayerTurn}
-                      </p>
-                      </div>
-
-                    <div className="skipTurnDiv">
-                      <button type="button"
-                              className="btn btn-danger disabled">It is not your turn</button>
-                    </div>
-
-                    </div>
-                  ) : null}
                 </div>
                 <div className="sideRow">
                   {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
                 </div>
-              </div>
-            </div>
+              {this.props.gameStartInfo ? isItYourTurn ? (
+                <div className="sideRow turnWrapper">
+                <div className="sideRow">
+                  <div className="turnDiv shadowOut">
+                    <p className="playerTurn">
+                      Current Turn:
+                      <br/>
+                      {this.state.currentPlayerTurn}
+                    </p>
+                  </div>
+                </div>
+                <div className="sideRow">
+                  <div className="skipTurnDiv">
+                    <button type="button"
+                            className="btn btn-primary"
+                            onClick={this.skipTurn}>Skip Turn</button>
+                  </div>
+                </div>
+                </div>
+              ) : (
+                <div className="sideRow turnWrapper">
+                <div className="sideRow">
+                  <div className="turnDiv shadowOut">
+                    <p className="playerTurn">
+                      Current Turn:
+                      <br/>
+                      {this.state.currentPlayerTurn}
+                    </p>
+                  </div>
+                </div>
+                <div className="sideRow">
+                  <div className="skipTurnDiv">
+                    <button type="button"
+                            className="btn btn-primary disabled">It is not your turn</button>
+                  </div>
+                </div>
+                </div>
+              ) : null}
+              </div> {/* Sidebar End */}
+            </div> {/* mainContentWrapper End */}
             <UserlistChat/>
           </div>
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
         </div>
-          <ChatInput/>
       </div>
     );
   }

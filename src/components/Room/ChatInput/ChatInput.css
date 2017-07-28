@@ -1,14 +1,10 @@
 .textInputDiv {
-  display: none;
   position: absolute;
-  width: 37%;
-  height: 50%;
-  top: 70%;
-  left: 50%;
-  -ms-transform: translateX(-50%) translateY(-50%);
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translate(-50%, -50%);
+  display: none;
+  width: 80%;
+  bottom: 0;
+  margin-bottom: 20px;
+  background: white;
 }
 
 .form-control.userTextInput {
@@ -19,6 +15,7 @@
   padding: 10px;
   font: normal 16px/normal "quicksand", Helvetica, sans-serif;
   color: black;
+  background: white;
   text-decoration: normal;
   text-align: center;
   -o-text-overflow: clip;
