@@ -155,6 +155,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   };
 
   skipTurn = () => {
+    // Turn Changing.
     turnChangingLogic(this.props.roomkey);
     // currentWord Generation requesting
     currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic, this.props.turnInfo)
