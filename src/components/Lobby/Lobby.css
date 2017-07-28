@@ -14,20 +14,12 @@
   transform: translate(-50%, -50%);
 }
 
-.errorContentWrapper {
-  position: absolute;
-  top: 70%;
-  left: 50%;
-  -ms-transform: translateX(-50%) translateY(-50%);
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translate(-50%, -50%);
-}
 
 .subtitleText {
   font-size: 30px;
   margin: auto;
 }
+
 
 #createRoomBtn {
   margin-right: 20px;
@@ -53,8 +45,9 @@
 }
 
 .errorMessage {
-  padding: 5px;
-  margin: 0 auto;
+  display: inline-block;
+  font-size: 12px;
+  padding-top: 10px;
 }
 
 .TV {
@@ -71,6 +64,41 @@
 }
 .travel {
   background-image: url('../../img/travel.png');
+}
+
+@media screen and (max-width:450px) {
+  .lobbyContentWrapper {
+    margin-top: 30px;
+    width: auto;
+  }
+  .category {
+    width: 65px;
+    height: 65px;
+    font-size: 12px;
+  }
+  #createRoomBtn, #quickJoinBtn {
+    font-size: 11px;
+    height: 60px;
+    padding: 10px;
+  }
+}
+@media screen and (max-width:650px) {
+  .subtitleText {
+    font-size: 20px;
+  }
+  .lobbyContentWrapper {
+    width: 90%;
+  }
+}
+@media screen and (max-width:900px) {
+  .lobbyContentWrapper {
+    width: 55%;
+  }
+}
+@media screen and (max-width:830px) {
+  .lobbyContentWrapper {
+    width: 60%;
+  }
 }
 
 
