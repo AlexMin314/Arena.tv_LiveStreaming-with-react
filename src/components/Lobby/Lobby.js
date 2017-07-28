@@ -25,6 +25,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   }
 
   componentDidMount() {
+    // Reseting game start value in redux.
     this.props.gameStart(false)
   }
 
@@ -35,64 +36,85 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
+  /**
+   * Room Joining
+   */
+
+   // Room Joining Logic
+   roomJoinLogic = (rooms, filter) => {
+
+     if (!rooms) {
+       this.setState({ errorMessage: 'Sorry, there are no rooms available, why don\'t you try creating one?' });
+     } else {
+       // empty array for storing available rooms
+       let availableRooms = [];
+       // Iterate over rooms
+       for (const key in rooms) {
+         // Check for available rooms
+         if (rooms[key].memberCount > 0 && rooms[key].memberCount < 6 && !rooms[key].gameStart) {
+           if (filter === null) {
+             availableRooms.push({roomInfo: rooms[key], _key: key});
+           } else if (rooms[key].roomTopic === filter) {
+             availableRooms.push({roomInfo: rooms[key], _key: key});
+           }
+         }
+       }
+
+       if (availableRooms.length === 0) {
+         this.setState({errorMessage: 'All rooms are currently full, please wait and try again or create a room!'})
+       } else {
+         // Get a random number within the range of the size of the availableRooms array
+         const randomNum = this.getRandomIntInRange(0, availableRooms.length);
+         // Assign the filtered room to variable
+         const roomName = availableRooms[randomNum].roomInfo.roomName;
+         // Add member count of the filtered room
+         const memberCount = availableRooms[randomNum].roomInfo.memberCount + 1;
+         // Get ID of current user
+         const userId = this.props.user[0].id;
+
+         firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}`)
+          .update({ memberCount: memberCount });
+
+         // Push the new user into /rooms/roomkey/members
+         const userInfo = this.props.user[0];
+         userInfo.ready = false;
+
+         firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}` + '/members')
+          .push(userInfo)
+          .then(() => {
+           this.setState({ 'roomName': availableRooms[randomNum]._key })
+          })
+          .then(() => {
+            // Room Key updating on redux
+            this.props.roomUpdating(availableRooms[randomNum]._key);
+            // user info updating with room key.
+            userRoomUpdating(this.props.user[0].id, availableRooms[randomNum]._key);
+            window.location.href = '/room/' + roomName;
+          });
+       }
+     }
+   };
+
+
+  // Quick Join
   onQuickJoin = (e) => {
     e.preventDefault();
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
       const rooms = snapshot.val();
-      if (!rooms) {
-        this.setState({ errorMessage: 'Sorry, there are no rooms available, why don\'t you try creating one?' });
-      } else {
-        // empty array for storing available rooms
-        let availableRooms = [];
-        // Iterate over rooms
-        for (const key in rooms) {
-          // Check for available rooms
-          if (rooms[key].memberCount > 0 && rooms[key].memberCount < 6) {
-            availableRooms.push({
-              roomInfo: rooms[key],
-              _key: key
-            });
-          }
-        }
+      this.roomJoinLogic(rooms, null);
+    });
+  };
 
-      if (availableRooms.length === 0) {
-        this.setState({ errorMessage: 'All rooms are currently full, please wait and try again or create a room!' })
-      } else {
-          // Get a random number within the range of the size of the availableRooms array
-          const randomNum = this.getRandomIntInRange(0, availableRooms.length);
-          // Assign the filtered room to variable
-          const roomName = availableRooms[randomNum].roomInfo.roomName;
-          // Add member count of the filtered room
-          const memberCount = availableRooms[randomNum].roomInfo.memberCount + 1;
-          // Get ID of current user
-          const userId = this.props.user[0].id;
-
-          firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}`).update({
-            memberCount: memberCount
-          });
-
-          // Push the new user into /rooms/roomkey/members
-          const userInfo = this.props.user[0];
-          userInfo.ready = false;
-
-          firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}` + '/members')
-            .push(userInfo)
-            .then(() => {
-              this.setState({'roomName': availableRooms[randomNum]._key})
-            })
-            .then(() => {
-              // Room Key updating on redux
-              this.props.roomUpdating(availableRooms[randomNum]._key);
-              // user info updating with room key.
-              userRoomUpdating(this.props.user[0].id, availableRooms[randomNum]._key);
-              window.location.href = '/room/' + roomName;
-            }
-          );
-        }
-      }
-
+  // Topic base join
+  topicJoin = (e) => {
+    e.preventDefault();    
+    const topic = e.target.innerHTML;
+    firebase.database().ref('/rooms').once('value').then((snapshot) => {
+      const rooms = snapshot.val();
+        this.roomJoinLogic(rooms, topic);
     });
   }
+
 
   /**
    * Topic Selection
@@ -100,7 +122,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   onRadioSelect = (e) => {
     // store room topic.
     this.setState({ roomTopic: e.target.innerHTML });
-  }
+  };
 
   /**
    * Room Creation - room name storing into the state
@@ -108,7 +130,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   onRoomName = (e) => {
     // store room name.
     this.setState({ roomName: e.target.value });
-  }
+  };
 
   /**
    * Room Creation main logic
@@ -144,12 +166,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     newRoom.currentTurn = 1;
     newRoom.winnerOfStage = ['init'];
 
-
     // Make new room to firebase, redirect to room.
     firebase.database().ref('rooms').child(roomkey).set(newRoom).then(() => {
       window.location.href = '/room/' + roomName;
     });
-  }
+  };
 
   render() {
 
@@ -160,11 +181,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             <div className="subtitleText">Choose Your Topic</div>
             <hr/>
             <div className="categoryWrapper">
-              <div className="category TV">TV</div>
-              <div className="category game">GAME</div>
-              <div className="category IT">IT</div>
-              <div className="category sports">SPORTS</div>
-              <div className="category travel">TRAVEL</div>
+              <div className="category TV" onClick={this.topicJoin}>TV</div>
+              <div className="category game" onClick={this.topicJoin}>GAME</div>
+              <div className="category IT" onClick={this.topicJoin}>IT</div>
+              <div className="category sports" onClick={this.topicJoin}>SPORTS</div>
+              <div className="category travel" onClick={this.topicJoin}>TRAVEL</div>
             </div>
             <div className="subtitleText"><hr/></div>
             {/* Button trigger modal */}
@@ -175,14 +196,14 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                     data-target="#createRoomModal">CREATE ROOM</button>
             <button type="button"
                     className="btn btn-primary"
+                    id="quickJoinBtn"
                     onClick={this.onQuickJoin}>QUICK JOIN</button>
             <br/>
-            <br/>
+            <div className="errorMessage">{this.state.errorMessage}</div>
           </div>
-        </div> {/* Wrapper End*/}
-        <div className="errorContentWrapper">
-        <h5 className="errorMessage">{this.state.errorMessage}</h5>
-        </div>
+        </div> {/* contentBody Wrapper End*/}
+
+
         {/* Modal */}
         <div className="modal" id="createRoomModal" role="dialog"
              aria-labelledby="createRoomModalLabel" aria-hidden="true">
