@@ -6,7 +6,7 @@ import uuid from 'uuid/v4';
 import { userRoomUpdating,
          roomMemberUpdating,
          readyUpdating,
-         updatingGameStart } from '../../firebase';
+         triggerUpdatingGameStart } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Room.css';
@@ -31,7 +31,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       ready: false,
       memberKey: '',
       currentPlayerId: '',
-      currentPlayerTurn: ''
+      currentPlayerTurn: '',
+      currentTurnIndex: ''
     }
   }
 
@@ -55,21 +56,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       this.props.gameStart(data.val())
 
       if(data.val()) {
-        firebase.database().ref('rooms/' + this.props.roomkey + '/members')
-          .once('value')
-          .then((snapshot) => {
-            const members = snapshot.val();
-            const membersArray = [];
-            for (const key in members) {
-              membersArray.push(members[key]);
-            }
-            const currentPlayerTurn = membersArray[0].displayName || membersArray[0].username;
-            this.setState({
-              currentPlayerTurn: currentPlayerTurn,
-              currentPlayerId: membersArray[0].id
-            })
-          });
-
           // Listener for current turn change
           const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
           turnRef.on('value', (snapshot) => {
@@ -83,13 +69,15 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               }
               this.setState({
                 currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
-                currentPlayerId: keyArray[nextTurn].id
+                currentPlayerId: keyArray[nextTurn].id,
+                currentTurnIndex: nextTurn
+              });
+              this.props.currentTurn(nextTurn);
             });
-          });
-        });
-      }
-    });
-  }
+        }); // turnRef.on Ends.
+      } // If statement Ends.
+    }); // readyRef.on Ends.
+  } // componentDidMount Ends.
 
 
   /**
@@ -104,27 +92,10 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    */
   gameReady = () => {
     this.setState({ ready: true });
+    // Updating ready status of mine.
     readyUpdating(this.props.roomkey, this.state.memberKey, true);
-    // Checking ready status of members
-    firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
-      .once('value')
-      .then((snapshot) => {
-        const memberList = snapshot.val();
-        let allReadyChecker = true;
-        // If only one user exist, the game will not start.
-        if (Object.keys(memberList).length === 1) allReadyChecker = false;
-        // Check all memeber's ready status
-        for (const key in memberList) {
-          if (!memberList[key].ready) {
-            allReadyChecker = false;
-            break;
-          }
-        }
-        // if all ready
-        if(allReadyChecker) {
-          updatingGameStart(this.props.roomkey, true);
-        }
-      })
+    // Checking ready status of all members
+    triggerUpdatingGameStart(this.props.roomkey);
   }
 
   checkTurn = () => {
@@ -283,8 +254,8 @@ const mapDispatchToProps = (dispatch) => {
     gameStart: (checker) => {
       dispatch(updateGameStart(checker))
     },
-    currentTurn: (username) => {
-      dispatch(updateCurrentTurn(username))
+    currentTurn: (index) => {
+      dispatch(updateCurrentTurn(index))
     }
   }
 }

@@ -61,13 +61,6 @@ export const readyUpdating = (roomkey, memberKey, data) => {
     .update({ 'ready': data });
 }
 
-// For ready status updating.
-export const updatingGameStart = (roomkey, data) => {
-  firebase.database().ref('rooms/' + roomkey).update({
-    'gameStart': data,
-    'stages': 1
-  });
-}
 
 // For current stage winner info updating
 export const stageWinnerUpdater = (roomkey, winnerID, stageNum) => {
@@ -83,6 +76,35 @@ export const stageWinnerUpdater = (roomkey, winnerID, stageNum) => {
 
 }
 
+// For ready status checking to start game.
+export const triggerUpdatingGameStart = (roomkey) => {
+  firebase.database().ref('/rooms/' + roomkey + '/members')
+    .once('value')
+    .then((snapshot) => {
+      const memberList = snapshot.val();
+      let allReadyChecker = true;
+      // If only one user exist, the game will not start.
+      if (Object.keys(memberList).length === 1) allReadyChecker = false;
+      // Check all memeber's ready status
+      for (const key in memberList) {
+        if (!memberList[key].ready) {
+          allReadyChecker = false;
+          break;
+        }
+      }
+      // if all ready
+      if(allReadyChecker) {
+        updatingGameStart(roomkey, true);
+      }
+    })
+}
+// For ready status updating.
+const updatingGameStart = (roomkey, data) => {
+  firebase.database().ref('rooms/' + roomkey).update({
+    'gameStart': data,
+    'stages': 1
+  });
+}
 /**
  * EventListener
  */

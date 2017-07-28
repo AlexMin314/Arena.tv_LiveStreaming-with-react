@@ -18,6 +18,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     super(props)
 
     this.readyCheker = {};
+    this.turnDisplay = {};
     this.state = {
       messages: [],
       userList: [],
@@ -99,7 +100,6 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
      * EventListener for Ready Status
      */
 
-    // If we have some changed on user obj in members, need to change this.
     const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
     readyRef.on('child_changed', (data) => {
       const userList = this.state.userList;
@@ -112,6 +112,36 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     });
 
 
+
+
+
+  } // componentDidMount Ends.
+
+  componentDidUpdate() {
+    /**
+     * EventListener for Turn Star Display
+     */
+    const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
+    turnRef.on('value', (data) => {
+      console.log(data.val())
+      if (this.props.gameStart) {
+        const userList = this.state.userList;
+        userList.forEach((e, idx) => {
+          console.log('out:', idx);
+          this.turnDisplay[idx].style.display = 'none';
+          if (idx === data.val()) {
+            console.log('in:', idx);
+            this.turnDisplay[idx].style.display = 'flex';
+          }
+        });
+      }
+    });
+  }
+
+
+
+  expandCard = (e) => {
+    console.log(e.target)
   }
 
  /**
@@ -127,7 +157,9 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       } else {
         renderList.push(<div className="nameCard shadowOut"
                               key={uuid()}>
-                              {this.state.userList[i].displayName || this.state.userList[i].username}</div>);
+                              <div className="scoreDisplay">Test Score</div>
+                              {this.state.userList[i].displayName || this.state.userList[i].username}
+                              </div>);
       }
     }
     return renderList;
@@ -150,19 +182,31 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
   /**
    * Rendering Ready Status to each slots.
    */
-  userinfoRender = () => {
+  userinfoRender = (checker) => {
     const renderList = [];
+    const startStatus = checker ? 'turnHostDisplay' : null;
     for(let i = 0; i < 6; i++) {
       if(!this.state.userList[i]) {
-        renderList.push(<div className="infoPosition" key={uuid()}>
+        renderList.push(<div className="infoPosition"
+                             key={uuid()}
+                             onClick={this.expandCard}>
                         </div>);
       } else {
-        renderList.push(<div className="infoPosition" key={uuid()}>
-                          <div className="readyCheker shadowOut">
-                            <i className="fa fa-check fa-lg"
-                               aria-hidden="true"
-                               id={'checker' + i}
-                               ref={(e) => this.readyCheker[i] = e}></i>
+        renderList.push(<div className="infoPosition"
+                             key={uuid()}
+                             onClick={this.expandCard}>
+                          <div className="readyCheker shadowOut"
+                               id={startStatus}>
+                            {checker ? null : (
+                              <i className="fa fa-check fa-lg"
+                                 aria-hidden="true"
+                                 ref={(e) => this.readyCheker[i] = e}></i>
+                            )}
+                            {checker ? (
+                              <i className="fa fa-star fa-2x"
+                                 aria-hidden="true"
+                                 ref={(e) => this.turnDisplay[i] = e}></i>
+                            ) : null}
                           </div>
                         </div>);
       }
@@ -183,7 +227,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
           <div className="chatPosition">{this.renderChat(5)}</div>
         </div>
         <div className="userInfoWrapper">
-          {this.props.gameStart ? null : this.userinfoRender()}
+          {this.props.gameStart ? this.userinfoRender(true) : this.userinfoRender(false)}
         </div>
         {this.renderUserList()}
       </div>
@@ -195,7 +239,8 @@ const mapStateToProps = (state) => {
     return {
       user: state.user,
       roomkey: state.room,
-      gameStart: state.gameStart
+      gameStart: state.gameStart,
+      turnInfo: state.currentTurn
     }
 }
 

@@ -70,16 +70,6 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
       })
   }
 
-  // Any typing from user will trigger set focus on input field
-  // handleInputUp = (e) => {
-  //   console.log(this.focusChecker)
-  //   if (this.focusChecker) {
-  //     this.focusChecker = false;
-  //     this.show();
-  //     this.focus();
-  //   }
-  // }
-
   // function to handle keys such as "Enter" and "Escape"
   handleKeyPress = (e) => {
     const checker = this.inputDiv.style.display;
@@ -101,7 +91,7 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
       })
       this.blur();
       this.hide();
-    }    
+    }
   }
 
   // updates the text input state of user everytime there is a change in input field

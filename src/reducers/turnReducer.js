@@ -6,7 +6,7 @@ const turnReducer = (state = initialTurn, action) => {
 
   switch (action.type) {
     case "UPDATE_TURN":
-      return action.username
+      return action.index
       break;
 
     default:

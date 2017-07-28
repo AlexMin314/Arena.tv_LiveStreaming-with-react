@@ -1,5 +1,5 @@
-export const setTurn = (status) => {
-    localStorage.setItem('currentTurn', JSON.stringify(status));
+export const setTurn = (index) => {
+    localStorage.setItem('currentTurn', JSON.stringify(index));
 }
 
 export const getTurn = () => {
