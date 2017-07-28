@@ -97,14 +97,48 @@ export const triggerUpdatingGameStart = (roomkey) => {
         updatingGameStart(roomkey, true);
       }
     })
-}
+};
+
 // For ready status updating.
 const updatingGameStart = (roomkey, data) => {
   firebase.database().ref('rooms/' + roomkey).update({
     'gameStart': data,
     'stages': 1
   });
+};
+
+export const currentWordGenerating = (roomKey, memberKey, topic, curTurnIndex) => {
+  firebase.database().ref('/rooms/' + roomKey + '/members')
+    .once('value')
+    .then((snapshot) => {
+      const memberList = snapshot.val();
+      Object.keys(memberList).forEach((e, idx) => {
+        if (idx === curTurnIndex && e === memberKey) {
+          currentWordGenerationRequest(roomKey, topic)
+        }
+      });
+    });
+};
+
+const currentWordGenerationRequest = (roomKey, topic) => {
+  firebase.database().ref('/TOPICS/' + topic)
+    .once('value')
+    .then((snapshot) => {
+      const topicArr = snapshot.val();
+      topicArr.shift()
+
+      const randomNum = getRandomIntInRange(0, topicArr.length - 1)
+
+      firebase.database().ref('rooms/' + roomKey).update({
+        'currentWord': topicArr[randomNum]
+      });
+    });
 }
+
+const getRandomIntInRange = (min, max) => {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
 /**
  * EventListener
  */

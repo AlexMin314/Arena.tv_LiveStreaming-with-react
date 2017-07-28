@@ -80,6 +80,19 @@
    margin-bottom: 5px;
  }
 
+.curWordWrapper {
+  margin-top: 20px;
+  height: 60px;
+}
+
+.curWordTitle {
+  font-size: 16px;
+}
+
+.curWord {
+  font-size: 20px;  
+}
+
 /*************
  Left sidebars
  *************/

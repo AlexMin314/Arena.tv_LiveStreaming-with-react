@@ -123,14 +123,11 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
      */
     const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
     turnRef.on('value', (data) => {
-      console.log(data.val())
       if (this.props.gameStart) {
         const userList = this.state.userList;
         userList.forEach((e, idx) => {
-          console.log('out:', idx);
           this.turnDisplay[idx].style.display = 'none';
           if (idx === data.val()) {
-            console.log('in:', idx);
             this.turnDisplay[idx].style.display = 'flex';
           }
         });
