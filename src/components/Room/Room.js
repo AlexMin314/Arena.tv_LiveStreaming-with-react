@@ -63,35 +63,32 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             for (const key in members) {
               membersArray.push(members[key]);
             }
-
+            const currentPlayerTurn = membersArray[0].displayName || membersArray[0].username;
             this.setState({
-              currentPlayerTurn: membersArray[0].displayName || membersArray[0].username,
+              currentPlayerTurn: currentPlayerTurn,
               currentPlayerId: membersArray[0].id
             })
           })
+
+        // Listener for current turn change
+        const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
+        turnRef.on('value', (snapshot) => {
+          const nextTurn = snapshot.val();
+            firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+              .once('value', (snapshot) => {
+                const members = snapshot.val();
+                let keyArray = [];
+                for (const key in members) {
+                keyArray.push(members[key]);
+                }
+                this.setState({
+                  currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
+                  currentPlayerId: keyArray[nextTurn].id
+                })
+              })
+        })
       }
     })
-
-    // Listener for current turn change
-    const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
-    turnRef.on('value', (snapshot) => {
-      const nextTurn = snapshot.val();
-          firebase.database().ref('rooms/' + this.props.roomkey + '/members')
-          .once('value', (snapshot) => {
-            const members = snapshot.val();
-            let keyArray = [];
-            for (const key in members) {
-              keyArray.push(members[key]);
-            }
-            this.setState({
-              currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
-              currentPlayerId: keyArray[nextTurn].id
-            })
-          })
-        })
-
-
-
   }
 
 
@@ -127,6 +124,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   checkTurn = () => {
     return this.state.currentPlayerId === this.props.user[0].id ? true : false;
+  }
 
   readyBtnDisplay = () => {
     if (this.state.ready) {
