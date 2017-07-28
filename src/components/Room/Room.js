@@ -62,7 +62,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             for (const key in members) {
               membersArray.push(members[key]);
             }
-            this.props.currentTurn(membersArray[0].displayName || membersArray[0].username);
+
             this.setState({
               currentPlayerTurn: membersArray[0].displayName || membersArray[0].username,
               currentPlayerId: membersArray[0].id
@@ -70,6 +70,25 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           })
       }
     })
+
+    // Listener for current turn change
+    const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
+    turnRef.on('value', (snapshot) => {
+      const nextTurn = snapshot.val();
+          firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+          .once('value', (snapshot) => {
+            const members = snapshot.val();
+            let keyArray = [];
+            for (const key in members) {
+              keyArray.push(members[key]);
+            }
+            this.setState({
+              currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
+              currentPlayerId: keyArray[nextTurn].id
+            })
+          })
+        })
+
   }
 
 
@@ -111,7 +130,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   skipTurn = () => {
     const roomRef = firebase.database().ref('rooms/' + this.props.roomkey);
-    roomRef.on('value', (snapshot) => {
+    roomRef.once('value', (snapshot) => {
       const memberCount = snapshot.val().memberCount;
       let currentTurn = snapshot.val().currentTurn;
       let nextTurn;
@@ -120,42 +139,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         firebase.database().ref('rooms/' + this.props.roomkey).update({
           'currentTurn': nextTurn
         });
-        firebase.database().ref('rooms/' + this.props.roomkey + '/members')
-        .on('value', (snapshot) => {
-          const members = snapshot.val();
-          let keyArray = [];
-          for (const key in members) {
-            keyArray.push(members[key]);
-          }
-          this.setState({
-            currentPlayerTurn: keyArray[nextTurn].displayName || keyArray[nextTurn].username,
-            currentPlayerId: keyArray[nextTurn].id
-          })
-        })
       })
     }
-
-    // firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
-    //   .once('value')
-    //   .then((snapshot) => {
-    //     const allCurrentPlayers = snapshot.val();
-    //     const allPlayerIds = [];
-    //     for (const key in allCurrentPlayers) {
-    //       allPlayerIds.push(allCurrentPlayers[key].id);
-    //     }
-    //     const indexOfCurrentPlayer = allPlayerIds.indexOf(this.state.playerId) + 1;
-    //     if (indexOfCurrentPlayer === allPlayerIds.length && allPlayerIds.length > 1) {
-    //       this.setState({
-    //         playerId: allPlayerIds[0]
-    //       })
-    //     }
-    //     else {
-    //       this.setState({
-    //         playerId: allPlayerIds[indexOfCurrentPlayer]
-    //       })
-    //     }
-    //   })
-
 
   readyBtnDisplay = () => {
   if (this.state.ready) {
