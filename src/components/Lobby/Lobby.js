@@ -158,7 +158,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     newRoom.roomTopic = this.state.roomTopic;
     newRoom.roomName = roomName;
     newRoom.members = {}
-    newRoom.members['host'] = userInfo;
+    newRoom.members['1'] = userInfo;
     newRoom.memberCount = 1;
     newRoom.stages = 0;
     newRoom.gameStart = false;
