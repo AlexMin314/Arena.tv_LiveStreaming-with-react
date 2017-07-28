@@ -63,9 +63,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             for (const key in members) {
               membersArray.push(members[key]);
             }
-
+            const currentPlayerTurn = membersArray[0].displayName || membersArray[0].username;
             this.setState({
-              currentPlayerTurn: membersArray[0].displayName || membersArray[0].username,
+              currentPlayerTurn: currentPlayerTurn,
               currentPlayerId: membersArray[0].id
             })
           });
