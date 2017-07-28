@@ -29,7 +29,7 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
     return (
       <div className="container-fluid contentBody">
         <div className="row homeContent">
-          <div className="col-md-7 col-sm-12 brandWrapper">
+          <div className="col-lg-6 col-md-7 col-9 brandWrapper">
             <div className="brandName">
               MindTap <i className="fa fa-pencil" aria-hidden="true"></i>
             </div>
