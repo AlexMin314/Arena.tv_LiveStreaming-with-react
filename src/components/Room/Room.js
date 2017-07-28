@@ -179,14 +179,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                 className="btn btn-primary disabled"
                 onClick={this.gameReady}
                 id="waitingBtn">
-                Waiting Others</button>
+                Waiting for others</button>
     )} else {
       return (
         <button type="button"
                 className="btn btn-primary"
                 onClick={this.gameReady}
                 id="gameReadyBtn">
-                Game Ready</button>
+                Ready</button>
     )}
   };
 

@@ -87,7 +87,6 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
       this.hide();
     }
     else if(e.key === "Enter" && this.state.textInput !== '') {
-
       this.sendChat(this.state.textInput);
     }
   }
