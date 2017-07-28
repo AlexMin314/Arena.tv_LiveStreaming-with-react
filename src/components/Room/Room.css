@@ -23,6 +23,21 @@
   flex: 2;
   flex-direction: column;  
 }
+.turnContainer {
+  display: flex;
+  align-items: flex-start;
+}
+.currentTurnHeader, .playerTurn {
+  display: flex;
+  height: 30%;
+  margin: 5px;
+  background-color: #9c27b0;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 15px;
+  color: white;
+}
 
 .canvasWrapper {
   display: flex;

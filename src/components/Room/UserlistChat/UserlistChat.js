@@ -127,7 +127,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       } else {
         renderList.push(<div className="nameCard shadowOut"
                               key={uuid()}>
-                              {this.state.userList[i].displayName}</div>);
+                              {this.state.userList[i].displayName || this.state.userList[i].username}</div>);
       }
     }
     return renderList;
