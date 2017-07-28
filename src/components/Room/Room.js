@@ -50,9 +50,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     // Get gameStart status - game start!
     const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
     readyRef.on('value', (data) => this.props.gameStart(data.val()))
-
-
-
   }
 
 
@@ -123,9 +120,12 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
           <div className="col-lg-8 col-md-12 sectionDivider">
             <div className="" id="mainContentWrapper">
-              <div className="sidebars"></div>
+              <div className="sidebars">
+                <div className="toolWrapper"></div>
+              </div>
               <div className="canvasWrapper shadowOut">
                 {this.props.gameStartInfo ? this.gameStartNotice() : null}
+                <canvas id="whiteBoard"></canvas>
               </div>
 
               <div className="sidebars">

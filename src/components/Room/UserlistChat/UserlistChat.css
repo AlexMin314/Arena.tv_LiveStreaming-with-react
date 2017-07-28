@@ -69,6 +69,19 @@
   flex: 1;
   height: auto;
   align-self: center;
+  position: absolute;
+  bottom: 40%;
+}
+
+@media screen and (max-height:600px) {
+  .chatPosition {
+    bottom: 50%;
+  }
+}
+@media screen and (max-height:450px) {
+  .chatPosition {
+    bottom: 60%;
+  }
 }
 
 .chatBubble {
