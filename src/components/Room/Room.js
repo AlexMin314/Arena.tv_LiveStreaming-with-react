@@ -124,8 +124,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
 
   checkTurn = () => {
-    if(this.state.currentPlayerId === this.props.user[0].id) return true;
-    return false;
+    return this.state.currentPlayerId === this.props.user[0].id ? true : false;
   }
 
   skipTurn = () => {
