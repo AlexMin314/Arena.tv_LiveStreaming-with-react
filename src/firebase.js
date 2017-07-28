@@ -69,6 +69,20 @@ export const updatingGameStart = (roomkey, data) => {
   });
 }
 
+// For current stage winner info updating
+export const stageWinnerUpdater = (roomkey, winnerID, stageNum) => {
+  firebase.database().ref('rooms/' + roomkey + '/winnerOfStage')
+    .once('value')
+    .then((snapshot) => {
+      const winnerOfStageArr = snapshot.val();
+      // need checker by stageNum and idx of array.
+      winnerOfStageArr.push(winnerID)
+      firebase.database().ref('rooms/' + roomkey)
+        .update({ 'winnerOfStage': winnerOfStageArr });
+    })
+
+}
+
 /**
  * EventListener
  */

@@ -24,6 +24,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   constructor(props){
     super(props)
 
+    this.startingNotice = null;
     this.state = {
       msg: '',
       chatInput: '',
@@ -89,6 +90,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           })
         })
 
+
+
   }
 
 
@@ -122,9 +125,34 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       })
   }
 
-
   checkTurn = () => {
     return this.state.currentPlayerId === this.props.user[0].id ? true : false;
+
+  readyBtnDisplay = () => {
+    if (this.state.ready) {
+      return (
+      <button type="button"
+              className="btn btn-primary disabled"
+              onClick={this.gameReady}
+              key={uuid()}>
+              Waiting Others</button>
+    )} else { return (
+      <button type="button"
+              className="btn btn-primary"
+              onClick={this.gameReady}
+              key={uuid()}>
+              Game Ready</button>
+    )}
+  }
+
+  gameStartNotice = () => {
+
+    setTimeout(() => {
+      this.startingNotice.style.display = 'none';
+    }, 2300)
+
+    return (<div className="gameStartNotice startHide"
+                 ref={(e) => this.startingNotice = e}>GAME START!</div>)
   }
 
   skipTurn = () => {
@@ -168,6 +196,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             <div className="" id="mainContentWrapper">
               <div className="sidebars"></div>
               <div className="canvasWrapper shadowOut">
+                {this.props.gameStartInfo ? this.gameStartNotice() : null}
               </div>
 
               <div className="sidebars">

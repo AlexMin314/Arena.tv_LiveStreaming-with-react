@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import uuid from 'uuid/v4';
 
 // Import firebase
-import { firebaseDB, userRoomUpdating } from '../../../firebase';
+import { firebaseDB,
+         userRoomUpdating,
+         stageWinnerUpdater } from '../../../firebase';
 import firebase from '../../../firebase';
 
 import './UserlistChat.css';
@@ -18,7 +20,8 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     this.readyCheker = {};
     this.state = {
       messages: [],
-      userList: []
+      userList: [],
+      currentWord: ''
     }
   }
 
@@ -42,6 +45,30 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       messages.push(newMsgObj);
       this.setState({ messages: messages });
     });
+
+
+    /**
+     * Game Logic related
+     */
+     // Get currentWord of the turn
+     const curKeywordRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentWord');
+     curKeywordRef.on('value', (data) => {
+       this.setState({ currentWord: data.val() })
+     });
+
+     // Fire winning into to firebase
+     messageRef.on('child_added', (data) => {
+        const latestChat = data.val().text.toLowerCase();
+        const chatSender = data.val().senderID;
+        const me = this.props.user[0].id;
+        const curTurnAnswer = this.state.currentWord.toLowerCase();
+
+       if (latestChat === curTurnAnswer && chatSender === me) {
+          /* Need a stage Number!!! */
+          const testStageNumber = 1;
+          stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
+       }
+     })
 
 
     /**
