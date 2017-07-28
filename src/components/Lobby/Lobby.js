@@ -107,7 +107,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   // Topic base join
   topicJoin = (e) => {
-    e.preventDefault();    
+    e.preventDefault();
     const topic = e.target.innerHTML;
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
       const rooms = snapshot.val();
@@ -184,7 +184,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
               <div className="category TV" onClick={this.topicJoin}>TV</div>
               <div className="category game" onClick={this.topicJoin}>GAME</div>
               <div className="category IT" onClick={this.topicJoin}>IT</div>
-              <div className="category sports" onClick={this.topicJoin}>SPORTS</div>
+              <div className="category logos" onClick={this.topicJoin}>LOGOS</div>
               <div className="category travel" onClick={this.topicJoin}>TRAVEL</div>
             </div>
             <div className="subtitleText"><hr/></div>
@@ -244,7 +244,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                   <label className="btn btn-primary" id="mRadio4"
                          onClick={this.onRadioSelect}>
                     <input type="radio" autoComplete="off"/>
-                    <div className="category categoryModal sports">SPORTS</div>
+                    <div className="category categoryModal logos">LOGOS</div>
                   </label>
                   <label className="btn btn-primary" id="mRadio5"
                          onClick={this.onRadioSelect}>
