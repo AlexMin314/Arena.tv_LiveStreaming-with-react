@@ -7,7 +7,8 @@ import { userRoomUpdating,
          roomMemberUpdating,
          readyUpdating,
          triggerUpdatingGameStart,
-         currentWordGenerating } from '../../firebase';
+         currentWordGenerating,
+         turnChangingLogic } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Room.css';
@@ -64,7 +65,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       this.props.gameStart(data.val())
       // currentWord Generation requesting
       if (this.state.topic) {
-        console.log('enter')
         currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic, this.props.turnInfo);
       }
     });
@@ -155,15 +155,10 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   };
 
   skipTurn = () => {
-    const roomRef = firebase.database().ref('rooms/' + this.props.roomkey);
-    roomRef.once('value', (snapshot) => {
-        const memberCount = snapshot.val().memberCount;
-        let currentTurn = snapshot.val().currentTurn;
-        let nextTurn = currentTurn < memberCount - 1 ? currentTurn + 1 : 0;
-        firebase.database().ref('rooms/' + this.props.roomkey).update({
-          'currentTurn': nextTurn
-        });
-      })
+    turnChangingLogic(this.props.roomkey);
+    // currentWord Generation requesting
+    currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic, this.props.turnInfo)
+    // Stage Updater needed!
   };
 
   readyBtnDisplay = () => {

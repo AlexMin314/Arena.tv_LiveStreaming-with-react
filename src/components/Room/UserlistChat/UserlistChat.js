@@ -5,7 +5,9 @@ import uuid from 'uuid/v4';
 // Import firebase
 import { firebaseDB,
          userRoomUpdating,
-         stageWinnerUpdater } from '../../../firebase';
+         stageWinnerUpdater,
+         currentWordGenerating,
+         turnChangingLogic } from '../../../firebase';
 import firebase from '../../../firebase';
 
 import './UserlistChat.css';
@@ -66,8 +68,13 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
        if (latestChat === curTurnAnswer && chatSender === me) {
           /* Need a stage Number!!! */
+          // Stage Updater needed!
           const testStageNumber = 1;
           stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
+
+          turnChangingLogic(this.props.roomkey)
+          // currentWord Generation requesting
+          currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic, this.props.turnInfo)
        }
      })
 

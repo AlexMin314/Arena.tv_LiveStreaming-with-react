@@ -128,7 +128,6 @@ const currentWordGenerationRequest = (roomKey, topic) => {
       topicArr.shift()
 
       const randomNum = getRandomIntInRange(0, topicArr.length - 1)
-
       firebase.database().ref('rooms/' + roomKey).update({
         'currentWord': topicArr[randomNum]
       });
@@ -138,6 +137,20 @@ const currentWordGenerationRequest = (roomKey, topic) => {
 const getRandomIntInRange = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 }
+
+export const turnChangingLogic = (roomkey) => {
+  const roomRef = firebase.database().ref('rooms/' + roomkey);
+  roomRef.once('value', (snapshot) => {
+      const memberCount = snapshot.val().memberCount;
+      let currentTurn = snapshot.val().currentTurn;
+      const nextTurn = currentTurn < memberCount - 1 ? currentTurn + 1 : 0;
+      firebase.database().ref('rooms/' + roomkey).update({
+        'currentTurn': nextTurn
+      });
+    })
+}
+
+
 
 /**
  * EventListener
