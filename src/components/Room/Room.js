@@ -260,7 +260,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               ) : null}
               </div> {/* Sidebar End */}
             </div> {/* mainContentWrapper End */}
-            <UserlistChat/>
+            <UserlistChat topic={this.state.topic}
+                          memberKey={this.state.memberKey}/>
           </div>
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
         </div>

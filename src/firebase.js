@@ -113,7 +113,7 @@ export const currentWordGenerating = (roomKey, memberKey, topic, curTurnIndex) =
     .then((snapshot) => {
       const memberList = snapshot.val();
       Object.keys(memberList).forEach((e, idx) => {
-        if (idx === curTurnIndex && e === memberKey) {
+        if (e === memberKey) {
           currentWordGenerationRequest(roomKey, topic)
         }
       });
@@ -128,6 +128,7 @@ const currentWordGenerationRequest = (roomKey, topic) => {
       topicArr.shift()
 
       const randomNum = getRandomIntInRange(0, topicArr.length - 1)
+      console.log(topicArr[randomNum]);
       firebase.database().ref('rooms/' + roomKey).update({
         'currentWord': topicArr[randomNum]
       });

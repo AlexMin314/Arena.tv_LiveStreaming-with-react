@@ -49,6 +49,26 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       this.setState({ messages: messages });
     });
 
+    // Fire winning into to firebase
+    messageRef.on('child_added', (data) => {
+       const latestChat = data.val().text.toLowerCase();
+       const chatSender = data.val().senderID;
+       const me = this.props.user[0].id;
+       const curTurnAnswer = this.state.currentWord.toLowerCase();
+
+      if (latestChat === curTurnAnswer &&
+         chatSender === me &&
+         me !== this.state.userList[this.props.turnInfo].id) {
+         /* Need a stage Number!!! */
+         // Stage Updater needed!
+         const testStageNumber = 1;
+         stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
+
+         turnChangingLogic(this.props.roomkey)
+         // currentWord Generation requesting
+         currentWordGenerating(this.props.roomkey, this.props.memberKey, this.props.topic, this.props.turnInfo)
+      }
+    })
 
     /**
      * Game Logic related
@@ -58,25 +78,6 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
      curKeywordRef.on('value', (data) => {
        this.setState({ currentWord: data.val() })
      });
-
-     // Fire winning into to firebase
-     messageRef.on('child_added', (data) => {
-        const latestChat = data.val().text.toLowerCase();
-        const chatSender = data.val().senderID;
-        const me = this.props.user[0].id;
-        const curTurnAnswer = this.state.currentWord.toLowerCase();
-
-       if (latestChat === curTurnAnswer && chatSender === me) {
-          /* Need a stage Number!!! */
-          // Stage Updater needed!
-          const testStageNumber = 1;
-          stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
-
-          turnChangingLogic(this.props.roomkey)
-          // currentWord Generation requesting
-          currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic, this.props.turnInfo)
-       }
-     })
 
 
     /**
@@ -118,11 +119,12 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       });
     });
 
-
-
-
-
   } // componentDidMount Ends.
+
+  componentWillReceiveProps() {
+
+  }
+
 
   componentDidUpdate() {
     /**
