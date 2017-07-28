@@ -5,7 +5,9 @@ import uuid from 'uuid/v4';
 // Import firebase
 import { firebaseDB,
          userRoomUpdating,
-         stageWinnerUpdater } from '../../../firebase';
+         stageWinnerUpdater,
+         currentWordGenerating,
+         turnChangingLogic } from '../../../firebase';
 import firebase from '../../../firebase';
 
 import './UserlistChat.css';
@@ -47,6 +49,26 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       this.setState({ messages: messages });
     });
 
+    // Fire winning into to firebase
+    messageRef.on('child_added', (data) => {
+       const latestChat = data.val().text.toLowerCase();
+       const chatSender = data.val().senderID;
+       const me = this.props.user[0].id;
+       const curTurnAnswer = this.state.currentWord.toLowerCase();
+
+      if (latestChat === curTurnAnswer &&
+         chatSender === me &&
+         me !== this.state.userList[this.props.turnInfo].id) {
+         /* Need a stage Number!!! */
+         // Stage Updater needed!
+         const testStageNumber = 1;
+         stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
+
+         turnChangingLogic(this.props.roomkey)
+         // currentWord Generation requesting
+         currentWordGenerating(this.props.roomkey, this.props.memberKey, this.props.topic, this.props.turnInfo)
+      }
+    })
 
     /**
      * Game Logic related
@@ -56,20 +78,6 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
      curKeywordRef.on('value', (data) => {
        this.setState({ currentWord: data.val() })
      });
-
-     // Fire winning into to firebase
-     messageRef.on('child_added', (data) => {
-        const latestChat = data.val().text.toLowerCase();
-        const chatSender = data.val().senderID;
-        const me = this.props.user[0].id;
-        const curTurnAnswer = this.state.currentWord.toLowerCase();
-
-       if (latestChat === curTurnAnswer && chatSender === me) {
-          /* Need a stage Number!!! */
-          const testStageNumber = 1;
-          stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
-       }
-     })
 
 
     /**
@@ -111,11 +119,12 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       });
     });
 
-
-
-
-
   } // componentDidMount Ends.
+
+  componentWillReceiveProps() {
+
+  }
+
 
   componentDidUpdate() {
     /**
@@ -123,14 +132,11 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
      */
     const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
     turnRef.on('value', (data) => {
-      console.log(data.val())
       if (this.props.gameStart) {
         const userList = this.state.userList;
         userList.forEach((e, idx) => {
-          console.log('out:', idx);
           this.turnDisplay[idx].style.display = 'none';
           if (idx === data.val()) {
-            console.log('in:', idx);
             this.turnDisplay[idx].style.display = 'flex';
           }
         });
