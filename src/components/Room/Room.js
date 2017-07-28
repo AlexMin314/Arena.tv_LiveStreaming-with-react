@@ -104,7 +104,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    */
   gameReady = () => {
     this.setState({ ready: true });
-    console.log(this.state.memberKey)
     readyUpdating(this.props.roomkey, this.state.memberKey, true);
     // Checking ready status of members
     firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
@@ -112,8 +111,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       .then((snapshot) => {
         const memberList = snapshot.val();
         let allReadyChecker = true;
+        // If only one user exist, the game will not start.
+        if (Object.keys(memberList).length === 1) allReadyChecker = false;
+        // Check all memeber's ready status
         for (const key in memberList) {
-          if (!memberList[key].ready) allReadyChecker = false;
+          if (!memberList[key].ready) {
+            allReadyChecker = false;
+            break;
+          }
         }
         // if all ready
         if(allReadyChecker) {
