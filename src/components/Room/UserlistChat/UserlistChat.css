@@ -4,6 +4,7 @@
   width: 100%;
   flex: 3;
   flex-direction: row;
+  z-index: 1;
 }
 
 /**********
@@ -37,6 +38,7 @@
 
 .nameCard {
   display: flex;
+  flex-direction: column;
   flex: 1;
   height: 30%;
   align-self: flex-end;
@@ -50,6 +52,10 @@
   color: white;
 }
 
+.scoreDisplay {
+  display: flex;
+  font-size: 12px;
+}
 
 
 /**********

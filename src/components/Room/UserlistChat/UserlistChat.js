@@ -110,8 +110,10 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
         }
       });
     });
+  }
 
-
+  expandCard = (e) => {
+    console.log(e.target)
   }
 
  /**
@@ -127,7 +129,9 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       } else {
         renderList.push(<div className="nameCard shadowOut"
                               key={uuid()}>
-                              {this.state.userList[i].displayName || this.state.userList[i].username}</div>);
+                              <div className="scoreDisplay">Test Score</div>                              
+                              {this.state.userList[i].displayName || this.state.userList[i].username}
+                              </div>);
       }
     }
     return renderList;
@@ -154,10 +158,14 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     const renderList = [];
     for(let i = 0; i < 6; i++) {
       if(!this.state.userList[i]) {
-        renderList.push(<div className="infoPosition" key={uuid()}>
+        renderList.push(<div className="infoPosition"
+                             key={uuid()}
+                             onClick={this.expandCard}>
                         </div>);
       } else {
-        renderList.push(<div className="infoPosition" key={uuid()}>
+        renderList.push(<div className="infoPosition"
+                              key={uuid()}
+                              onClick={this.expandCard}>
                           <div className="readyCheker shadowOut">
                             <i className="fa fa-check fa-lg"
                                aria-hidden="true"
