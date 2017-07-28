@@ -182,9 +182,9 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             <hr/>
             <div className="categoryWrapper">
               <div className="category TV" onClick={this.topicJoin}>TV</div>
-              <div className="category game" onClick={this.topicJoin}>GAME</div>
-              <div className="category IT" onClick={this.topicJoin}>IT</div>
-              <div className="category sports" onClick={this.topicJoin}>SPORTS</div>
+              <div className="category game" onClick={this.topicJoin}>GAMES</div>
+              <div className="category IT" onClick={this.topicJoin}>ANIME</div>
+              <div className="category logos" onClick={this.topicJoin}>LOGOS</div>
               <div className="category travel" onClick={this.topicJoin}>TRAVEL</div>
             </div>
             <div className="subtitleText"><hr/></div>
@@ -225,7 +225,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                          placeholder="Enter RoomName...(optional)"
                          onChange={this.onRoomName}/>
                 <div className="modalSubtitle">Select Topic</div>
-                <div className="btn-group" data-toggle="buttons">
+                <div className="btn-group" id="modalTopic" data-toggle="buttons">
                   <label className="btn btn-primary active" id="mRadio1"
                          onClick={this.onRadioSelect}>
                     <input type="radio" autoComplete="off"/>
@@ -234,17 +234,17 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                   <label className="btn btn-primary" id="mRadio2"
                          onClick={this.onRadioSelect}>
                     <input type="radio" autoComplete="off"/>
-                    <div className="category categoryModal game">GAME</div>
+                    <div className="category categoryModal game">GAMES</div>
                   </label>
                   <label className="btn btn-primary" id="mRadio3"
                          onClick={this.onRadioSelect}>
                     <input type="radio" autoComplete="off"/>
-                    <div className="category categoryModal IT">IT</div>
+                    <div className="category categoryModal IT">ANIME</div>
                   </label>
                   <label className="btn btn-primary" id="mRadio4"
                          onClick={this.onRadioSelect}>
                     <input type="radio" autoComplete="off"/>
-                    <div className="category categoryModal sports">SPORTS</div>
+                    <div className="category categoryModal logos">LOGOS</div>
                   </label>
                   <label className="btn btn-primary" id="mRadio5"
                          onClick={this.onRadioSelect}>

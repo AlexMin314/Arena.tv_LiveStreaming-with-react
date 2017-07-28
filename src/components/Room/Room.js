@@ -54,7 +54,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     readyRef.on('value', (data) => {
       this.props.gameStart(data.val())
 
-      if(data.val() === true) {
+      if(data.val()) {
         firebase.database().ref('rooms/' + this.props.roomkey + '/members')
           .once('value')
           .then((snapshot) => {
@@ -68,27 +68,27 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               currentPlayerTurn: currentPlayerTurn,
               currentPlayerId: membersArray[0].id
             })
-          })
+          });
 
-        // Listener for current turn change
-        const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
-        turnRef.on('value', (snapshot) => {
-          const nextTurn = snapshot.val();
+          // Listener for current turn change
+          const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
+          turnRef.on('value', (snapshot) => {
+            const nextTurn = snapshot.val();
             firebase.database().ref('rooms/' + this.props.roomkey + '/members')
-              .once('value', (snapshot) => {
-                const members = snapshot.val();
-                let keyArray = [];
-                for (const key in members) {
+            .once('value', (snapshot) => {
+              const members = snapshot.val();
+              const keyArray = [];
+              for (const key in members) {
                 keyArray.push(members[key]);
-                }
-                this.setState({
-                  currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
-                  currentPlayerId: keyArray[nextTurn].id
-                })
-              })
-        })
+              }
+              this.setState({
+                currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
+                currentPlayerId: keyArray[nextTurn].id
+            });
+          });
+        });
       }
-    })
+    });
   }
 
 
@@ -104,7 +104,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    */
   gameReady = () => {
     this.setState({ ready: true });
-    console.log(this.state.memberKey)
     readyUpdating(this.props.roomkey, this.state.memberKey, true);
     // Checking ready status of members
     firebase.database().ref('/rooms/' + this.props.roomkey + '/members')
@@ -112,8 +111,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       .then((snapshot) => {
         const memberList = snapshot.val();
         let allReadyChecker = true;
+        // If only one user exist, the game will not start.
+        if (Object.keys(memberList).length === 1) allReadyChecker = false;
+        // Check all memeber's ready status
         for (const key in memberList) {
-          if (!memberList[key].ready) allReadyChecker = false;
+          if (!memberList[key].ready) {
+            allReadyChecker = false;
+            break;
+          }
         }
         // if all ready
         if(allReadyChecker) {
@@ -151,38 +156,37 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
     return (<div className="gameStartNotice startHide"
                  ref={(e) => this.startingNotice = e}>GAME START!</div>)
-  }
+  };
 
   skipTurn = () => {
     const roomRef = firebase.database().ref('rooms/' + this.props.roomkey);
     roomRef.once('value', (snapshot) => {
-      const memberCount = snapshot.val().memberCount;
-      let currentTurn = snapshot.val().currentTurn;
-      let nextTurn;
-      if(currentTurn < memberCount - 1) nextTurn = currentTurn + 1;
-      else nextTurn = 0
+        const memberCount = snapshot.val().memberCount;
+        let currentTurn = snapshot.val().currentTurn;
+        let nextTurn = currentTurn < memberCount - 1 ? currentTurn + 1 : 0;
         firebase.database().ref('rooms/' + this.props.roomkey).update({
           'currentTurn': nextTurn
         });
       })
-    }
+  };
 
   readyBtnDisplay = () => {
-  if (this.state.ready) {
-    return (
-    <button type="button"
-            className="btn btn-primary disabled"
-            onClick={this.gameReady}
-            key={uuid()}>
-            Waiting Others</button>
-  )} else { return (
-    <button type="button"
-            className="btn btn-primary"
-            onClick={this.gameReady}
-            key={uuid()}>
-            Game Ready</button>
-  )}
-}
+    if (this.state.ready) {
+      return (
+        <button type="button"
+                className="btn btn-primary disabled"
+                onClick={this.gameReady}
+                id="waitingBtn">
+                Waiting for others</button>
+    )} else {
+      return (
+        <button type="button"
+                className="btn btn-primary"
+                onClick={this.gameReady}
+                id="gameReadyBtn">
+                Ready</button>
+    )}
+  };
 
   render() {
     const isItYourTurn = this.checkTurn();
@@ -192,61 +196,74 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
           <div className="col-lg-8 col-md-12 sectionDivider">
             <div className="" id="mainContentWrapper">
-              <div className="sidebars"></div>
+              {/* Left SideBar */}
+              <div className="sidebars">
+                <div className="toolWrapper"></div>
+                <div className="toolWrapper"></div>
+                <div className="toolWrapper"></div>
+              </div>
+              {/* Center */}
               <div className="canvasWrapper shadowOut">
                 {this.props.gameStartInfo ? this.gameStartNotice() : null}
+                <canvas id="whiteBoard"></canvas>
+                <ChatInput/>
               </div>
-
+              {/* Right SideBar */}
               <div className="sidebars">
                 <div className="sideRow">
                   <button type="button"
                           className="btn btn-primary"
+                          id="leaveRoomBtn"
                           onClick={this.leaveRoom}>
                           Leave Room</button>
-                  {this.props.gameStartInfo ? isItYourTurn ? (
-                    <div className="turnContainer">
-                      <div className="turnDiv">
-                      <p className="playerTurn">
-                        Current Turn:
-                        <br/>
-                        {this.state.currentPlayerTurn}
-                      </p>
-                      </div>
-
-                      <div className="skipTurnDiv">
-                      <button type="button"
-                              className="btn btn-danger"
-                              onClick={this.skipTurn}>Skip Turn</button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="turnContainer">
-                      <div className="turnDiv">
-                      <p className="playerTurn">
-                        Current Turn:
-                        <br/>
-                        {this.state.currentPlayerTurn}
-                      </p>
-                      </div>
-
-                    <div className="skipTurnDiv">
-                      <button type="button"
-                              className="btn btn-danger disabled">It is not your turn</button>
-                    </div>
-
-                    </div>
-                  ) : null}
                 </div>
                 <div className="sideRow">
                   {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
                 </div>
-              </div>
-            </div>
+              {this.props.gameStartInfo ? isItYourTurn ? (
+                <div className="sideRow turnWrapper">
+                <div className="sideRow">
+                  <div className="turnDiv shadowOut">
+                    <p className="playerTurn">
+                      Current Turn:
+                      <br/>
+                      {this.state.currentPlayerTurn}
+                    </p>
+                  </div>
+                </div>
+                <div className="sideRow">
+                  <div className="skipTurnDiv">
+                    <button type="button"
+                            className="btn btn-primary"
+                            onClick={this.skipTurn}>Skip Turn</button>
+                  </div>
+                </div>
+                </div>
+              ) : (
+                <div className="sideRow turnWrapper">
+                <div className="sideRow">
+                  <div className="turnDiv shadowOut">
+                    <p className="playerTurn">
+                      Current Turn:
+                      <br/>
+                      {this.state.currentPlayerTurn}
+                    </p>
+                  </div>
+                </div>
+                <div className="sideRow">
+                  <div className="skipTurnDiv">
+                    <button type="button"
+                            className="btn btn-primary disabled">It is not your turn</button>
+                  </div>
+                </div>
+                </div>
+              ) : null}
+              </div> {/* Sidebar End */}
+            </div> {/* mainContentWrapper End */}
             <UserlistChat/>
           </div>
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
         </div>
-          <ChatInput/>
       </div>
     );
   }

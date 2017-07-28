@@ -21,38 +21,73 @@
   display: flex;
   height: 100%;
   flex: 2;
-  flex-direction: column;  
-}
-.turnContainer {
-  display: flex;
-  align-items: flex-start;
-}
-.currentTurnHeader, .playerTurn {
-  display: flex;
-  height: 30%;
-  margin: 5px;
-  background-color: #9c27b0;
-  align-items: center;
-  justify-content: center;
-  font-weight: 900;
-  font-size: 15px;
-  color: white;
+  flex-direction: column;
 }
 
+
+
+/*************
+  Center
+ *************/
+
 .canvasWrapper {
-  display: flex;
-  border: 2px solid rgb(219, 219, 219);
+   display: flex;
+   position: relative;
+   border: 2px solid rgb(219, 219, 219);
+   height: 100%;
+   flex: 8;
+   justify-content: center;
+   align-items: center;
+ }
+
+#whiteBoard {
+  position: absolute;
   height: 100%;
-  flex: 8;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  border: 1px solid red;
 }
 
 .gameStartNotice {
   font-size: 30px;
+  position: absolute;
 }
 
 .startHide {
   -webkit-animation: fadeout 2s forwards;
   animation: fadeout 2s forwards;
 }
+
+/*************
+ Right sidebars
+ *************/
+
+.turnWrapper {
+  margin-top: 15px;
+}
+
+.playerTurn {
+  height: 30%;
+  margin: 5px;
+  padding: 10px;
+  font-weight: 900;
+  font-size: 15px;
+}
+
+#waitingBtn, #gameReadyBtn, #leaveRoomBtn, .turnWrapper {
+  margin-left: 5px;
+}
+ #leaveRoomBtn {
+   margin-bottom: 5px;
+ }
+
+/*************
+ Left sidebars
+ *************/
+
+ .toolWrapper {
+    border: 1px solid red;
+    display: flex;
+    height: 100%;
+    padding-right: 5px;
+    flex: 1;
+ }

@@ -69,13 +69,13 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
   }
 
   // Any typing from user will trigger set focus on input field
-  handleKeyPress = (e) => {
+  handleInputUp = (e) => {
     this.show();
     this.focus();
   }
 
   // function to handle keys such as "Enter" and "Escape"
-  handleKeyDown = (e) => {
+  handleKeyPress = (e) => {
     if(e.key === "Enter" && this.state.textInput === '') {
       this.focus();
     }
@@ -89,7 +89,6 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
     else if(e.key === "Enter" && this.state.textInput !== '') {
       this.sendChat(this.state.textInput);
     }
-
   }
 
   // updates the text input state of user everytime there is a change in input field
@@ -100,9 +99,9 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
   }
 
   componentDidMount() {
-  // Event listeners for keypress and keydown
+  // Event listeners for chat input.
+  window.addEventListener('keypress', this.handleInputUp);
   window.addEventListener('keypress', this.handleKeyPress);
-  window.addEventListener('keydown', this.handleKeyDown);
   }
 
   render() {
@@ -111,7 +110,7 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
         <div className="input-group input-group-lg textInputDiv"
              ref={(div) => { this.inputDiv = div; }}>
           <input type="text"
-                 className="form-control userTextInput"
+                 className="form-control userTextInput shadowOut"
                  aria-describedby="sizing-addon1"
                  onChange={this.handleInput}
                  value={this.state.textInput}
