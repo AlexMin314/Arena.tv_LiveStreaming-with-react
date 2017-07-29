@@ -27,7 +27,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
     this.state = {
       gameStartNotice: [],
-      correctAnswerNotice: []
+      correctAnswerNotice: [],
+      drawings: []
     }
   }
 
@@ -52,9 +53,79 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       }
     })
 
+    /**
+    * Event Listener of mouse
+    */
+    const canvas = document.getElementById('whiteBoard');
+    let cRect = canvas.getBoundingClientRect();
+    let width = cRect.width;
+    let height = cRect.height;
+    canvas.width = width;
+    canvas.height = height;
+    window.addEventListener('resize', () => {
+
+    })
+    const ctx = canvas.getContext("2d");
+
+    let drawing = false;
+    let color = "black";
+    let lineJoin = "round";
+    let lineWidth = 5;
+    let test = [];
+
+    const coordinator = (e) => {
+      const cRect = canvas.getBoundingClientRect();
+      const mouseX = (e.clientX - cRect.left) / width;
+      const mouseY = (e.clientY - cRect.top) / height;
+      return { mouseX, mouseY }
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      const mouseXY = coordinator(e);
+      test.push(mouseXY)
+      redraw()
+      drawing = true;
+    })
+    canvas.addEventListener('mousemove', (e) => {
+      if(drawing) {
+        const mouseXY = coordinator(e);
+        test.push(mouseXY)
+        redraw()
+      }
+    })
+    canvas.addEventListener('mouseup', (e) => {
+      const mouseXY = coordinator(e);
+      test = [];
+      drawing = false;
+    })
+    canvas.addEventListener('mouseleave', (e) => {
+      test = [];
+      drawing = false;
+    })
+
+    const redraw = () => {
+      ctx.strokeStyle = color;
+      ctx.lineJoin = lineJoin;
+      ctx.lineWidth = lineWidth;
+      ctx.beginPath();
+      if (test.length > 1) {
+        ctx.moveTo(test[test.length - 2].mouseX * width, test[test.length - 2].mouseY * height)
+      } else {
+        ctx.moveTo((test[test.length - 1].mouseX) * width -1, (test[test.length - 1].mouseY) * height)
+      }
+        ctx.lineTo(test[test.length - 1].mouseX * width, test[test.length - 1].mouseY * height);
+        ctx.closePath();
+        ctx.stroke();
+    }
+
+
   } // componentDidMount Ends.
 
   componentWillReceiveProps() {
+
+  }
+
+  componentWillUpdate() {
 
   }
 
