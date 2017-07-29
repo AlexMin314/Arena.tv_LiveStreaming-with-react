@@ -35,6 +35,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
      */
     const messageRef = firebase.database().ref('rooms/' + this.props.roomkey + '/message');
 
+    // Chat Updater
     messageRef.on('child_added', (data) => {
       const messages = this.state.messages;
       const userList = this.state.userList;
@@ -43,27 +44,27 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       userList.forEach((e) => {
         if (e.id === newMsgObj.senderID) newMsgObj.slotNum = e.slotNum;
       });
-
       // Storing the sorted chat. - for the entire chat list.
       messages.push(newMsgObj);
       this.setState({ messages: messages });
     });
 
-    // Fire winning into to firebase
+    // Fire winning info to firebase
     messageRef.on('child_added', (data) => {
        const latestChat = data.val().text.toLowerCase();
        const chatSender = data.val().senderID;
-       const me = this.props.user[0].id;
+       const me = this.props.user[0];
        const curTurnAnswer = this.state.currentWord.toLowerCase();
 
       if (latestChat === curTurnAnswer &&
-         chatSender === me &&
+         chatSender === me.id &&
          me !== this.state.userList[this.props.turnInfo].id) {
-         /* Need a stage Number!!! */
-         // Stage Updater needed!
-         const testStageNumber = 1;
-         stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
 
+         /* Need a stage Number Logic!!! */
+         const testStageNumber = 1;
+         // stageWinnerUpdater for firebase
+         stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
+         // Turn changer
          turnChangingLogic(this.props.roomkey)
          // currentWord Generation requesting
          currentWordGenerating(this.props.roomkey, this.props.memberKey, this.props.topic, this.props.turnInfo)
@@ -121,14 +122,9 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
   } // componentDidMount Ends.
 
-  componentWillReceiveProps() {
-
-  }
-
-
   componentDidUpdate() {
     /**
-     * EventListener for Turn Star Display
+     * EventListener for Turn Indicator(Star) Display
      */
     const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
     turnRef.on('value', (data) => {
@@ -144,10 +140,12 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     });
   }
 
-
-
+  /**
+   * If the user click name card... then?
+   */
   expandCard = (e) => {
-    console.log(e.target)
+    // Testing version.
+    console.log(e.target.className)
   }
 
  /**
