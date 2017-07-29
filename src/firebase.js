@@ -63,13 +63,16 @@ export const readyUpdating = (roomkey, memberKey, data) => {
 
 
 // For current stage winner info updating
-export const stageWinnerUpdater = (roomkey, winnerID, stageNum) => {
+export const stageWinnerUpdater = (roomkey, winner, stageNum) => {
   firebase.database().ref('rooms/' + roomkey + '/winnerOfStage')
     .once('value')
     .then((snapshot) => {
       const winnerOfStageArr = snapshot.val();
       // need checker by stageNum and idx of array.
-      winnerOfStageArr.push(winnerID)
+      const update = {};
+      update.id = winner.id;
+      update.name = winner.displayName;
+      winnerOfStageArr.push(update)
       firebase.database().ref('rooms/' + roomkey)
         .update({ 'winnerOfStage': winnerOfStageArr });
     })
@@ -92,7 +95,7 @@ export const triggerUpdatingGameStart = (roomkey) => {
           break;
         }
       }
-      // if all ready
+      // if all ready,
       if(allReadyChecker) {
         updatingGameStart(roomkey, true);
       }
@@ -107,6 +110,8 @@ const updatingGameStart = (roomkey, data) => {
   });
 };
 
+
+// currentWord Generation logic
 export const currentWordGenerating = (roomKey, memberKey, topic, curTurnIndex) => {
   firebase.database().ref('/rooms/' + roomKey + '/members')
     .once('value')
@@ -120,6 +125,7 @@ export const currentWordGenerating = (roomKey, memberKey, topic, curTurnIndex) =
     });
 };
 
+// currentWord Generation logic
 const currentWordGenerationRequest = (roomKey, topic) => {
   firebase.database().ref('/TOPICS/' + topic)
     .once('value')
@@ -135,10 +141,12 @@ const currentWordGenerationRequest = (roomKey, topic) => {
     });
 }
 
+// helper for random number
 const getRandomIntInRange = (min, max) => {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+// Turn Changer logic
 export const turnChangingLogic = (roomkey) => {
   const roomRef = firebase.database().ref('rooms/' + roomkey);
   roomRef.once('value', (snapshot) => {
