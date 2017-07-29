@@ -211,13 +211,13 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                           id="leaveRoomBtn"
                           onClick={this.leaveRoom}>
                           Leave Room</button>
-                </div>
-                <div className="sideRow">
-                  {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
+                  <div className="readyWrapper">
+                    {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
+                  </div>
                 </div>
               {this.props.gameStartInfo ? isItYourTurn ? (
                 <div className="sideRow turnWrapper">
-                  <div className="sideRow">
+                  <div className="">
                     <div className="turnDiv shadowOut">
                       <p className="playerTurn">
                         Current Turn:
@@ -226,14 +226,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                       </p>
                     </div>
                   </div>
-                  <div className="sideRow">
+                  <div className="">
                     <div className="skipTurnDiv">
                       <button type="button"
                               className="btn btn-primary"
                               onClick={this.skipTurn}>Skip Turn</button>
                     </div>
                   </div>
-                  <div className="sideRow">
+                  <div className="">
                     <div className="curWordWrapper shadowOut">
                       <div className="curWordTitle">Current Word</div>
                       <div className="curWord">{this.state.currentWord}</div>
@@ -242,7 +242,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                 </div>
               ) : (
                 <div className="sideRow turnWrapper">
-                  <div className="sideRow">
+                  <div className="">
                     <div className="turnDiv shadowOut">
                       <p className="playerTurn">
                         Current Turn:
@@ -251,7 +251,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                       </p>
                     </div>
                   </div>
-                  <div className="sideRow">
+                  <div className="">
                     <div className="skipTurnDiv">
                       <button type="button"
                               className="btn btn-primary disabled">not your turn</button>
@@ -259,6 +259,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                   </div>
                 </div>
               ) : null}
+              <div className="sideRow">
+              </div>
               </div> {/* Sidebar End */}
             </div> {/* mainContentWrapper End */}
             <UserlistChat topic={this.state.topic}

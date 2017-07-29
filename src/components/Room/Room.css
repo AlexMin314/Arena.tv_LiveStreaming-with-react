@@ -61,9 +61,17 @@
  Right sidebars
  *************/
 
+.sideRow {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
 .turnWrapper {
   margin-top: 15px;
+  flex: 4;
 }
+
 
 .playerTurn {
   height: 30%;
@@ -90,7 +98,7 @@
 }
 
 .curWord {
-  font-size: 20px;  
+  font-size: 20px;
 }
 
 /*************
