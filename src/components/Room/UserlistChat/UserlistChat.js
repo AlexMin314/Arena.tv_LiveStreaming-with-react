@@ -53,11 +53,11 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     messageRef.on('child_added', (data) => {
        const latestChat = data.val().text.toLowerCase();
        const chatSender = data.val().senderID;
-       const me = this.props.user[0].id;
+       const me = this.props.user[0];
        const curTurnAnswer = this.state.currentWord.toLowerCase();
 
       if (latestChat === curTurnAnswer &&
-         chatSender === me &&
+         chatSender === me.id &&
          me !== this.state.userList[this.props.turnInfo].id) {
 
          /* Need a stage Number Logic!!! */

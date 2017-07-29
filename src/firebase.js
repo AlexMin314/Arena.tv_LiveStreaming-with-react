@@ -63,13 +63,16 @@ export const readyUpdating = (roomkey, memberKey, data) => {
 
 
 // For current stage winner info updating
-export const stageWinnerUpdater = (roomkey, winnerID, stageNum) => {
+export const stageWinnerUpdater = (roomkey, winner, stageNum) => {
   firebase.database().ref('rooms/' + roomkey + '/winnerOfStage')
     .once('value')
     .then((snapshot) => {
       const winnerOfStageArr = snapshot.val();
       // need checker by stageNum and idx of array.
-      winnerOfStageArr.push(winnerID)
+      const update = {};
+      update.id = winner.id;
+      update.name = winner.displayName;
+      winnerOfStageArr.push(update)
       firebase.database().ref('rooms/' + roomkey)
         .update({ 'winnerOfStage': winnerOfStageArr });
     })

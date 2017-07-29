@@ -25,38 +25,6 @@
 }
 
 
-
-/*************
-  Center
- *************/
-
-.canvasWrapper {
-   display: flex;
-   position: relative;
-   border: 2px solid rgb(219, 219, 219);
-   height: 100%;
-   flex: 8;
-   justify-content: center;
-   align-items: center;
- }
-
-#whiteBoard {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  border: 1px solid red;
-}
-
-.gameStartNotice {
-  font-size: 30px;
-  position: absolute;
-}
-
-.startHide {
-  -webkit-animation: fadeout 2s forwards;
-  animation: fadeout 2s forwards;
-}
-
 /*************
  Right sidebars
  *************/

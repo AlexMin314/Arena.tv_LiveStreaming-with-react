@@ -25,13 +25,32 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   constructor(props){
     super(props)
 
-    this.startingNotice = null;
     this.state = {
-
+      gameStartNotice: [],
+      correctAnswerNotice: []
     }
   }
 
   componentDidMount() {
+
+    /* Need a logic for preventing rerender whan user reload by redux and stage, turnNum */
+    const winnerRef = firebase.database().ref('rooms/' + this.props.roomkey + '/winnerOfStage');
+    winnerRef.on('child_added', (data) => {
+      if(data.val() !== 'init') {
+        this.setState({
+          correctAnswerNotice : [{classname:'correctAnswerNotice startHide',
+                                    name:data.val().name}]
+        })
+        setTimeout(() => this.setState({ correctAnswerNotice: [] }), 2000)
+      }
+    })
+    const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
+    startRef.on('value', (data) => {
+      if(data.val()) {
+        this.setState({ gameStartNotice: ['gameStartNotice startHide'] });
+        setTimeout(() => this.setState({ gameStartNotice: [] }), 2000)
+      }
+    })
 
   } // componentDidMount Ends.
 
@@ -44,13 +63,21 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   }
 
   gameStartNotice = () => {
+    const returnArr = [];
+    this.state.gameStartNotice.forEach((e) => {
+      returnArr.push(<div className={e}>GAME START!</div>)
+    });
+    return returnArr;
+  };
 
-    setTimeout(() => {
-      this.startingNotice.style.display = 'none';
-    }, 2300)
-
-    return (<div className="gameStartNotice startHide"
-                 ref={(e) => this.startingNotice = e}>GAME START!</div>)
+  correctAnswerNotice = () => {
+    const returnArr = [];
+    this.state.correctAnswerNotice.forEach((e) => {
+      returnArr.push(<div className={e.classname}>
+                      Correct Answer! <br/>
+                      {e.name} <br/>got points!</div>)
+    });
+    return returnArr;
   };
 
 
@@ -66,7 +93,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         </div>
         {/* Center */}
         <div className="canvasWrapper shadowOut">
-          {this.props.gameStartInfo ? this.gameStartNotice() : null}
+          {this.gameStartNotice()}
+          {this.correctAnswerNotice()}
           <canvas id="whiteBoard"></canvas>
           <ChatInput/>
         </div>
