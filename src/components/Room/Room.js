@@ -19,14 +19,13 @@ import { updateCurrentTurn } from '../../actions/turnActions';
 
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
-import ChatInput from './ChatInput/ChatInput';
+import Canvas from './Canvas/Canvas';
 
 export class Room extends Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props){
     super(props)
 
-    this.startingNotice = null;
     this.state = {
       msg: '',
       chatInput: '',
@@ -144,16 +143,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     )}
   }
 
-  gameStartNotice = () => {
-
-    setTimeout(() => {
-      this.startingNotice.style.display = 'none';
-    }, 2300)
-
-    return (<div className="gameStartNotice startHide"
-                 ref={(e) => this.startingNotice = e}>GAME START!</div>)
-  };
-
   skipTurn = () => {
     // Turn Changing.
     turnChangingLogic(this.props.roomkey);
@@ -190,19 +179,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
           <div className="col-lg-8 col-md-12 sectionDivider">
             <div className="" id="mainContentWrapper">
-              {/* Left SideBar */}
-              <div className="sidebars">
-                <div className="toolWrapper"></div>
-                <div className="toolWrapper">
-                </div>
-                <div className="toolWrapper"></div>
-              </div>
-              {/* Center */}
-              <div className="canvasWrapper shadowOut">
-                {this.props.gameStartInfo ? this.gameStartNotice() : null}
-                <canvas id="whiteBoard"></canvas>
-                <ChatInput/>
-              </div>
+              {/* Left SideBar + Center Canvas*/}
+              <Canvas/>
               {/* Right SideBar */}
               <div className="sidebars">
                 <div className="sideRow">

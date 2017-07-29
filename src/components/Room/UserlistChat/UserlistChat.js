@@ -140,9 +140,12 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     });
   }
 
+  /**
+   * If the user click name card... then?
+   */
   expandCard = (e) => {
     // Testing version.
-    console.log(e.target)
+    console.log(e.target.className)
   }
 
  /**
