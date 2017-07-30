@@ -8,7 +8,8 @@ import { userRoomUpdating,
          readyUpdating,
          triggerUpdatingGameStart,
          currentWordGenerating,
-         turnChangingLogic } from '../../firebase';
+         turnChangingLogic,
+         strokeClear } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Room.css';
@@ -34,7 +35,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       topic: '',
       currentPlayerId: '',
       currentPlayerTurn: '',
-      currentTurnIndex: '',
       currentWord: ''
     }
   }
@@ -64,7 +64,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       this.props.gameStart(data.val())
       // currentWord Generation requesting
       if (this.state.topic) {
-        currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic, this.props.turnInfo);
+        currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic);
       }
     });
 
@@ -81,19 +81,50 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         }
         this.setState({
           currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
-          currentPlayerId: keyArray[nextTurn].id,
-          currentTurnIndex: nextTurn
+          currentPlayerId: keyArray[nextTurn].id
         });
-        this.props.currentTurn(nextTurn);
+        const updator = {
+          index: nextTurn,
+          id: keyArray[nextTurn].id,
+          name: keyArray[nextTurn].username || keyArray[nextTurn].displayName
+        }
+        this.props.currentTurn(updator);
       });
     }); // turnRef.on Ends.
+
+    /* Temporal Logic, if the host left the room, turn will be changed */
+    const membersRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
+    membersRef.on('child_removed', (data) => {
+      turnRef.on('value', (snapshot) => {
+        const nextTurn = snapshot.val();
+        firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+        .once('value', (snapshot) => {
+          const members = snapshot.val();
+          const keyArray = [];
+          for (const key in members) {
+            keyArray.push(members[key]);
+          }
+          this.setState({
+            currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
+            currentPlayerId: keyArray[nextTurn].id
+          });
+          const updator = {
+            index: nextTurn,
+            id: keyArray[nextTurn].id,
+            name: keyArray[nextTurn].username || keyArray[nextTurn].displayName
+          }
+          this.props.currentTurn(updator);
+        });
+      }); 
+    });
+
 
     // Get Cur Word.
     const wordRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentWord');
     wordRef.on('value', (snapshot) => {
       this.setState({ currentWord: snapshot.val() })
     });
-
+    console.log(this.props.turnInfo.index);
   } // componentDidMount Ends.
 
   componentWillReceiveProps() {
@@ -108,6 +139,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    * Room related.
    */
   leaveRoom = () => {
+    // clear canvas
+    if(this.props.user[0].id === this.props.turnInfo.id) {
+      strokeClear(this.props.roomkey)
+    }
+    // updating to firebase
     roomMemberUpdating(this.props.roomkey, this.state.memberKey, {}, true, '/lobby');
   }
 
@@ -144,10 +180,12 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   skipTurn = () => {
+    // clear canvas
+    strokeClear(this.props.roomkey)
     // Turn Changing.
     turnChangingLogic(this.props.roomkey);
     // currentWord Generation requesting
-    currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic, this.props.turnInfo)
+    currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic)
     // Stage Updater needed!
   };
 

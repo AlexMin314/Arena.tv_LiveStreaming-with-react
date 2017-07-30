@@ -7,7 +7,8 @@ import { firebaseDB,
          userRoomUpdating,
          stageWinnerUpdater,
          currentWordGenerating,
-         turnChangingLogic } from '../../../firebase';
+         turnChangingLogic,
+         strokeClear } from '../../../firebase';
 import firebase from '../../../firebase';
 
 import './UserlistChat.css';
@@ -58,7 +59,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
       if (latestChat === curTurnAnswer &&
          chatSender === me.id &&
-         me.id !== this.state.userList[this.props.turnInfo].id) {
+         me.id !== this.props.turnInfo.id) {
 
          /* Need a stage Number Logic!!! */
          const testStageNumber = 1;
@@ -66,8 +67,10 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
          stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
          // Turn changer
          turnChangingLogic(this.props.roomkey)
+         // clear canvas
+         strokeClear(this.props.roomkey)
          // currentWord Generation requesting
-         currentWordGenerating(this.props.roomkey, this.props.memberKey, this.props.topic, this.props.turnInfo)
+         currentWordGenerating(this.props.roomkey, this.props.memberKey, this.props.topic, this.props.turnInfo.index)
       }
     })
 

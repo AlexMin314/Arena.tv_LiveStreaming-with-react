@@ -112,7 +112,7 @@ const updatingGameStart = (roomkey, data) => {
 
 
 // currentWord Generation logic
-export const currentWordGenerating = (roomKey, memberKey, topic, curTurnIndex) => {
+export const currentWordGenerating = (roomKey, memberKey, topic) => {
   firebase.database().ref('/rooms/' + roomKey + '/members')
     .once('value')
     .then((snapshot) => {
@@ -134,7 +134,6 @@ const currentWordGenerationRequest = (roomKey, topic) => {
       topicArr.shift()
 
       const randomNum = getRandomIntInRange(0, topicArr.length - 1)
-      console.log(topicArr[randomNum]);
       firebase.database().ref('rooms/' + roomKey).update({
         'currentWord': topicArr[randomNum]
       });
@@ -159,6 +158,15 @@ export const turnChangingLogic = (roomkey) => {
     })
 }
 
+
+// Stroke Updator
+export const strokeUpdator = (roomKey, mouseXY) => {
+  firebase.database().ref('rooms/' + roomKey + '/stroke').push(mouseXY);
+}
+
+export const strokeClear = (roomKey) => {
+  firebase.database().ref('rooms/' + roomKey).update({stroke: null});
+}
 
 
 /**
