@@ -30,16 +30,18 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
     this.state = {
       gameStartNotice: [],
-      correctAnswerNotice: []
+      correctAnswerNotice: [],
+      turnNotice: []
     }
   }
 
   componentDidMount() {
+    let newItems = false;
 
     /* Need a logic for preventing rerender whan user reload by redux and stage, turnNum */
     const winnerRef = firebase.database().ref('rooms/' + this.props.roomkey + '/winnerOfStage');
     winnerRef.on('child_added', (data) => {
-      if(data.val() !== 'init') {
+      if(data.val() !== 'init' && newItems) {
         this.setState({
           correctAnswerNotice : [{classname:'correctAnswerNotice startHide',
                                     name:data.val().name}]
@@ -49,9 +51,30 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     })
     const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
     startRef.on('value', (data) => {
-      if(data.val()) {
+      if(data.val() && newItems) {
         this.setState({ gameStartNotice: ['gameStartNotice startHide'] });
         setTimeout(() => this.setState({ gameStartNotice: [] }), 2000)
+      }
+    })
+    const turnNoticeRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
+    turnNoticeRef.on('value', (data) => {
+      if (newItems) {
+        setTimeout(() => {
+          if(this.props.user[0].id === this.props.turnInfo.id) {
+            this.setState({ turnNotice: ['turnNoticeText startHide'] });
+            setTimeout(() => this.setState({ turnNotice: [] }), 2000)
+          }
+        }, 300)
+      }
+    })
+
+    startRef.once('value', (data) => {
+      if(data.val()) {
+        winnerRef.once('value', (data) => {
+          turnNoticeRef.once('value', (data) => {
+            newItems = true;
+          })
+        })
       }
     })
 
@@ -212,6 +235,14 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     return returnArr;
   };
 
+  yourTurnNotice = () => {
+    const returnArr = [];
+    this.state.turnNotice.forEach((e) => {
+      returnArr.push(<div className={e} key={uuid()}>Your Turn!</div>)
+    });
+    return returnArr;
+  };
+
 
   render() {
     return (
@@ -227,6 +258,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         <div className="canvasWrapper shadowOut">
           {this.gameStartNotice()}
           {this.correctAnswerNotice()}
+          {this.yourTurnNotice()}
           <canvas id="whiteBoard"></canvas>
           <ChatInput/>
         </div>

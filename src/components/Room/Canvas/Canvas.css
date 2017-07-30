@@ -35,7 +35,7 @@
   position: absolute;
   text-align: center;
 }
-.gameStartNotice {
+.gameStartNotice, .turnNoticeText {
   font-size: 30px;
   position: absolute;
 }

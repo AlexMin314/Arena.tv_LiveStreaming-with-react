@@ -112,8 +112,9 @@ export const triggerUpdatingGameStart = (roomkey) => {
 // For ready status updating.
 const updatingGameStart = (roomkey, data) => {
   firebase.database().ref('rooms/' + roomkey).update({
-    'gameStart': data,
-    'stages': 1
+    gameStart: data,
+    stages: 1,
+    currentTurn: 0
   });
 };
 
