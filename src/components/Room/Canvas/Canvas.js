@@ -65,12 +65,23 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       }
     })
     const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
+    const countDownRef = firebase.database().ref('rooms/' + this.props.roomkey + '/countDownStarted');
     startRef.on('value', (data) => {
-      if(data.val() && newItems) {
-        this.start3();
-        setTimeout(() => this.start2(), 1000);
-        setTimeout(() => this.start1(), 2000);
-        setTimeout(() => this.realStart(), 3000);
+      if(data.val()) {
+        winnerRef.once('value', (data) => {
+          turnNoticeRef.once('value', (data) => {
+            newItems = true;
+          })
+        })
+        countDownRef.once('value', (data) => {
+          if(data.val() === false) {
+            this.start3();
+            setTimeout(() => this.start2(), 1000);
+            setTimeout(() => this.start1(), 2000);
+            setTimeout(() => this.realStart(), 3000);
+            countDownRef.update({ 'countDownStarted': true });
+          }
+        })
       }
     })
     const turnNoticeRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
@@ -82,16 +93,6 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
             setTimeout(() => this.setState({ turnNotice: [] }), 2000)
           }
         }, 300)
-      }
-    })
-
-    startRef.once('value', (data) => {
-      if(data.val()) {
-        winnerRef.once('value', (data) => {
-          turnNoticeRef.once('value', (data) => {
-            newItems = true;
-          })
-        })
       }
     })
 

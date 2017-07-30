@@ -266,6 +266,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                       <div className="curWord">{this.state.currentWord}</div>
                     </div>
                   </div>
+                  <div className="">
+                    <div className="timerDiv">
+                      <h2> Timer countdown </h2>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <div className="sideRow turnWrapper">
@@ -283,7 +288,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                   <div className="">
                     <div className="skipTurnDiv">
                       <button type="button"
-                              className="btn btn-primary disabled">not your turn</button>
+                              className="btn btn-primary disabled">It is not your turn</button>
                     </div>
                   </div>
                 </div>
