@@ -7,7 +7,8 @@ import { firebaseDB,
          userRoomUpdating,
          stageWinnerUpdater,
          currentWordGenerating,
-         turnChangingLogic } from '../../../firebase';
+         turnChangingLogic,
+         strokeClear } from '../../../firebase';
 import firebase from '../../../firebase';
 
 import './UserlistChat.css';
@@ -58,16 +59,15 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
       if (latestChat === curTurnAnswer &&
          chatSender === me.id &&
-         me.id !== this.state.userList[this.props.turnInfo].id) {
-
-         /* Need a stage Number Logic!!! */
-         const testStageNumber = 1;
+         me.id !== this.props.turnInfo.id) {
          // stageWinnerUpdater for firebase
-         stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
+         stageWinnerUpdater(this.props.roomkey, me);
          // Turn changer
          turnChangingLogic(this.props.roomkey)
+         // clear canvas
+         strokeClear(this.props.roomkey)
          // currentWord Generation requesting
-         currentWordGenerating(this.props.roomkey, this.props.memberKey, this.props.topic, this.props.turnInfo)
+         currentWordGenerating(this.props.roomkey, this.props.memberKey, this.props.topic, this.props.turnInfo.index)
       }
     })
 
@@ -138,7 +138,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
         });
       }
     });
-  }
+  } // componentDidUpdate Ends.
 
   /**
    * If the user click name card... then?

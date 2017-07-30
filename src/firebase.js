@@ -63,7 +63,7 @@ export const readyUpdating = (roomkey, memberKey, data) => {
 
 
 // For current stage winner info updating
-export const stageWinnerUpdater = (roomkey, winner, stageNum) => {
+export const stageWinnerUpdater = (roomkey, winner) => {
   firebase.database().ref('rooms/' + roomkey + '/winnerOfStage')
     .once('value')
     .then((snapshot) => {
@@ -72,9 +72,16 @@ export const stageWinnerUpdater = (roomkey, winner, stageNum) => {
       const update = {};
       update.id = winner.id;
       update.name = winner.displayName || winner.username;
+      update.stage = winnerOfStageArr.length;
       winnerOfStageArr.push(update)
-      firebase.database().ref('rooms/' + roomkey)
-        .update({ 'winnerOfStage': winnerOfStageArr });
+      if(winnerOfStageArr.length < 13) {
+        firebase.database().ref('rooms/' + roomkey)
+          .update({ 'winnerOfStage': winnerOfStageArr });
+        firebase.database().ref('rooms/' + roomkey)
+          .update({ 'stages': winnerOfStageArr.length });
+      } else {
+        console.log('game over status!')
+      }
     })
 
 }
@@ -105,14 +112,15 @@ export const triggerUpdatingGameStart = (roomkey) => {
 // For ready status updating.
 const updatingGameStart = (roomkey, data) => {
   firebase.database().ref('rooms/' + roomkey).update({
-    'gameStart': data,
-    'stages': 1
+    gameStart: data,
+    stages: 1,
+    currentTurn: 0
   });
 };
 
 
 // currentWord Generation logic
-export const currentWordGenerating = (roomKey, memberKey, topic, curTurnIndex) => {
+export const currentWordGenerating = (roomKey, memberKey, topic) => {
   firebase.database().ref('/rooms/' + roomKey + '/members')
     .once('value')
     .then((snapshot) => {
@@ -134,7 +142,6 @@ const currentWordGenerationRequest = (roomKey, topic) => {
       topicArr.shift()
 
       const randomNum = getRandomIntInRange(0, topicArr.length - 1)
-      console.log(topicArr[randomNum]);
       firebase.database().ref('rooms/' + roomKey).update({
         'currentWord': topicArr[randomNum]
       });
@@ -159,6 +166,15 @@ export const turnChangingLogic = (roomkey) => {
     })
 }
 
+
+// Stroke Updator
+export const strokeUpdator = (roomKey, mouseXY) => {
+  firebase.database().ref('rooms/' + roomKey + '/stroke').push(mouseXY);
+}
+
+export const strokeClear = (roomKey) => {
+  firebase.database().ref('rooms/' + roomKey).update({stroke: null});
+}
 
 
 /**
