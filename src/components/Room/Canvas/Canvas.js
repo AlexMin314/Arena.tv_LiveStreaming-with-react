@@ -110,14 +110,15 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     // Rendering Logic
     const redraw = () => {
 
-      // getting tool settings
-      ctx.strokeStyle = `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`;
-      ctx.lineJoin = lineJoin;
-      ctx.lineWidth = lineWidth;
       // getting the latest element from the this.drawings array.
       const curIdx = this.drawings.length - 1;
       const pastIdx = this.drawings.length - 2;
       const arr = this.drawings;
+      // getting tool settings
+      const color = arr[curIdx].cl;
+      ctx.strokeStyle = `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`;
+      ctx.lineJoin = lineJoin;
+      ctx.lineWidth = lineWidth;
 
       ctx.beginPath();
       // condition for clicking(just dot) or dragging(line)
@@ -133,20 +134,21 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     }
 
     // helper function for caculating mouse coordinate.
-    const coordinator = (e, move, aspect) => {
+    const coordinator = (e, move, aspect, color) => {
       const cRect = canvas.getBoundingClientRect();
       const mX = (e.clientX - cRect.left) / width;
       const mY = (e.clientY - cRect.top) / height;
       const mv = move;
       const ap = aspect;
-      return { mX, mY, mv, ap }
+      const cl = color;
+      return { mX, mY, mv, ap, cl }
     }
 
 
     // Event Listners.
     const uid = this.props.user[0].id;
     canvas.addEventListener('mousedown', (e) => {
-      const mouseXY = coordinator(e, 'start', aspect);
+      const mouseXY = coordinator(e, 'start', aspect, this.state.color);
       if (this.props.gameStartInfo && this.props.turnInfo.id === uid) {
         strokeUpdator(this.props.roomkey, mouseXY);
         drawing = true;
@@ -154,12 +156,12 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     });
     canvas.addEventListener('mousemove', (e) => {
       if(drawing && this.props.gameStartInfo && this.props.turnInfo.id === uid) {
-        const mouseXY = coordinator(e, 'drag', aspect);
+        const mouseXY = coordinator(e, 'drag', aspect, this.state.color);
         strokeUpdator(this.props.roomkey, mouseXY, this.props.gameStartInfo);
       }
     });
     canvas.addEventListener('mouseup', (e) => {
-      const mouseXY = coordinator(e, 'end', aspect);
+      const mouseXY = coordinator(e, 'end', aspect, this.state.color);
       if (this.props.gameStartInfo && this.props.turnInfo.id === uid) {
         strokeUpdator(this.props.roomkey, mouseXY);
         drawing = false;
@@ -312,17 +314,19 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         {/* Left SideBar */}
         <div className="sidebars">
           <div className="toolWrapper">
-            Color Picker
             <div className="colorPickerWrapper">
-              <i className="fa fa-pencil-square fa-lg" style={ styles.pencilLogo } ></i>
+              Color Picker
               <div className="colorPicker">
-                <div style={ styles.swatch } onClick={ this.handleClick }>
-                  <div style={ styles.color } />
+                <i className="fa fa-pencil-square fa-lg" style={ styles.pencilLogo } ></i>
+                <div className="colorPickerPallet">
+                  <div style={ styles.swatch } onClick={ this.handleClick }>
+                    <div style={ styles.color } />
+                  </div>
+                  { this.state.displayColorPicker ? <div style={ styles.popover }>
+                    <div style={ styles.cover } onClick={ this.handleClose }/>
+                    <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
+                  </div> : null }
                 </div>
-                { this.state.displayColorPicker ? <div style={ styles.popover }>
-                  <div style={ styles.cover } onClick={ this.handleClose }/>
-                  <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
-                </div> : null }
               </div>
             </div>
             <div className="ereaser"></div>

@@ -56,6 +56,11 @@
 
 .colorPickerWrapper {
   display: flex;
+  flex-direction: column;
+}
+
+.colorPicker {
+  display: flex;
   flex-direction: row;
 }
 
