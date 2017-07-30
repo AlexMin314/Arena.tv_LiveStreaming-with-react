@@ -35,6 +35,27 @@
   position: absolute;
   text-align: center;
 }
+
+.countDown3 {
+  font-size: 30px;
+  position: flex;
+}
+
+.countDown2 {
+  font-size: 30px;
+  position: flex;
+}
+
+.countDown1 {
+  font-size: 30px;
+  position: flex;
+}
+
+.countDownStartHide {
+  -webkit-animation: fadeout 1s forwards;
+  animation: fadeout 1s forwards;
+}
+
 .gameStartNotice, .turnNoticeText {
   font-size: 30px;
   position: absolute;

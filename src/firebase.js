@@ -71,7 +71,7 @@ export const stageWinnerUpdater = (roomkey, winner) => {
       // need checker by stageNum and idx of array.
       const update = {};
       update.id = winner.id;
-      update.name = winner.displayName;
+      update.name = winner.displayName || winner.username;
       update.stage = winnerOfStageArr.length;
       winnerOfStageArr.push(update)
       if(winnerOfStageArr.length < 13) {
