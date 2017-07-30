@@ -33,6 +33,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     this.drawings = [];
     this.weightTool = {};
     this.state = {
+      countDown1: [],
+      countDown2: [],
+      countDown3: [],
       gameStartNotice: [],
       correctAnswerNotice: [],
       turnNotice: [],
@@ -64,8 +67,10 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
     startRef.on('value', (data) => {
       if(data.val() && newItems) {
-        this.setState({ gameStartNotice: ['gameStartNotice startHide'] });
-        setTimeout(() => this.setState({ gameStartNotice: [] }), 2000)
+        this.start3();
+        setTimeout(() => this.start2(), 1000);
+        setTimeout(() => this.start1(), 2000);
+        setTimeout(() => this.realStart(), 3000);
       }
     })
     const turnNoticeRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
@@ -246,6 +251,58 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     return returnArr;
   };
 
+  countDown1 = () => {
+    const returnCountDown1 = [];
+    this.state.countDown1.forEach((e) => {
+      returnCountDown1.push(<div className={e}>1</div>)
+    });
+    return returnCountDown1;
+  }
+
+  countDown2 = () => {
+    const returnCountDown2 = [];
+    this.state.countDown2.forEach((e) => {
+      returnCountDown2.push(<div className={e}>2</div>)
+    });
+    return returnCountDown2;
+  }
+
+  countDown3 = () => {
+    const returnCountDown3 = [];
+    this.state.countDown3.forEach((e) => {
+      returnCountDown3.push(<div className={e}>3</div>)
+    });
+    return returnCountDown3;
+  }
+
+  start3 = () => {
+      this.setState({ countDown3: ['countDown3 countDownStartHide'] });
+    setTimeout(() => {
+      this.setState({ countDown3: [] })
+    }, 500);
+  }
+
+  start2 = () => {
+      this.setState({ countDown2: ['countDown2 countDownStartHide'] });
+    setTimeout(() => {
+      this.setState({ countDown2: [] })
+    }, 500);
+  }
+
+  start1 = () => {
+      this.setState({ countDown1: ['countDown1 countDownStartHide'] });
+    setTimeout(() => {
+      this.setState({ countDown1: [] })
+    }, 500);
+  }
+
+  realStart = () => {
+      this.setState({ gameStartNotice: ['gameStartNotice startHide'] });
+    setTimeout(() => {
+      this.setState({ gameStartNotice: [] })
+    }, 2000);
+  }
+
   correctAnswerNotice = () => {
     const returnArr = [];
     this.state.correctAnswerNotice.forEach((e) => {
@@ -414,6 +471,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         </div>
         {/* Center */}
         <div className="canvasWrapper shadowOut">
+          {this.countDown3()}
+          {this.countDown2()}
+          {this.countDown1()}
           {this.gameStartNotice()}
           {this.correctAnswerNotice()}
           {this.yourTurnNotice()}
