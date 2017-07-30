@@ -8,7 +8,8 @@ import { userRoomUpdating,
          readyUpdating,
          triggerUpdatingGameStart,
          currentWordGenerating,
-         turnChangingLogic } from '../../../firebase';
+         turnChangingLogic,
+         strokeUpdator } from '../../../firebase';
 import firebase from '../../../firebase';
 
 import './Canvas.css';
@@ -25,10 +26,11 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   constructor(props){
     super(props)
 
+    this.drawings = [];
+
     this.state = {
       gameStartNotice: [],
-      correctAnswerNotice: [],
-      drawings: []
+      correctAnswerNotice: []
     }
   }
 
@@ -57,66 +59,123 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     * Event Listener of mouse
     */
     const canvas = document.getElementById('whiteBoard');
-    let cRect = canvas.getBoundingClientRect();
-    let width = cRect.width;
-    let height = cRect.height;
-    canvas.width = width;
-    canvas.height = height;
-    window.addEventListener('resize', () => {
-
-    })
     const ctx = canvas.getContext("2d");
+    // getting local settings
+    let cRect = canvas.getBoundingClientRect();
+    let width = canvas.clientWidth;
+    let height = canvas.clientHeight;
+    let aspect = width / height;
+    let resizeCanvas;
+    canvas.height = height;
+    canvas.width = width;
 
+
+    // Rendering Logic
+    const redraw = () => {
+
+      // getting tool settings
+      ctx.strokeStyle = color;
+      ctx.lineJoin = lineJoin;
+      ctx.lineWidth = lineWidth;
+      // getting the latest element from the this.drawings array.
+      const curIdx = this.drawings.length - 1;
+      const pastIdx = this.drawings.length - 2;
+      const arr = this.drawings;
+
+      ctx.beginPath();
+      // condition for clicking(just dot) or dragging(line)
+      if (arr.length > 1 && arr[pastIdx].mv === 'drag') {
+        ctx.moveTo(arr[pastIdx].mX * width, arr[pastIdx].mY * height)
+      }
+      if(arr[curIdx].mv === ('start' || 'end')) {
+        ctx.moveTo(arr[curIdx].mX * width - 1, arr[curIdx].mY * height)
+      }
+      ctx.lineTo(arr[curIdx].mX * width, arr[curIdx].mY * height);
+      ctx.closePath();
+      ctx.stroke();
+    }
+
+    // Temporal tool settings.
     let drawing = false;
     let color = "black";
     let lineJoin = "round";
     let lineWidth = 5;
-    let test = [];
 
-    const coordinator = (e) => {
+    // helper function for caculating mouse coordinate.
+    const coordinator = (e, move, aspect) => {
       const cRect = canvas.getBoundingClientRect();
-      const mouseX = (e.clientX - cRect.left) / width;
-      const mouseY = (e.clientY - cRect.top) / height;
-      return { mouseX, mouseY }
+      const mX = (e.clientX - cRect.left) / width;
+      const mY = (e.clientY - cRect.top) / height;
+      const mv = move;
+      const ap = aspect;
+      return { mX, mY, mv, ap }
     }
 
+
+    // Event Listners.
+    const uid = this.props.user[0].id;
     canvas.addEventListener('mousedown', (e) => {
-      const mouseXY = coordinator(e);
-      test.push(mouseXY)
-      redraw()
-      drawing = true;
-    })
-    canvas.addEventListener('mousemove', (e) => {
-      if(drawing) {
-        const mouseXY = coordinator(e);
-        test.push(mouseXY)
-        redraw()
+      const mouseXY = coordinator(e, 'start', aspect);
+      if (this.props.gameStartInfo && this.props.turnInfo.id === uid) {
+        strokeUpdator(this.props.roomkey, mouseXY);
+        drawing = true;
       }
-    })
+    });
+    canvas.addEventListener('mousemove', (e) => {
+      if(drawing && this.props.gameStartInfo && this.props.turnInfo.id === uid) {
+        const mouseXY = coordinator(e, 'drag', aspect);
+        strokeUpdator(this.props.roomkey, mouseXY, this.props.gameStartInfo);
+      }
+    });
     canvas.addEventListener('mouseup', (e) => {
-      const mouseXY = coordinator(e);
-      test = [];
-      drawing = false;
-    })
+      const mouseXY = coordinator(e, 'end', aspect);
+      if (this.props.gameStartInfo && this.props.turnInfo.id === uid) {
+        strokeUpdator(this.props.roomkey, mouseXY);
+        drawing = false;
+      }
+    });
     canvas.addEventListener('mouseleave', (e) => {
-      test = [];
       drawing = false;
+    });
+
+    // Event Receivers.
+    const strokeRef = firebase.database().ref('rooms/' + this.props.roomkey + '/stroke');
+    strokeRef.on('child_added', (data) => {
+      this.drawings.push(data.val());
+      redraw();
+    })
+    strokeRef.on('child_removed', (data) => {
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     })
 
-    const redraw = () => {
-      ctx.strokeStyle = color;
-      ctx.lineJoin = lineJoin;
-      ctx.lineWidth = lineWidth;
-      ctx.beginPath();
-      if (test.length > 1) {
-        ctx.moveTo(test[test.length - 2].mouseX * width, test[test.length - 2].mouseY * height)
-      } else {
-        ctx.moveTo((test[test.length - 1].mouseX) * width -1, (test[test.length - 1].mouseY) * height)
-      }
-        ctx.lineTo(test[test.length - 1].mouseX * width, test[test.length - 1].mouseY * height);
-        ctx.closePath();
-        ctx.stroke();
-    }
+    // Resize canvas and Rerender drawings if user resize the window.
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeCanvas);
+      // setTimeout for optimazation on performance.
+      resizeCanvas = setTimeout(() => {
+        // updating local settings.
+        cRect = canvas.getBoundingClientRect();
+        width = canvas.clientWidth;
+        height = canvas.clientHeight;
+        aspect = width / height;
+        canvas.width = width;
+        canvas.height = height;
+        // getting drawing information from firebase
+        firebase.database().ref('rooms/' + this.props.roomkey + '/stroke')
+          .once('value')
+          .then((snapshot) => {
+            const strokes = snapshot.val();
+            // resetting
+            this.drawings = [];
+            for (const key in strokes) {
+              // pushing the information and render that one by one.
+              this.drawings.push(strokes[key]);
+              redraw();
+            }
+          })
+      }, 500);
+    })
+
 
 
   } // componentDidMount Ends.
@@ -136,7 +195,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   gameStartNotice = () => {
     const returnArr = [];
     this.state.gameStartNotice.forEach((e) => {
-      returnArr.push(<div className={e}>GAME START!</div>)
+      returnArr.push(<div className={e}
+                          key={uuid()}>GAME START!</div>)
     });
     return returnArr;
   };
@@ -144,7 +204,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   correctAnswerNotice = () => {
     const returnArr = [];
     this.state.correctAnswerNotice.forEach((e) => {
-      returnArr.push(<div className={e.classname}>
+      returnArr.push(<div className={e.classname}
+                          key={uuid()}>
                       Correct Answer! <br/>
                       {e.name} <br/>got points!</div>)
     });
