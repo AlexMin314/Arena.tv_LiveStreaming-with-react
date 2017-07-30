@@ -138,7 +138,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
         });
       }
     });
-  }
+  } // componentDidUpdate Ends.
 
   /**
    * If the user click name card... then?

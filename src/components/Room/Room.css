@@ -67,15 +67,3 @@
 .curWord {
   font-size: 20px;
 }
-
-/*************
- Left sidebars
- *************/
-
- .toolWrapper {
-    border: 1px solid red;
-    display: flex;
-    height: 100%;
-    padding-right: 5px;
-    flex: 1;
- }

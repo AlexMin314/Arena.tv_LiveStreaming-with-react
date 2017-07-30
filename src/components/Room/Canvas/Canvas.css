@@ -44,3 +44,21 @@
   -webkit-animation: fadeout 2s forwards;
   animation: fadeout 2s forwards;
 }
+
+/*********
+  tools
+  ********/
+
+.toolWrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.colorPickerWrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.fa-pencil-square {
+  margin: 6px;
+}
