@@ -23,7 +23,6 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  border: 1px solid red;
   min-height: 210px;
 }
 
@@ -58,7 +57,7 @@
   margin-right: 5px;
   height: 100%;
   flex: 2;
-  min-height: 210px;
+  min-height: 190px;
 }
 .toolWrapper2 {
   display: flex;
@@ -101,16 +100,18 @@
   justify-content: center;
   align-items: center;
   padding: 0;
-  border: 1px solid red;
 }
 .clearBtn {
   display: flex;
-  width: 75px;
-  height: 25px;
+  width: 55px;
+  height: 22px;
   justify-content: center;
   align-items: center;
-  padding: 0;
-
+  margin-right: 5px;
+  font-size: 12px;
+}
+.clearBtn:hover {
+  background: rgb(223, 221, 221);
 }
 
 .selected {
@@ -137,4 +138,8 @@
   width: 18px;
   height: 18px;
   border-radius: 100%;
+}
+
+.edits:hover {
+  background: rgb(223, 221, 221);
 }

@@ -176,6 +176,28 @@ export const strokeClear = (roomKey) => {
   firebase.database().ref('rooms/' + roomKey).update({stroke: null});
 }
 
+export const undoRecent = (roomKey) => {
+  firebase.database().ref('rooms/' + roomKey + '/stroke')
+    .once('value', (snapshot) => {
+      const strokes = snapshot.val();
+      let lastStart = null;
+      let checker = false;
+      // find last 'start'
+      for (const key in strokes) {
+        if (strokes[key].mv === 'start') lastStart = key;
+      }
+      // delete from the 'start'
+      for (const key in strokes) {
+        if (key === lastStart) checker = true;
+        if (checker) {
+          firebase.database().ref('rooms/' + roomKey + '/stroke/' + key)
+            .set({})
+        }
+      }
+    }
+  );
+}
+
 
 /**
  * EventListener

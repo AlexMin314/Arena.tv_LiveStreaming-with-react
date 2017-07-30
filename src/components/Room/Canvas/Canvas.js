@@ -12,7 +12,8 @@ import { userRoomUpdating,
          currentWordGenerating,
          turnChangingLogic,
          strokeUpdator,
-         strokeClear } from '../../../firebase';
+         strokeClear,
+         undoRecent } from '../../../firebase';
 import firebase from '../../../firebase';
 
 import './Canvas.css';
@@ -104,9 +105,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     canvas.width = width;
     let drawing = false;
 
-    // Rendering Logic
+    // Canvas Drawing Logic for init loading and add_child.
     const redraw = () => {
-
       // getting the latest element from the this.drawings array.
       const curIdx = this.drawings.length - 1;
       const pastIdx = this.drawings.length - 2;
@@ -129,6 +129,25 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       ctx.closePath();
       ctx.stroke();
     }
+    // Canvas Drawing Logic for undo.
+    const redrawAll = () => {
+      this.drawings.forEach((e, i) => {
+        const arr = this.drawings;
+        const color = arr[i].cl;
+
+        ctx.strokeStyle = `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`;
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = arr[i].wg;
+
+        ctx.beginPath();
+        ctx.moveTo(arr[i].mX * width, arr[i].mY * height)
+        if (i < arr.length - 1 && arr[i].mv !== 'end') {
+          ctx.lineTo(arr[i + 1].mX * width, arr[i + 1].mY * height);
+        }
+        ctx.closePath();
+        ctx.stroke();
+      })
+    }
 
     // helper function for caculating mouse coordinate.
     const coordinator = (e, move, aspect, color, weight) => {
@@ -139,7 +158,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       const ap = aspect;
       const cl = color;
       const wg = weight;
-      return { mX, mY, mv, ap, cl, wg }
+      const id = uuid();
+      return { mX, mY, mv, ap, cl, wg, id }
     }
 
 
@@ -177,6 +197,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     })
     strokeRef.on('child_removed', (data) => {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      this.drawings.pop()
+      if (data.val().mv === 'end') redrawAll();
     })
 
     // Resize canvas and Rerender drawings if user resize the window.
@@ -303,6 +325,10 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     if (this.props.turnInfo.id === this.props.user[0].id) strokeClear(this.props.roomkey)
   }
 
+  undo = () => {
+    if (this.props.turnInfo.id === this.props.user[0].id) undoRecent(this.props.roomkey)
+  }
+
 
   render() {
 
@@ -372,13 +398,17 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
             <div className="editToolWrapper">
               Edit Tool
               <div className="editTool">
-                <div className="weights"></div>
-                <div className="weights"></div>
-                <div className="weights"></div>
+                <div className="clearBtn shadowOut"
+                     onClick={this.clearAllDrawings}>CLEAR</div>
+                <div className="weights shadowOut edits">
+                  <i className="fa fa-undo fa-lg" aria-hidden="true"
+                     onClick={this.undo}></i>
+                </div>
+                <div className="weights shadowOut">
+                  <i className="fa fa-eraser fa-lg" aria-hidden="true"></i>
+                </div>
               </div>
             </div>
-            <div className="clearBtn shadowOut"
-                 onClick={this.clearAllDrawings}>CLEAR</div>
           </div>
           <div className="toolWrapper2"></div>
         </div>
