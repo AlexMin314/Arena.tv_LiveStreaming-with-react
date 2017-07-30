@@ -101,9 +101,6 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     let resizeCanvas;
     canvas.height = height;
     canvas.width = width;
-
-
-    // Temporal tool settings.
     let drawing = false;
 
     // Rendering Logic
@@ -117,7 +114,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       const color = arr[curIdx].cl;
       ctx.strokeStyle = `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`;
       ctx.lineJoin = 'round';
-      ctx.lineWidth = this.state.weightPick;
+      ctx.lineWidth = arr[curIdx].wg;
 
       ctx.beginPath();
       // condition for clicking(just dot) or dragging(line)
@@ -133,21 +130,22 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     }
 
     // helper function for caculating mouse coordinate.
-    const coordinator = (e, move, aspect, color) => {
+    const coordinator = (e, move, aspect, color, weight) => {
       const cRect = canvas.getBoundingClientRect();
       const mX = (e.clientX - cRect.left) / width;
       const mY = (e.clientY - cRect.top) / height;
       const mv = move;
       const ap = aspect;
       const cl = color;
-      return { mX, mY, mv, ap, cl }
+      const wg = weight;
+      return { mX, mY, mv, ap, cl, wg }
     }
 
 
     // Event Listners.
     const uid = this.props.user[0].id;
     canvas.addEventListener('mousedown', (e) => {
-      const mouseXY = coordinator(e, 'start', aspect, this.state.color);
+      const mouseXY = coordinator(e, 'start', aspect, this.state.color, this.state.weightPick);
       if (this.props.gameStartInfo && this.props.turnInfo.id === uid) {
         strokeUpdator(this.props.roomkey, mouseXY);
         drawing = true;
@@ -155,12 +153,12 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     });
     canvas.addEventListener('mousemove', (e) => {
       if(drawing && this.props.gameStartInfo && this.props.turnInfo.id === uid) {
-        const mouseXY = coordinator(e, 'drag', aspect, this.state.color);
+        const mouseXY = coordinator(e, 'drag', aspect, this.state.color, this.state.weightPick);
         strokeUpdator(this.props.roomkey, mouseXY, this.props.gameStartInfo);
       }
     });
     canvas.addEventListener('mouseup', (e) => {
-      const mouseXY = coordinator(e, 'end', aspect, this.state.color);
+      const mouseXY = coordinator(e, 'end', aspect, this.state.color, this.state.weightPick);
       if (this.props.gameStartInfo && this.props.turnInfo.id === uid) {
         strokeUpdator(this.props.roomkey, mouseXY);
         drawing = false;
