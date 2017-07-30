@@ -63,7 +63,7 @@ export const readyUpdating = (roomkey, memberKey, data) => {
 
 
 // For current stage winner info updating
-export const stageWinnerUpdater = (roomkey, winner, stageNum) => {
+export const stageWinnerUpdater = (roomkey, winner) => {
   firebase.database().ref('rooms/' + roomkey + '/winnerOfStage')
     .once('value')
     .then((snapshot) => {
@@ -72,9 +72,16 @@ export const stageWinnerUpdater = (roomkey, winner, stageNum) => {
       const update = {};
       update.id = winner.id;
       update.name = winner.displayName;
+      update.stage = winnerOfStageArr.length;
       winnerOfStageArr.push(update)
-      firebase.database().ref('rooms/' + roomkey)
-        .update({ 'winnerOfStage': winnerOfStageArr });
+      if(winnerOfStageArr.length < 13) {
+        firebase.database().ref('rooms/' + roomkey)
+          .update({ 'winnerOfStage': winnerOfStageArr });
+        firebase.database().ref('rooms/' + roomkey)
+          .update({ 'stages': winnerOfStageArr.length });
+      } else {
+        console.log('game over status!')
+      }
     })
 
 }
