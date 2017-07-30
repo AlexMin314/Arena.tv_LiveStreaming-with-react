@@ -58,8 +58,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     */
     const canvas = document.getElementById('whiteBoard');
     let cRect = canvas.getBoundingClientRect();
-    let width = cRect.width;
-    let height = cRect.height;
+    let width = canvas.clientWidth;
+    let height = canvas.clientHeight;
+    const aspect = width / height;
     canvas.width = width;
     canvas.height = height;
     window.addEventListener('resize', () => {
@@ -73,11 +74,13 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     let lineWidth = 5;
     let test = [];
 
-    const coordinator = (e) => {
+    const coordinator = (e, move, aspect) => {
       const cRect = canvas.getBoundingClientRect();
-      const mouseX = (e.clientX - cRect.left) / width;
-      const mouseY = (e.clientY - cRect.top) / height;
-      return { mouseX, mouseY }
+      const mX = (e.clientX - cRect.left) / width;
+      const mY = (e.clientY - cRect.top) / height;
+      const mv = move;
+      const ap = aspect;
+      return { mX, mY, mv, ap }
     }
 
     canvas.addEventListener('mousedown', (e) => {
@@ -89,6 +92,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     canvas.addEventListener('mousemove', (e) => {
       if(drawing) {
         const mouseXY = coordinator(e);
+        console.log(mouseXY)
         test.push(mouseXY)
         redraw()
       }
@@ -109,11 +113,11 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       ctx.lineWidth = lineWidth;
       ctx.beginPath();
       if (test.length > 1) {
-        ctx.moveTo(test[test.length - 2].mouseX * width, test[test.length - 2].mouseY * height)
+        ctx.moveTo(test[test.length - 2].mX * width, test[test.length - 2].mY * height)
       } else {
-        ctx.moveTo((test[test.length - 1].mouseX) * width -1, (test[test.length - 1].mouseY) * height)
+        ctx.moveTo((test[test.length - 1].mX) * width -1, (test[test.length - 1].mY) * height)
       }
-        ctx.lineTo(test[test.length - 1].mouseX * width, test[test.length - 1].mouseY * height);
+        ctx.lineTo(test[test.length - 1].mX * width, test[test.length - 1].mY * height);
         ctx.closePath();
         ctx.stroke();
     }

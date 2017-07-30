@@ -58,7 +58,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
       if (latestChat === curTurnAnswer &&
          chatSender === me.id &&
-         me !== this.state.userList[this.props.turnInfo].id) {
+         me.id !== this.state.userList[this.props.turnInfo].id) {
 
          /* Need a stage Number Logic!!! */
          const testStageNumber = 1;
