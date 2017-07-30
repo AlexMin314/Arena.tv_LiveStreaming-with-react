@@ -52,9 +52,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     startRef.on('value', (data) => {
       if(data.val()) {
           this.start3();
-        setTimeout(() => this.start2(), 2000);
-        setTimeout(() => this.start1(), 4000);
-        setTimeout(() => this.realStart(), 6000);
+        setTimeout(() => this.start2(), 1000);
+        setTimeout(() => this.start1(), 2000);
+        setTimeout(() => this.realStart(), 3000);
       }
     })
 
@@ -174,21 +174,21 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       this.setState({ countDown3: ['countDown3 countDownStartHide'] });
     setTimeout(() => {
       this.setState({ countDown3: [] })
-    }, 1000);
+    }, 500);
   }
 
   start2 = () => {
       this.setState({ countDown2: ['countDown2 countDownStartHide'] });
     setTimeout(() => {
       this.setState({ countDown2: [] })
-    }, 1000);
+    }, 500);
   }
 
   start1 = () => {
       this.setState({ countDown1: ['countDown1 countDownStartHide'] });
     setTimeout(() => {
       this.setState({ countDown1: [] })
-    }, 1000);
+    }, 500);
   }
 
   realStart = () => {
