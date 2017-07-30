@@ -35,7 +35,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       topic: '',
       currentPlayerId: '',
       currentPlayerTurn: '',
-      currentWord: ''
+      currentWord: '',
+      currentStage: '',
     }
   }
 
@@ -86,7 +87,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         const updator = {
           index: nextTurn,
           id: keyArray[nextTurn].id,
-          name: keyArray[nextTurn].username || keyArray[nextTurn].displayName
+          name: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
+          stage: this.state.currentStage
         }
         this.props.currentTurn(updator);
       });
@@ -115,7 +117,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           }
           this.props.currentTurn(updator);
         });
-      }); 
+      });
     });
 
 
@@ -124,7 +126,12 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     wordRef.on('value', (snapshot) => {
       this.setState({ currentWord: snapshot.val() })
     });
-    console.log(this.props.turnInfo.index);
+
+    const stageRef = firebase.database().ref('rooms/' + this.props.roomkey + '/stages');
+    stageRef.on('value', (snapshot) => {
+      this.setState({ currentStage: snapshot.val() })
+    });
+
   } // componentDidMount Ends.
 
   componentWillReceiveProps() {
@@ -236,6 +243,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                   <div className="">
                     <div className="turnDiv shadowOut">
                       <p className="playerTurn">
+                        Stage: {this.state.currentStage}
+                        <br/>
                         Current Turn:
                         <br/>
                         {this.state.currentPlayerTurn}
@@ -261,6 +270,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                   <div className="">
                     <div className="turnDiv shadowOut">
                       <p className="playerTurn">
+                        Stage: {this.state.currentStage}
+                        <br/>
                         Current Turn:
                         <br/>
                         {this.state.currentPlayerTurn}
