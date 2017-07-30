@@ -60,11 +60,8 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       if (latestChat === curTurnAnswer &&
          chatSender === me.id &&
          me.id !== this.props.turnInfo.id) {
-
-         /* Need a stage Number Logic!!! */
-         const testStageNumber = 1;
          // stageWinnerUpdater for firebase
-         stageWinnerUpdater(this.props.roomkey, me, testStageNumber);
+         stageWinnerUpdater(this.props.roomkey, me);
          // Turn changer
          turnChangingLogic(this.props.roomkey)
          // clear canvas
