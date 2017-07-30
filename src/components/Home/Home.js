@@ -38,6 +38,12 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
               Curabitur blandit tempus porttitor. Etiam porta sem
               malesuada magna mollis euismod. Curabitur blandit tempus porttitor.
             </div>
+            <div className="mainIconWrapper">
+              <i className="fa fa-paint-brush fa-2x mainIcon" aria-hidden="true"></i>
+              <i className="fa fa-users fa-2x mainIcon" aria-hidden="true"></i>
+              <i className="fa fa-commenting fa-2x mainIcon" aria-hidden="true"></i>
+              <i className="fa fa-gamepad fa-2x mainIcon" aria-hidden="true"></i>
+            </div>
             <div className="row">
               <button type="button"
                       className="btn btn-primary"

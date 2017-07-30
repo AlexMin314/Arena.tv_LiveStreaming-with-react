@@ -16,13 +16,14 @@
    flex: 8;
    justify-content: center;
    align-items: center;
+   min-height: 210px;
  }
 
 #whiteBoard {
   position: absolute;
   height: 100%;
   width: 100%;
-  border: 1px solid red;
+  min-height: 210px;
 }
 
 .gameStartNotice {
@@ -70,21 +71,96 @@
   tools
   ********/
 
-.toolWrapper {
+.toolWrapper1 {
   display: flex;
   flex-direction: column;
+  padding: 10px;
+  margin-right: 5px;
+  height: 100%;
+  flex: 2;
+  min-height: 190px;
 }
-
-.colorPickerWrapper {
+.toolWrapper2 {
   display: flex;
   flex-direction: column;
+  padding: 10px;
+  margin-right: 5px;
+  height: 100%;
+  flex: 1;
 }
 
-.colorPicker {
+.colorPickerWrapper, .lineWeightsWrapper, .editToolWrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.colorPicker, .lineWeights, .editTool {
   display: flex;
   flex-direction: row;
+  margin-top: 5px;
 }
 
 .fa-pencil-square {
   margin: 6px;
+  border-radius: 3px;
+  width: 17px;
+  height: 15px;
+}
+
+.colorPickerPallet {
+  width: 47px;
+  height: 24px;
+}
+
+.weights {
+  display: flex;
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+.clearBtn {
+  display: flex;
+  width: 55px;
+  height: 22px;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+  font-size: 12px;
+}
+.clearBtn:hover {
+  background: rgb(223, 221, 221);
+}
+
+.selected {
+  background: rgb(222, 222, 222);
+}
+
+#weightTypes1 {
+  display: flex;
+  width: 3px;
+  height: 3px;
+  border-radius: 100%;
+}
+#weightTypes2 {
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+}
+#weightTypes3 {
+  width: 13px;
+  height: 13px;
+  border-radius: 100%;
+}
+#weightTypes4 {
+  width: 18px;
+  height: 18px;
+  border-radius: 100%;
+}
+
+.edits:hover {
+  background: rgb(223, 221, 221);
 }

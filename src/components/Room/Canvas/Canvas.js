@@ -11,7 +11,9 @@ import { userRoomUpdating,
          triggerUpdatingGameStart,
          currentWordGenerating,
          turnChangingLogic,
-         strokeUpdator } from '../../../firebase';
+         strokeUpdator,
+         strokeClear,
+         undoRecent } from '../../../firebase';
 import firebase from '../../../firebase';
 
 import './Canvas.css';
@@ -29,7 +31,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     super(props)
 
     this.drawings = [];
-
+    this.weightTool = {};
     this.state = {
       countDown1: [],
       countDown2: [],
@@ -44,6 +46,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         b: '0',
         a: '100',
       },
+      weightPick: 3
     }
   }
 
@@ -105,16 +108,10 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     let resizeCanvas;
     canvas.height = height;
     canvas.width = width;
-
-
-    // Temporal tool settings.
     let drawing = false;
-    let lineJoin = "round";
-    let lineWidth = 5;
 
-    // Rendering Logic
+    // Canvas Drawing Logic for init loading and add_child.
     const redraw = () => {
-
       // getting the latest element from the this.drawings array.
       const curIdx = this.drawings.length - 1;
       const pastIdx = this.drawings.length - 2;
@@ -122,8 +119,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       // getting tool settings
       const color = arr[curIdx].cl;
       ctx.strokeStyle = `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`;
-      ctx.lineJoin = lineJoin;
-      ctx.lineWidth = lineWidth;
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = arr[curIdx].wg;
 
       ctx.beginPath();
       // condition for clicking(just dot) or dragging(line)
@@ -137,23 +134,44 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       ctx.closePath();
       ctx.stroke();
     }
+    // Canvas Drawing Logic for undo.
+    const redrawAll = () => {
+      this.drawings.forEach((e, i) => {
+        const arr = this.drawings;
+        const color = arr[i].cl;
+
+        ctx.strokeStyle = `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`;
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = arr[i].wg;
+
+        ctx.beginPath();
+        ctx.moveTo(arr[i].mX * width, arr[i].mY * height)
+        if (i < arr.length - 1 && arr[i].mv !== 'end') {
+          ctx.lineTo(arr[i + 1].mX * width, arr[i + 1].mY * height);
+        }
+        ctx.closePath();
+        ctx.stroke();
+      })
+    }
 
     // helper function for caculating mouse coordinate.
-    const coordinator = (e, move, aspect, color) => {
+    const coordinator = (e, move, aspect, color, weight) => {
       const cRect = canvas.getBoundingClientRect();
       const mX = (e.clientX - cRect.left) / width;
       const mY = (e.clientY - cRect.top) / height;
       const mv = move;
       const ap = aspect;
       const cl = color;
-      return { mX, mY, mv, ap, cl }
+      const wg = weight;
+      const id = uuid();
+      return { mX, mY, mv, ap, cl, wg, id }
     }
 
 
     // Event Listners.
     const uid = this.props.user[0].id;
     canvas.addEventListener('mousedown', (e) => {
-      const mouseXY = coordinator(e, 'start', aspect, this.state.color);
+      const mouseXY = coordinator(e, 'start', aspect, this.state.color, this.state.weightPick);
       if (this.props.gameStartInfo && this.props.turnInfo.id === uid) {
         strokeUpdator(this.props.roomkey, mouseXY);
         drawing = true;
@@ -161,12 +179,12 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     });
     canvas.addEventListener('mousemove', (e) => {
       if(drawing && this.props.gameStartInfo && this.props.turnInfo.id === uid) {
-        const mouseXY = coordinator(e, 'drag', aspect, this.state.color);
+        const mouseXY = coordinator(e, 'drag', aspect, this.state.color, this.state.weightPick);
         strokeUpdator(this.props.roomkey, mouseXY, this.props.gameStartInfo);
       }
     });
     canvas.addEventListener('mouseup', (e) => {
-      const mouseXY = coordinator(e, 'end', aspect, this.state.color);
+      const mouseXY = coordinator(e, 'end', aspect, this.state.color, this.state.weightPick);
       if (this.props.gameStartInfo && this.props.turnInfo.id === uid) {
         strokeUpdator(this.props.roomkey, mouseXY);
         drawing = false;
@@ -184,6 +202,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     })
     strokeRef.on('child_removed', (data) => {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      this.drawings.pop()
+      if (data.val().mv === 'end') redrawAll();
     })
 
     // Resize canvas and Rerender drawings if user resize the window.
@@ -217,18 +237,6 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
 
   } // componentDidMount Ends.
-
-  componentWillReceiveProps() {
-
-  }
-
-  componentWillUpdate() {
-
-  }
-
-  componentDidUpdate() {
-
-  }
 
   /**
    * Notice Message Related
@@ -330,6 +338,54 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     this.setState({ color: color.rgb })
   };
 
+  weightPicker = (e) => {
+    console.log(e.target)
+    for(const key in this.weightTool) {
+      if (key == e.target.id.slice(-1)) {
+        this.setState({ weightPick: 3 + (key - 1) * 5 });
+        setTimeout(() => {
+          this.weightTool[key].className = 'weights shadowOut selected';
+        },0)
+      } else {
+        setTimeout(() => {
+          this.weightTool[key].className = 'weights shadowOut';
+        },0)
+      }
+    }
+  }
+
+  weightToolRender = () => {
+    const returnArr = []
+    const style = { background: `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`};
+    for(let i = 1; i < 5; i++) {
+      if (i === 1) {
+      returnArr.push(<div className="weights shadowOut selected"
+                          ref={(e) => this.weightTool[i] = e}
+                          onClick={this.weightPicker}
+                          id={"weightTypesWrapper" + i} key={uuid()}>
+                       <div id={"weightTypes" + i} style={style}></div>
+                     </div>);
+      } else {
+        returnArr.push(<div className="weights shadowOut"
+                            ref={(e) => this.weightTool[i] = e}
+                            onClick={this.weightPicker}
+                            id={"weightTypesWrapper" + i} key={uuid()}>
+                         <div id={"weightTypes" + i} style={style}></div>
+                       </div>);
+      }
+    }
+    return returnArr;
+  }
+
+  clearAllDrawings = () => {
+    // clear canvas
+    if (this.props.turnInfo.id === this.props.user[0].id) strokeClear(this.props.roomkey)
+  }
+
+  undo = () => {
+    if (this.props.turnInfo.id === this.props.user[0].id) undoRecent(this.props.roomkey)
+  }
+
 
   render() {
 
@@ -370,35 +426,48 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       <div className="canvasSectionWrapper">
         {/* Left SideBar */}
         <div className="sidebars">
-          <div className="toolWrapper">
+          <div className="toolWrapper1 shadowOut">
+            {/* Color Picker Tool */}
             <div className="colorPickerWrapper">
               Color Picker
               <div className="colorPicker">
-                <i className="fa fa-pencil-square fa-lg" style={ styles.pencilLogo } ></i>
-                <div className="colorPickerPallet">
+                <i className="fa fa-pencil-square fa-lg shadowOut" style={ styles.pencilLogo } ></i>
+                <div className="colorPickerPallet shadowOut">
                   <div style={ styles.swatch } onClick={ this.handleClick }>
-                    <div style={ styles.color } />
+                    <div style={ styles.color }></div>
                   </div>
-                  { this.state.displayColorPicker ? <div style={ styles.popover }>
-                    <div style={ styles.cover } onClick={ this.handleClose }/>
-                    <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
-                  </div> : null }
+                  { this.state.displayColorPicker ? (
+                    <div style={ styles.popover }>
+                      <div style={ styles.cover } onClick={ this.handleClose }></div>
+                      <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
+                    </div>) : null }
                 </div>
               </div>
             </div>
-            <div className="ereaser"></div>
-            <div className="clearBtn"></div>
+            {/* Line Weights Tool */}
+            <div className="lineWeightsWrapper">
+              Line Weights
+              <div className="lineWeights">
+                {this.weightToolRender()}
+              </div>
+            </div>
+            {/* Edit Tool */}
+            <div className="editToolWrapper">
+              Edit Tool
+              <div className="editTool">
+                <div className="clearBtn shadowOut"
+                     onClick={this.clearAllDrawings}>CLEAR</div>
+                <div className="weights shadowOut edits">
+                  <i className="fa fa-undo fa-lg" aria-hidden="true"
+                     onClick={this.undo}></i>
+                </div>
+                <div className="weights shadowOut">
+                  <i className="fa fa-eraser fa-lg" aria-hidden="true"></i>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="toolWrapper">
-            <div className="strokeStyle"></div>
-            <div className="strokeStyle"></div>
-            <div className="strokeStyle"></div>
-            <div className="strokewidth"></div>
-            <div className="strokewidth"></div>
-            <div className="strokewidth"></div>
-            <div className="strokewidth"></div>
-          </div>
-          <div className="toolWrapper"></div>
+          <div className="toolWrapper2"></div>
         </div>
         {/* Center */}
         <div className="canvasWrapper shadowOut">
