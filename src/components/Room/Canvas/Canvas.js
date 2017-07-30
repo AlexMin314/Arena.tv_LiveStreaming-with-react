@@ -11,7 +11,8 @@ import { userRoomUpdating,
          triggerUpdatingGameStart,
          currentWordGenerating,
          turnChangingLogic,
-         strokeUpdator } from '../../../firebase';
+         strokeUpdator,
+         strokeClear } from '../../../firebase';
 import firebase from '../../../firebase';
 
 import './Canvas.css';
@@ -283,18 +284,23 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
                           ref={(e) => this.weightTool[i] = e}
                           onClick={this.weightPicker}
                           id={"weightTypesWrapper" + i} key={uuid()}>
-                      <div id={"weightTypes" + i} style={style}></div>
-                    </div>);
+                       <div id={"weightTypes" + i} style={style}></div>
+                     </div>);
       } else {
         returnArr.push(<div className="weights shadowOut"
                             ref={(e) => this.weightTool[i] = e}
                             onClick={this.weightPicker}
                             id={"weightTypesWrapper" + i} key={uuid()}>
-                        <div id={"weightTypes" + i} style={style}></div>
-                      </div>);
+                         <div id={"weightTypes" + i} style={style}></div>
+                       </div>);
       }
     }
     return returnArr;
+  }
+
+  clearAllDrawings = () => {
+    // clear canvas
+    if (this.props.turnInfo.id === this.props.user[0].id) strokeClear(this.props.roomkey)
   }
 
 
@@ -337,7 +343,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       <div className="canvasSectionWrapper">
         {/* Left SideBar */}
         <div className="sidebars">
-          <div className="toolWrapper shadowOut">
+          <div className="toolWrapper1 shadowOut">
             {/* Color Picker Tool */}
             <div className="colorPickerWrapper">
               Color Picker
@@ -362,10 +368,19 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
                 {this.weightToolRender()}
               </div>
             </div>
-            <div className="ereaser"></div>
-            <div className="clearBtn"></div>
+            {/* Edit Tool */}
+            <div className="editToolWrapper">
+              Edit Tool
+              <div className="editTool">
+                <div className="weights"></div>
+                <div className="weights"></div>
+                <div className="weights"></div>
+              </div>
+            </div>
+            <div className="clearBtn shadowOut"
+                 onClick={this.clearAllDrawings}>CLEAR</div>
           </div>
-          <div className="toolWrapper"></div>
+          <div className="toolWrapper2"></div>
         </div>
         {/* Center */}
         <div className="canvasWrapper shadowOut">
