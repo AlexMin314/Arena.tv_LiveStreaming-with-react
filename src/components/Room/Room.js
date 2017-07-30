@@ -229,11 +229,13 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               {/* Right SideBar */}
               <div className="sidebars">
                 <div className="sideRow">
-                  <button type="button"
-                          className="btn btn-primary"
-                          id="leaveRoomBtn"
-                          onClick={this.leaveRoom}>
-                          Leave Room</button>
+                  <div>
+                    <button type="button"
+                            className="btn btn-primary"
+                            id="leaveRoomBtn"
+                            onClick={this.leaveRoom}>
+                            Leave Room</button>
+                  </div>
                   <div className="readyWrapper">
                     {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
                   </div>

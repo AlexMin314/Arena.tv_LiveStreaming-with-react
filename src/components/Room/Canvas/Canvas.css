@@ -52,18 +52,67 @@
 .toolWrapper {
   display: flex;
   flex-direction: column;
+  padding: 10px;
+  margin-right: 5px;
+  height: 100%;
 }
 
-.colorPickerWrapper {
+.colorPickerWrapper, .lineWeightsWrapper {
   display: flex;
   flex-direction: column;
+  margin-bottom: 10px;
 }
 
-.colorPicker {
+.colorPicker, .lineWeights {
   display: flex;
   flex-direction: row;
+  margin-top: 5px;
 }
 
 .fa-pencil-square {
   margin: 6px;
+  border-radius: 3px;
+  width: 17px;
+  height: 15px;
+}
+
+.colorPickerPallet {
+  width: 47px;
+  height: 24px;
+}
+
+.weights {
+  display: flex;
+  width: 22px;
+  height: 22px;
+  margin-right: 5px;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+}
+
+.selected {
+  background: rgb(222, 222, 222);
+}
+
+#weightTypes1 {
+  display: flex;
+  width: 3px;
+  height: 3px;
+  border-radius: 100%;
+}
+#weightTypes2 {
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+}
+#weightTypes3 {
+  width: 13px;
+  height: 13px;
+  border-radius: 100%;
+}
+#weightTypes4 {
+  width: 18px;
+  height: 18px;
+  border-radius: 100%;
 }

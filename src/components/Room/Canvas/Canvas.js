@@ -29,7 +29,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     super(props)
 
     this.drawings = [];
-
+    this.weightTool = {};
     this.state = {
       gameStartNotice: [],
       correctAnswerNotice: [],
@@ -41,6 +41,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         b: '0',
         a: '100',
       },
+      weightPick: 3
     }
   }
 
@@ -104,8 +105,6 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
     // Temporal tool settings.
     let drawing = false;
-    let lineJoin = "round";
-    let lineWidth = 5;
 
     // Rendering Logic
     const redraw = () => {
@@ -117,8 +116,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       // getting tool settings
       const color = arr[curIdx].cl;
       ctx.strokeStyle = `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`;
-      ctx.lineJoin = lineJoin;
-      ctx.lineWidth = lineWidth;
+      ctx.lineJoin = 'round';
+      ctx.lineWidth = this.state.weightPick;
 
       ctx.beginPath();
       // condition for clicking(just dot) or dragging(line)
@@ -213,18 +212,6 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
   } // componentDidMount Ends.
 
-  componentWillReceiveProps() {
-
-  }
-
-  componentWillUpdate() {
-
-  }
-
-  componentDidUpdate() {
-
-  }
-
   /**
    * Notice Message Related
    */
@@ -273,6 +260,45 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     this.setState({ color: color.rgb })
   };
 
+  weightPicker = (e) => {
+    console.log(e.target)
+    for(const key in this.weightTool) {
+      if (key == e.target.id.slice(-1)) {
+        this.setState({ weightPick: 3 + (key - 1) * 5 });
+        setTimeout(() => {
+          this.weightTool[key].className = 'weights shadowOut selected';
+        },0)
+      } else {
+        setTimeout(() => {
+          this.weightTool[key].className = 'weights shadowOut';
+        },0)
+      }
+    }
+  }
+
+  weightToolRender = () => {
+    const returnArr = []
+    const style = { background: `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`};
+    for(let i = 1; i < 5; i++) {
+      if (i === 1) {
+      returnArr.push(<div className="weights shadowOut selected"
+                          ref={(e) => this.weightTool[i] = e}
+                          onClick={this.weightPicker}
+                          id={"weightTypesWrapper" + i} key={uuid()}>
+                      <div id={"weightTypes" + i} style={style}></div>
+                    </div>);
+      } else {
+        returnArr.push(<div className="weights shadowOut"
+                            ref={(e) => this.weightTool[i] = e}
+                            onClick={this.weightPicker}
+                            id={"weightTypesWrapper" + i} key={uuid()}>
+                        <div id={"weightTypes" + i} style={style}></div>
+                      </div>);
+      }
+    }
+    return returnArr;
+  }
+
 
   render() {
 
@@ -313,33 +339,33 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       <div className="canvasSectionWrapper">
         {/* Left SideBar */}
         <div className="sidebars">
-          <div className="toolWrapper">
+          <div className="toolWrapper shadowOut">
+            {/* Color Picker Tool */}
             <div className="colorPickerWrapper">
               Color Picker
               <div className="colorPicker">
-                <i className="fa fa-pencil-square fa-lg" style={ styles.pencilLogo } ></i>
-                <div className="colorPickerPallet">
+                <i className="fa fa-pencil-square fa-lg shadowOut" style={ styles.pencilLogo } ></i>
+                <div className="colorPickerPallet shadowOut">
                   <div style={ styles.swatch } onClick={ this.handleClick }>
-                    <div style={ styles.color } />
+                    <div style={ styles.color }></div>
                   </div>
-                  { this.state.displayColorPicker ? <div style={ styles.popover }>
-                    <div style={ styles.cover } onClick={ this.handleClose }/>
-                    <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
-                  </div> : null }
+                  { this.state.displayColorPicker ? (
+                    <div style={ styles.popover }>
+                      <div style={ styles.cover } onClick={ this.handleClose }></div>
+                      <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
+                    </div>) : null }
                 </div>
+              </div>
+            </div>
+            {/* Line Weights Tool */}
+            <div className="lineWeightsWrapper">
+              Line Weights
+              <div className="lineWeights">
+                {this.weightToolRender()}
               </div>
             </div>
             <div className="ereaser"></div>
             <div className="clearBtn"></div>
-          </div>
-          <div className="toolWrapper">
-            <div className="strokeStyle"></div>
-            <div className="strokeStyle"></div>
-            <div className="strokeStyle"></div>
-            <div className="strokewidth"></div>
-            <div className="strokewidth"></div>
-            <div className="strokewidth"></div>
-            <div className="strokewidth"></div>
           </div>
           <div className="toolWrapper"></div>
         </div>
