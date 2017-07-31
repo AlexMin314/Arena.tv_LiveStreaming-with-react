@@ -28,8 +28,40 @@
 .introText {
   font-size: 20px;
   font-weight: 900;
-  /*
-  text-shadow:#999999 1px 1px 1px;*/
+  color: rgb(31, 150, 236);
+  text-shadow: black 2px 2px 2px, black 2px 2px 2px;
+}
+
+.taglineText {
+  margin-top: 10px;
+}
+
+.tagline {
+  font-size: 18px;
+}
+
+ul, li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  font-size: 15px;
+}
+
+ul {
+  margin: 2em 0;
+}
+
+li {
+  margin: 1em;
+  margin-left: 3em;
+}
+
+li:before {
+  content: '\f006';
+  font-family: 'FontAwesome';
+  float: left;
+  margin-left: -1.5em;
+  color: #0074D9;
 }
 
 .mainIconWrapper {
