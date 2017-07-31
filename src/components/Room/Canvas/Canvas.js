@@ -68,9 +68,6 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
     const countDownRef = firebase.database().ref('rooms/' + this.props.roomkey + '/countDownStarted');
     startRef.on('value', (data) => {
-      console.log(this.props.roomkey)
-      console.log(newItems)
-      console.log(data.val())
       if(data.val()) {
         winnerRef.once('value', (data) => {
           turnNoticeRef.once('value', (data) => {
