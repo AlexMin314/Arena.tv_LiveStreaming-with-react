@@ -45,7 +45,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         r: '0',
         g: '0',
         b: '0',
-        a: '100',
+        a: '100'
       },
       weightPick: 3,
       eraser: false
@@ -63,7 +63,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
           correctAnswerNotice : [{classname:'correctAnswerNotice startHide',
                                     name:data.val().name}]
         })
-        setTimeout(() => this.setState({ correctAnswerNotice: [] }), 1500)
+        setTimeout(() => this.setState({ correctAnswerNotice: [] }), 1000)
       }
     })
     const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
@@ -92,9 +92,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         setTimeout(() => {
           if(this.props.user[0].id === this.props.turnInfo.id) {
             this.setState({ turnNotice: ['turnNoticeText startHide'] });
-            setTimeout(() => this.setState({ turnNotice: [] }), 2000)
+            setTimeout(() => this.setState({ turnNotice: [] }), 1500)
           }
-        }, 300)
+        }, 1000)
       }
     })
 
@@ -236,6 +236,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
   } // componentDidMount Ends.
 
+
   /**
    * Notice Message Related
    */
@@ -252,7 +253,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   countDown1 = () => {
     const returnCountDown1 = [];
     this.state.countDown1.forEach((e) => {
-      returnCountDown1.push(<div className={e}>1</div>)
+      returnCountDown1.push(<div className={e} key={uuid()}>1</div>)
     });
     return returnCountDown1;
   }
@@ -260,7 +261,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   countDown2 = () => {
     const returnCountDown2 = [];
     this.state.countDown2.forEach((e) => {
-      returnCountDown2.push(<div className={e}>2</div>)
+      returnCountDown2.push(<div className={e} key={uuid()}>2</div>)
     });
     return returnCountDown2;
   }
@@ -268,7 +269,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   countDown3 = () => {
     const returnCountDown3 = [];
     this.state.countDown3.forEach((e) => {
-      returnCountDown3.push(<div className={e}>3</div>)
+      returnCountDown3.push(<div className={e} key={uuid()}>3</div>)
     });
     return returnCountDown3;
   }
@@ -325,7 +326,6 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
    */
 
   handleClick = () => {
-
     this.setState({ displayColorPicker: !this.state.displayColorPicker })
   };
 

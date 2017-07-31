@@ -6,10 +6,12 @@ import uuid from 'uuid/v4';
 import { userRoomUpdating,
          roomMemberUpdating,
          readyUpdating,
+         allMemeberReadyUpdating,
          triggerUpdatingGameStart,
          currentWordGenerating,
          turnChangingLogic,
-         strokeClear } from '../../firebase';
+         strokeClear,
+         gameOverUpdator } from '../../firebase';
 import firebase from '../../firebase';
 
 import './Room.css';
@@ -37,6 +39,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       currentPlayerTurn: '',
       currentWord: '',
       currentStage: '',
+      gameover: false,
+      gameoverChk: false,
       time: {},
       seconds: 180,
       timer: 0
@@ -49,16 +53,19 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     firebase.database().ref('/rooms/' + this.props.roomkey)
       .once('value')
       .then((snapshot) => {
-        const room = snapshot.val();
-        const members = room.members;
-        for(const key in members) {
-          if (members[key].id === this.props.user[0].id) {
-            this.setState({
-              memberKey: key,
-              topic: room.roomTopic
-            });
+        //if (snapshot.val()) {
+          const room = snapshot.val();
+          const members = room.members;
+          for(const key in members) {
+            if (members[key].id === this.props.user[0].id) {
+              console.log()
+              this.setState({
+                memberKey: key,
+                topic: room.roomTopic
+              });
+            }
           }
-        }
+        //}
       });
 
     // Get gameStart status - game start!
@@ -71,64 +78,75 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       this.setState({ time: timeLeft });
       // currentWord Generation requesting
       if (this.state.topic) {
-        currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic);
+        currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, true);
+      }
+    });
+
+    // Get gameover
+    const gameoverRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameover');
+    gameoverRef.on('value', (data) => {
+      this.setState({ gameover: data.val() })
+      if (data.val()) {
+        this.setState({ gameoverChk: true });
       }
     });
 
     // Listener for current turn change
     const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
     turnRef.on('value', (snapshot) => {
+      if (!this.state.gameover) {
       const nextTurn = snapshot.val();
       firebase.database().ref('rooms/' + this.props.roomkey + '/members')
-      .once('value', (snapshot) => {
-          if (snapshot.val()) {
-            const members = snapshot.val();
-            const keyArray = [];
-            for (const key in members) {
-              keyArray.push(members[key]);
-            }
-
-            this.setState({
-              currentPlayerTurn: keyArray[nextTurn].displayName,
-              currentPlayerId: keyArray[nextTurn].id
-            });
-
-            const updator = {
-              index: nextTurn,
-              id: keyArray[nextTurn].id,
-              name: keyArray[nextTurn].displayName,
-              stage: this.state.currentStage
-            }
-            this.props.currentTurn(updator);
-          }
-      });
-    }); // turnRef.on Ends.
-
-    /* Temporal Logic, if the host left the room, turn will be changed */
-    const membersRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
-    membersRef.on('child_removed', (data) => {
-      turnRef.on('value', (snapshot) => {
-          const nextTurn = snapshot.val();
-          firebase.database().ref('rooms/' + this.props.roomkey + '/members')
-          .once('value', (snapshot) => {
+        .once('value', (snapshot) => {
             if (snapshot.val()) {
-            const members = snapshot.val();
-            const keyArray = [];
-            for (const key in members) {
-              keyArray.push(members[key]);
-            }
+              const members = snapshot.val();
+              const keyArray = [];
+              for (const key in members) {
+                keyArray.push(members[key]);
+              }
               this.setState({
                 currentPlayerTurn: keyArray[nextTurn].displayName,
                 currentPlayerId: keyArray[nextTurn].id
               });
-            const updator = {
-              index: nextTurn,
-              id: keyArray[nextTurn].id,
-              name: keyArray[nextTurn].displayName
-            }
-            this.props.currentTurn(updator);
-            }
+              const updator = {
+                index: nextTurn,
+                id: keyArray[nextTurn].id,
+                name: keyArray[nextTurn].displayName,
+                stage: this.state.currentStage
+              }
+              this.props.currentTurn(updator);
+            } // If snapshot.val() ends
           });
+        } // If !this.state.gameover ends.
+      }); // turnRef.on Ends.
+
+      /* Temporal Logic, if the host left the room, turn will be changed */
+      const membersRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
+      membersRef.on('child_removed', (data) => {
+      turnRef.on('value', (snapshot) => {
+        if (!this.state.gameover) {
+          const nextTurn = snapshot.val();
+          firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+          .once('value', (snapshot) => {
+            if (snapshot.val()) {
+              const members = snapshot.val();
+              const keyArray = [];
+              for (const key in members) {
+                keyArray.push(members[key]);
+              }
+              this.setState({
+                currentPlayerTurn: keyArray[nextTurn].displayName,
+                currentPlayerId: keyArray[nextTurn].id
+              });
+              const updator = {
+                index: nextTurn,
+                id: keyArray[nextTurn].id,
+                name: keyArray[nextTurn].displayName
+              }
+              this.props.currentTurn(updator);
+            } // if (snapshot.val()) ends
+          });
+        } // if (!this.state.gameover) ends
       });
     });
 
@@ -154,6 +172,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     if(this.props.user[0].id === this.props.turnInfo.id) strokeClear(this.props.roomkey)
     // updating to firebase
     roomMemberUpdating(this.props.roomkey, this.state.memberKey, {}, true, '/lobby');
+  }
+
+  playAgain = () => {
+    this.setState({ ready: false });
+    this.setState({ gameoverChk: false });
+    //allMemeberReadyUpdating(this.props.roomkey);
+    readyUpdating(this.props.roomkey, this.state.memberKey, false);
+    triggerUpdatingGameStart(this.props.roomkey);
   }
 
   /**
@@ -194,7 +220,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     // Turn Changing.
     turnChangingLogic(this.props.roomkey);
     // currentWord Generation requesting
-    currentWordGenerating(this.props.roomkey, this.state.memberKey, this.state.topic)
+    currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic)
     // Start timer
     this.startTimer();
     // Stage Updater needed!
@@ -265,22 +291,26 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           <div className="col-lg-8 col-md-12 sectionDivider">
             <div className="" id="mainContentWrapper">
               {/* Left SideBar + Center Canvas*/}
-              <Canvas/>
+              {this.state.gameover || this.state.gameoverChk ? null : (
+                <Canvas/>
+              )}
               {/* Right SideBar */}
               <div className="sidebars">
                 <div className="sideRow">
-                  <div>
-                    <button type="button"
-                            className="btn btn-primary"
-                            id="leaveRoomBtn"
-                            onClick={this.leaveRoom}>
-                            Leave Room</button>
-                  </div>
+                  {this.state.gameover || this.state.gameoverChk ? null : (
+                    <div>
+                      <button type="button"
+                              className="btn btn-primary"
+                              id="leaveRoomBtn"
+                              onClick={this.leaveRoom}>
+                              Leave</button>
+                    </div>
+                  )}
                   <div className="readyWrapper">
                     {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
                   </div>
                 </div>
-              {this.props.gameStartInfo ? isItYourTurn ? (
+              {this.props.gameStartInfo && (!this.state.gameover || !this.state.gameoverChk) ? isItYourTurn ? (
                 <div className="sideRow turnWrapper">
                   <div className="">
                     <div className="turnDiv shadowOut">
@@ -343,6 +373,28 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           </div>
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
         </div>
+        {this.state.gameover || this.state.gameoverChk ? (
+          <div className="gameOverWapper">
+            <div className="gameOver">GAME OVER!</div>
+            <div>Information</div>
+            <div>Information</div>
+            <div>Information</div>
+            <div>Information</div>
+            <div>Information</div>
+            <div className="gameOverBtns">
+              <button type="button"
+                      className="btn btn-primary"
+                      id="playAgain"
+                      onClick={this.playAgain}>
+                      Play<br/>Again</button>
+              <button type="button"
+                      className="btn btn-primary"
+                      id="returnLobby"
+                      onClick={this.leaveRoom}>
+                      Return to<br/>lobby</button>
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   }
