@@ -398,6 +398,36 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     this.cursor.style.cursor = "url(../../../img/pencil.png) 0 16, auto";
   }
 
+  /**
+   * ready realted.
+   */
+   readyBtnDisplay = () => {
+     if (this.props.ready) {
+       return (
+         <button type="button"
+                 className="btn btn-primary disabled"
+                 onClick={this.props.gameReady}
+                 id="waitingBtn"
+                 key={uuid()}>
+                 Waiting ...</button>
+     )} else {
+       return (
+         <button type="button"
+                 className="btn btn-primary active"
+                 onClick={this.props.gameReady}
+                 id="gameReadyBtn"
+                 key={uuid()}>
+                 Ready</button>
+     )}
+   };
+
+   /**
+    * Turn related
+    */
+    checkTurn = () => {
+      return this.props.currentPlayerId === this.props.user[0].id ? true : false;
+    }
+
 
   render() {
 
@@ -434,54 +464,95 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       },
     });
 
+    const isItYourTurn = this.checkTurn();
     return (
       <div className="canvasSectionWrapper">
         {/* Left SideBar */}
         <div className="sidebars">
           <div className="toolWrapper1 shadowOut">
-            {/* Color Picker Tool */}
-            <div className="colorPickerWrapper">
-              Color Picker
-              <div className="colorPicker">
-                <i className="fa fa-pencil-square fa-lg shadowOut"
-                   style={ styles.pencilLogo }></i>
-                <div className="colorPickerPallet shadowOut">
-                  <div style={ styles.swatch } onClick={ this.handleClick }>
-                    <div style={ styles.color }></div>
+            <div className="toolInnerWrapper">
+              {/* Color Picker Tool */}
+              <div className="colorPickerWrapper">
+                Color Picker
+                <div className="colorPicker">
+                  <i className="fa fa-pencil-square fa-lg shadowOut"
+                     style={ styles.pencilLogo }></i>
+                  <div className="colorPickerPallet shadowOut">
+                    <div style={ styles.swatch } onClick={ this.handleClick }>
+                      <div style={ styles.color }></div>
+                    </div>
+                    { this.state.displayColorPicker ? (
+                      <div style={ styles.popover }>
+                        <div style={ styles.cover } onClick={ this.handleClose }></div>
+                        <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
+                      </div>) : null }
                   </div>
-                  { this.state.displayColorPicker ? (
-                    <div style={ styles.popover }>
-                      <div style={ styles.cover } onClick={ this.handleClose }></div>
-                      <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
-                    </div>) : null }
                 </div>
               </div>
-            </div>
-            {/* Line Weights Tool */}
-            <div className="lineWeightsWrapper">
-              Line Weights
-              <div className="lineWeights">
-                {this.weightToolRender()}
-              </div>
-            </div>
-            {/* Edit Tool */}
-            <div className="editToolWrapper">
-              Edit Tool
-              <div className="editTool">
-                <div className="clearBtn shadowOut"
-                     onClick={this.clearAllDrawings}>CLEAR</div>
-                <div className="weights shadowOut edits">
-                  <i className="fa fa-undo fa-lg" aria-hidden="true"
-                     onClick={this.undo}></i>
-                </div>
-                <div className={this.state.eraser ? "weights shadowOut selected" : "weights shadowOut"}
-                     key={uuid()}>
-                  <i className="fa fa-eraser fa-lg"
-                     aria-hidden="true"
-                     onClick={this.eraser}></i>
+              {/* Line Weights Tool */}
+              <div className="lineWeightsWrapper">
+                Line Weights
+                <div className="lineWeights">
+                  {this.weightToolRender()}
                 </div>
               </div>
+              {/* Edit Tool */}
+              <div className="editToolWrapper">
+                Edit Tool
+                <div className="editTool">
+                  <div className="clearBtn shadowOut"
+                       onClick={this.clearAllDrawings}>CLEAR</div>
+                  <div className="weights shadowOut edits">
+                    <i className="fa fa-undo fa-lg" aria-hidden="true"
+                       onClick={this.undo}></i>
+                  </div>
+                  <div className={this.state.eraser ? "weights shadowOut selected" : "weights shadowOut"}
+                       key={uuid()}>
+                    <i className="fa fa-eraser fa-lg"
+                       aria-hidden="true"
+                       onClick={this.eraser}></i>
+                  </div>
+                </div>
+              </div>
+              {isItYourTurn ? null : (
+                <div className="toolOverlayer"></div>
+              )}
             </div>
+            {/* Info Part */}
+            {this.props.gameStartInfo && (!this.props.gameover || !this.props.gameoverChk) ? isItYourTurn ? (
+              <div className="infoWrapper">
+                <div className="curWordWrapper">
+                  <div className="curWordTitle">Your Word</div>
+                  <div className="curWord">- {this.props.currentWord}</div>
+                </div>
+                <div className="turnDiv">
+                  <p className="playerTurn">
+                    Turn Host
+                    <br/>
+                    - {this.props.currentPlayerTurn}
+                  </p>
+                </div>
+                <div className="skipTurnDiv">
+                  <button type="button"
+                          className="btn btn-primary"
+                          onClick={this.props.skipTurn}>Skip Turn</button>
+                </div>
+              </div>
+            ) : (
+              <div className="infoWrapper">
+                <div className="turnDiv">
+                  <p className="playerTurn">
+                    Turn Host
+                    <br/>
+                    - {this.props.currentPlayerTurn}
+                  </p>
+                </div>
+                <div className="skipTurnDiv">
+                  <button type="button"
+                          className="btn btn-primary disabled">not your<br/>turn</button>
+                </div>
+              </div>
+            ) : null}
           </div>
           <div className="toolWrapper2"></div>
         </div>
@@ -493,6 +564,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
           {this.gameStartNotice()}
           {this.correctAnswerNotice()}
           {this.yourTurnNotice()}
+          <div className="readyWrapper">
+            {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
+          </div>
           <canvas id="whiteBoard"></canvas>
           <ChatInput/>
         </div>

@@ -190,9 +190,14 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
                                key={uuid()}>
                                 {this.state.hasGameStarted ?
                                   (<div className="scoreDisplay"
-                                        key={uuid()}>Score: {this.state.userList[i].score}
-                                    <br/>
-                                    {this.state.userList[i].displayName}
+                                        key={uuid()}>
+                                    <div className="scoreInner">
+                                      <i className="fa fa-trophy fa-lg"
+                                         id="trophy"
+                                         aria-hidden="true"></i>
+                                      {this.state.userList[i].score}
+                                    </div>
+                                    <div>{this.state.userList[i].displayName}</div>
                                   </div>
                                   )
                                  :
