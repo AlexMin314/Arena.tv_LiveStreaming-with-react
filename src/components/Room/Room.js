@@ -40,7 +40,10 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       currentWord: '',
       currentStage: '',
       gameover: false,
-      gameoverChk: false
+      gameoverChk: false,
+      time: {},
+      seconds: 180,
+      timer: 0
     }
   }
 
@@ -70,6 +73,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     readyRef.on('value', (data) => {
       // Game Start! update to redux
       this.props.gameStart(data.val())
+      // Time remaining for Turn
+      const timeLeft = this.secondsToTime(this.state.seconds);
+      this.setState({ time: timeLeft });
       // currentWord Generation requesting
       if (this.state.topic) {
         currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, true);
@@ -89,54 +95,58 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
     turnRef.on('value', (snapshot) => {
       if (!this.state.gameover) {
-        const nextTurn = snapshot.val();
-        firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+      const nextTurn = snapshot.val();
+      firebase.database().ref('rooms/' + this.props.roomkey + '/members')
         .once('value', (snapshot) => {
-          const members = snapshot.val();
-          const keyArray = [];
-          for (const key in members) {
-            keyArray.push(members[key]);
-          }
-          this.setState({
-            currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
-            currentPlayerId: keyArray[nextTurn].id
+            if (snapshot.val()) {
+              const members = snapshot.val();
+              const keyArray = [];
+              for (const key in members) {
+                keyArray.push(members[key]);
+              }
+              this.setState({
+                currentPlayerTurn: keyArray[nextTurn].displayName,
+                currentPlayerId: keyArray[nextTurn].id
+              });
+              const updator = {
+                index: nextTurn,
+                id: keyArray[nextTurn].id,
+                name: keyArray[nextTurn].displayName,
+                stage: this.state.currentStage
+              }
+              this.props.currentTurn(updator);
+            } // If snapshot.val() ends
           });
-          const updator = {
-            index: nextTurn,
-            id: keyArray[nextTurn].id,
-            name: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
-            stage: this.state.currentStage
-          }
-          this.props.currentTurn(updator);
-        });
-      }
-    }); // turnRef.on Ends.
+        } // If !this.state.gameover ends.
+      }); // turnRef.on Ends.
 
-    /* Temporal Logic, if the host left the room, turn will be changed */
-    const membersRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
-    membersRef.on('child_removed', (data) => {
+      /* Temporal Logic, if the host left the room, turn will be changed */
+      const membersRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
+      membersRef.on('child_removed', (data) => {
       turnRef.on('value', (snapshot) => {
         if (!this.state.gameover) {
           const nextTurn = snapshot.val();
           firebase.database().ref('rooms/' + this.props.roomkey + '/members')
           .once('value', (snapshot) => {
-            const members = snapshot.val();
-            const keyArray = [];
-            for (const key in members) {
-              keyArray.push(members[key]);
-            }
-            this.setState({
-              currentPlayerTurn: keyArray[nextTurn].username || keyArray[nextTurn].displayName,
-              currentPlayerId: keyArray[nextTurn].id
-            });
-            const updator = {
-              index: nextTurn,
-              id: keyArray[nextTurn].id,
-              name: keyArray[nextTurn].username || keyArray[nextTurn].displayName
-            }
-            this.props.currentTurn(updator);
+            if (snapshot.val()) {
+              const members = snapshot.val();
+              const keyArray = [];
+              for (const key in members) {
+                keyArray.push(members[key]);
+              }
+              this.setState({
+                currentPlayerTurn: keyArray[nextTurn].displayName,
+                currentPlayerId: keyArray[nextTurn].id
+              });
+              const updator = {
+                index: nextTurn,
+                id: keyArray[nextTurn].id,
+                name: keyArray[nextTurn].displayName
+              }
+              this.props.currentTurn(updator);
+            } // if (snapshot.val()) ends
           });
-        }
+        } // if (!this.state.gameover) ends
       });
     });
 
@@ -154,22 +164,12 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   } // componentDidMount Ends.
 
-  componentWillReceiveProps() {
-
-  }
-
-  componentDidUpdate() {
-
-  }
-
   /**
    * Room related.
    */
   leaveRoom = () => {
     // clear canvas
-    if(this.props.user[0].id === this.props.turnInfo.id) {
-      strokeClear(this.props.roomkey)
-    }
+    if(this.props.user[0].id === this.props.turnInfo.id) strokeClear(this.props.roomkey)
     // updating to firebase
     roomMemberUpdating(this.props.roomkey, this.state.memberKey, {}, true, '/lobby');
   }
@@ -177,7 +177,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   playAgain = () => {
     this.setState({ ready: false });
     this.setState({ gameoverChk: false });
-    allMemeberReadyUpdating(this.props.roomkey);
+    //allMemeberReadyUpdating(this.props.roomkey);
+    readyUpdating(this.props.roomkey, this.state.memberKey, false);
     triggerUpdatingGameStart(this.props.roomkey);
   }
 
@@ -220,6 +221,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     turnChangingLogic(this.props.roomkey);
     // currentWord Generation requesting
     currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic)
+    // Start timer
+    this.startTimer();
     // Stage Updater needed!
   };
 
@@ -241,7 +244,43 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     )}
   };
 
+  /*
+   * Time Remaining Functions
+  */
+  secondsToTime = (secs) => {
+    let convertToMinutes = secs % (60 * 60);
+    let minutes = Math.floor(convertToMinutes / 60);
 
+    let convertToSeconds = convertToMinutes % 60;
+    let seconds = Math.ceil(convertToSeconds);
+
+    let obj = {
+      "minutes": minutes,
+      "seconds": seconds
+    }
+    return obj;
+  }
+
+  startTimer = () => {
+    if(this.state.timer === 0) setInterval(this.countDown, 1000);
+  }
+
+  countDown = () => {
+    // Remove one second, set state so a re-render happens.
+    let seconds = this.state.seconds - 1;
+    this.setState({
+      time: this.secondsToTime(seconds),
+      seconds: seconds,
+    });
+
+    // Check if we're at zero.
+    if (seconds <= 0) {
+      clearInterval(this.state.timer);
+    }
+  }
+/***********************************
+** End of time remaining functions *
+*///////////////////////////////////
 
   render() {
     const isItYourTurn = this.checkTurn();
@@ -299,7 +338,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                   </div>
                   <div className="">
                     <div className="timerDiv">
-                      <h2> Timer countdown </h2>
+                      <h5> Time Remaining: </h5>
+                      <div> {this.state.time.minutes} : {this.state.time.seconds} </div>
                     </div>
                   </div>
                 </div>

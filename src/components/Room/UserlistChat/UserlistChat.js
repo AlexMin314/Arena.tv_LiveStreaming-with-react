@@ -25,7 +25,8 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     this.state = {
       messages: [],
       userList: [],
-      currentWord: ''
+      currentWord: '',
+      hasGameStarted: false
     }
   }
 
@@ -108,8 +109,8 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
      * EventListener for Ready Status
      */
 
-    const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
-    readyRef.on('child_changed', (data) => {
+    const readyAndScoreRef = firebase.database().ref('rooms/' + this.props.roomkey + '/members');
+    readyAndScoreRef.on('child_changed', (data) => {
       const userList = this.state.userList;
       userList.forEach((e, idx) => {
         if (e.id === data.val().id && !this.props.gameStart) {
@@ -117,8 +118,22 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
           this.readyCheker[idx].style.display = 'flex';
         }
       });
-    });
 
+      // update the score
+      if(this.props.gameStart) {
+        // the player id to update
+        const idToUpdate = data.val().id;
+        // the updated score from database
+        const scoreToUpdate = data.val().score;
+        // Iterate over the user list and find the user to update, after which update the score
+        userList.forEach((user, index) => {
+          if(user.id === idToUpdate) {
+            userList[index].score = scoreToUpdate;
+            this.setState({ userList: userList });
+          }
+        })
+      }
+    }); // end of readyAndScoreRef listener
   } // componentDidMount Ends.
 
   componentDidUpdate() {
@@ -137,7 +152,21 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
         });
       }
     });
-  } // componentDidUpdate Ends.
+  } // end of componentDidUpdate
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.gameStart) {
+      /**
+      * EventListener for Game Start
+      */
+      const gameStartRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
+      gameStartRef.once('value')
+      .then((snapshot) => {
+        if (snapshot.val()) this.setState({ hasGameStarted: true })
+        else this.setState({ hasGameStarted: false })
+      })
+    }
+  } // end of componentWillReceiveProps
 
   /**
    * If the user click name card... then?
@@ -152,17 +181,26 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
   */
   renderUserList = () => {
     const renderList = [];
-
     for(let i = 0; i < 6; i++) {
       if(!this.state.userList[i]) {
         renderList.push(<div className="nameCardsBG shadowOut"
                              key={uuid()}>&#43;</div>);
       } else {
-        renderList.push(<div className="nameCard shadowOut"
-                              key={uuid()}>
-                              <div className="scoreDisplay">Test Score</div>
-                              {this.state.userList[i].displayName || this.state.userList[i].username}
-                              </div>);
+          renderList.push(<div className="nameCard shadowOut"
+                               key={uuid()}>
+                                {this.state.hasGameStarted ?
+                                  (<div className="scoreDisplay"
+                                        key={uuid()}>Score: {this.state.userList[i].score}
+                                    <br/>
+                                    {this.state.userList[i].displayName}
+                                  </div>
+                                  )
+                                 :
+                                  (this.state.userList[i].displayName)
+                                }
+                          </div>
+                                );
+
       }
     }
     return renderList;

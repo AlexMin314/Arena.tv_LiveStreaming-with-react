@@ -76,6 +76,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
          // Push the new user into /rooms/roomkey/members
          const userInfo = this.props.user[0];
          userInfo.ready = false;
+         userInfo.score = 0;
 
          firebase.database().ref(`/rooms/${availableRooms[randomNum]._key}` + '/members')
           .push(userInfo)
@@ -151,6 +152,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     // Updating object
     const userInfo = this.props.user[0];
     userInfo.ready = false;
+    userInfo.score = 0;
 
     const newRoom = {};
     newRoom.roomTopic = this.state.roomTopic;

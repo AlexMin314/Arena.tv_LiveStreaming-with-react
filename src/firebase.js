@@ -81,11 +81,30 @@ export const stageWinnerUpdater = (roomkey, winner) => {
       const winnerOfStageArr = snapshot.val();
       // need checker by stageNum and idx of array.
       const update = {};
+
+      // Update user score in room
+      const membersRef = firebase.database().ref('rooms/' + roomkey + '/members');
+      membersRef.once('value', (snapshot) => {
+        const membersObj = snapshot.val();
+        let membersArray = [];
+        for (const key in membersObj) {
+          if(membersObj[key].displayName === winner.displayName) {
+            let currentScoreRef = firebase.database().ref('rooms/' + roomkey + '/members/' + key + '/score');
+            currentScoreRef.once('value', (snapshot) => {
+              let currentScore = snapshot.val();
+              currentScore += 10;
+              firebase.database().ref('rooms/' + roomkey + '/members/' + key).update({ score: currentScore });
+            })
+            break;
+          }
+        }
+      }) // End of update user score
+
       update.id = winner.id;
-      update.name = winner.displayName || winner.username;
+      update.name = winner.displayName;
       update.stage = winnerOfStageArr.length;
       winnerOfStageArr.push(update)
-      const stageNum = 2;
+      const stageNum = 3;
       if(winnerOfStageArr.length < stageNum + 1) {
         firebase.database().ref('rooms/' + roomkey)
           .update({ 'winnerOfStage': winnerOfStageArr });
@@ -157,9 +176,7 @@ const currentWordGenerationRequest = (roomKey, topic) => {
     .once('value')
     .then((snapshot) => {
       const topicArr = snapshot.val();
-      topicArr.shift()
-
-      const randomNum = getRandomIntInRange(0, topicArr.length - 1)
+      const randomNum = getRandomIntInRange(1, topicArr.length - 1)
       firebase.database().ref('rooms/' + roomKey).update({
         'currentWord': topicArr[randomNum]
       });

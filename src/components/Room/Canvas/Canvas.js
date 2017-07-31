@@ -253,7 +253,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   countDown1 = () => {
     const returnCountDown1 = [];
     this.state.countDown1.forEach((e) => {
-      returnCountDown1.push(<div className={e}>1</div>)
+      returnCountDown1.push(<div className={e} key={uuid()}>1</div>)
     });
     return returnCountDown1;
   }
@@ -261,7 +261,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   countDown2 = () => {
     const returnCountDown2 = [];
     this.state.countDown2.forEach((e) => {
-      returnCountDown2.push(<div className={e}>2</div>)
+      returnCountDown2.push(<div className={e} key={uuid()}>2</div>)
     });
     return returnCountDown2;
   }
@@ -269,7 +269,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   countDown3 = () => {
     const returnCountDown3 = [];
     this.state.countDown3.forEach((e) => {
-      returnCountDown3.push(<div className={e}>3</div>)
+      returnCountDown3.push(<div className={e} key={uuid()}>3</div>)
     });
     return returnCountDown3;
   }
