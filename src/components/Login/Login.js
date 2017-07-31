@@ -115,6 +115,18 @@ class Login extends Component {
     })
   }
 
+  // Helper Function to return a random number between a specified range
+  getRandomIntInRange = (min, max) => {
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  randomTip = () => {
+    const tipsArray = ["Use the \"Skip Turn\" button if you are not sure how to draw!", "Use multiple colors for better illustration", "Don\'t hesitate to guess whenever anything comes to mind", "The pen is mightier than the sword", "Two colors are better than one!", "Use Quick Join to join a random game quickly", "Keep track of the time remaining while you are drawing!", "You can join your friend's room using the \"Join Room\" button"];
+    const randomNum = this.getRandomIntInRange(0,7);
+    const returnedString = tipsArray[randomNum];
+    return returnedString;
+  }
+
   render() {
     return (
       <div className="container-fluid contentBody">
@@ -127,7 +139,7 @@ class Login extends Component {
             	<div className="cssload-inner cssload-three"></div>
             </div>
             <div className="advice">
-              Cras justo odio, dapibus ac facilisis in, egestas eget quam.
+              {this.randomTip()}
             </div>
           </div>
         ) : (
