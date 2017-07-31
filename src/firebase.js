@@ -112,7 +112,7 @@ export const stageWinnerUpdater = (roomkey, winner) => {
       update.name = winner.displayName;
       update.stage = winnerOfStageArr.length;
       winnerOfStageArr.push(update)
-      const stageNum = 3;
+      const stageNum = 6;
       if(winnerOfStageArr.length < stageNum + 1) {
         firebase.database().ref('rooms/' + roomkey)
           .update({ 'winnerOfStage': winnerOfStageArr });
