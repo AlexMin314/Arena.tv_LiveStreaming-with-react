@@ -67,7 +67,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
          // clear canvas
          strokeClear(this.props.roomkey)
          // currentWord Generation requesting
-         currentWordGenerating(this.props.roomkey, this.props.memberKey, this.props.topic, this.props.turnInfo.index)
+         currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.props.topic)
       }
     })
 
@@ -79,7 +79,6 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
      curKeywordRef.on('value', (data) => {
        this.setState({ currentWord: data.val() })
      });
-
 
     /**
      * EventListener for UserList
@@ -113,7 +112,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     readyRef.on('child_changed', (data) => {
       const userList = this.state.userList;
       userList.forEach((e, idx) => {
-        if (e.id === data.val().id) {
+        if (e.id === data.val().id && !this.props.gameStart) {
           // change ready checker(green)
           this.readyCheker[idx].style.display = 'flex';
         }

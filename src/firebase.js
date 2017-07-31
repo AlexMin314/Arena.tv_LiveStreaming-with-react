@@ -42,7 +42,7 @@ export const roomMemberUpdating = (roomkey, memberKey, updateObj, remove, path) 
         let memberCount = snapshot.val();
         // If memberCount is 0 after user leaves, delete the whole room object from firebase
         if (memberCount === 1) {
-          firebase.database().ref('rooms/' + roomkey).remove()
+            firebase.database().ref('rooms/' + roomkey).remove();
         } else {
         // If memberCount is more than 0 after leaves, just decrement memberCount by 1
           firebase.database().ref('rooms/' + roomkey)
@@ -60,6 +60,17 @@ export const readyUpdating = (roomkey, memberKey, data) => {
   firebase.database().ref('rooms/' + roomkey + '/members/' + memberKey)
     .update({ 'ready': data });
 }
+export const allMemeberReadyUpdating = (roomkey) => {
+  firebase.database().ref('rooms/' + roomkey + '/members')
+    .once('value')
+    .then((snapshot) => {
+      const allMembers = snapshot.val();
+      for(const key in allMembers) {
+        firebase.database().ref('rooms/' + roomkey + '/members/'+ key)
+          .update({ready: false});
+      }
+    })
+}
 
 
 // For current stage winner info updating
@@ -74,16 +85,21 @@ export const stageWinnerUpdater = (roomkey, winner) => {
       update.name = winner.displayName || winner.username;
       update.stage = winnerOfStageArr.length;
       winnerOfStageArr.push(update)
-      if(winnerOfStageArr.length < 13) {
+      const stageNum = 2;
+      if(winnerOfStageArr.length < stageNum + 1) {
         firebase.database().ref('rooms/' + roomkey)
           .update({ 'winnerOfStage': winnerOfStageArr });
         firebase.database().ref('rooms/' + roomkey)
           .update({ 'stages': winnerOfStageArr.length });
       } else {
-        console.log('game over status!')
+        gameOverUpdator(roomkey, true);
       }
     })
+}
 
+// Game over status updator
+export const gameOverUpdator = (roomkey, data) => {
+  firebase.database().ref('/rooms/' + roomkey).update({ gameover: data });
 }
 
 // For ready status checking to start game.
@@ -99,6 +115,8 @@ export const triggerUpdatingGameStart = (roomkey) => {
       for (const key in memberList) {
         if (!memberList[key].ready) {
           allReadyChecker = false;
+          updatingGameStart(roomkey, false);
+          gameOverUpdator(roomkey, false)
           break;
         }
       }
@@ -120,16 +138,16 @@ const updatingGameStart = (roomkey, data) => {
 
 
 // currentWord Generation logic
-export const currentWordGenerating = (roomKey, memberKey, topic) => {
+export const currentWordGenerating = (roomKey, uid, topic, host) => {
   firebase.database().ref('/rooms/' + roomKey + '/members')
     .once('value')
     .then((snapshot) => {
       const memberList = snapshot.val();
-      Object.keys(memberList).forEach((e, idx) => {
-        if (e === memberKey) {
+      for (const key in memberList) {
+        if (memberList[key].id === uid) {
           currentWordGenerationRequest(roomKey, topic)
         }
-      });
+      };
     });
 };
 
@@ -157,9 +175,15 @@ const getRandomIntInRange = (min, max) => {
 export const turnChangingLogic = (roomkey) => {
   const roomRef = firebase.database().ref('rooms/' + roomkey);
   roomRef.once('value', (snapshot) => {
-      const memberCount = snapshot.val().memberCount;
-      let currentTurn = snapshot.val().currentTurn;
-      const nextTurn = currentTurn < memberCount - 1 ? currentTurn + 1 : 0;
+    const memberCount = snapshot.val().memberCount;
+    let currentTurn = snapshot.val().currentTurn;
+    let nextTurn;
+    if(memberCount > 1) {
+      nextTurn = currentTurn < memberCount - 1 ? currentTurn + 1 : 0;
+    } else {
+      nextTurn = 0;
+    }
+
       firebase.database().ref('rooms/' + roomkey).update({
         'currentTurn': nextTurn
       });

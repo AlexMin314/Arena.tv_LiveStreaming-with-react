@@ -31,8 +31,6 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   // Helper Function to return a random number between a specified range
   getRandomIntInRange = (min, max) => {
-    min = Math.ceil(min);
-    max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
   }
 
@@ -51,7 +49,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
        // Iterate over rooms
        for (const key in rooms) {
          // Check for available rooms
-         if (rooms[key].memberCount > 0 && rooms[key].memberCount < 6 && !rooms[key].gameStart) {
+         if (rooms[key].memberCount > 0 && rooms[key].memberCount < 6 && !rooms[key].gameStart && !rooms[key].gameover) {
            if (filter === null) {
              availableRooms.push({roomInfo: rooms[key], _key: key});
            } else if (rooms[key].roomTopic === filter) {
@@ -162,6 +160,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     newRoom.memberCount = 1;
     newRoom.stages = 0;
     newRoom.gameStart = false;
+    newRoom.gameover = false;
     newRoom.currentWord = 'Not Started';
     newRoom.currentTurn = 0;
     newRoom.winnerOfStage = ['init'];
