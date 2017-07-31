@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "firebase": "^4.1.3",
+    "hover.css": "^2.2.0",
     "react": "^15.6.1",
     "react-color": "^2.13.4",
     "react-dom": "^15.6.1",

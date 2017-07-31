@@ -34,9 +34,19 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
               MindTap <i className="fa fa-pencil" aria-hidden="true"></i>
             </div>
             <div className="introText">
-                Etiam porta sem malesuada magna mollis euismod.
-              Curabitur blandit tempus porttitor. Etiam porta sem
-              malesuada magna mollis euismod. Curabitur blandit tempus porttitor.
+                <h2>"Pictionary on-the-go with a modern twist"</h2>
+            </div>
+            <div className="taglineText">
+                <h4 className="tagline">Keep the guessing going and test your art skills!</h4>
+            </div>
+            <div className="featuresText">
+                <ul>
+                  <li>5 Categories to choose from</li>
+                  <li>Pick from a kaleidoscope of colors to draw</li>
+                  <li>Up to 6 players at once</li>
+                  <li>Fastest finger first to score points</li>
+                  <li>Guess before the time runs out</li>
+                </ul>
             </div>
             <div className="mainIconWrapper">
               <i className="fa fa-paint-brush fa-2x mainIcon" aria-hidden="true"></i>

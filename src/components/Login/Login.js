@@ -150,7 +150,7 @@ class Login extends Component {
                             className="form-control"
                             placeholder="Enter Password"/>
                 <br/>
-                  <button className="btn btn-primary"
+                  <button className="btn btn-primary hvr-outline-out"
                           onClick={this.login}>Login</button>
                 </div>
                 <div className="goToSignUp">
