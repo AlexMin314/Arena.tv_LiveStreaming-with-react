@@ -230,3 +230,24 @@
 		-moz-transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
 	}
 }
+
+.hvr-outline-out:before {
+  content: '';
+  position: absolute;
+  border: black solid 4px;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  -webkit-transition-duration: .3s;
+  transition-duration: .3s;
+  -webkit-transition-property: top, right, bottom, left;
+  transition-property: top, right, bottom, left
+}
+
+.hvr-outline-out:active:before, .hvr-outline-out:focus:before, .hvr-outline-out:hover:before {
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -8px
+}
