@@ -26,8 +26,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       messages: [],
       userList: [],
       currentWord: '',
-      hasGameStarted: false,
-      score: 0
+      hasGameStarted: false
     }
   }
 
