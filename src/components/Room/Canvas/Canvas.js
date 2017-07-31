@@ -390,17 +390,14 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   }
 
   undo = (e) => {
-    e.preventDefault();
     if (this.props.turnInfo.id === this.props.user[0].id) undoRecent(this.props.roomkey)
   }
 
   eraser = (e) => {
-    e.preventDefault();
     this.setState({ eraser: !this.state.eraser });
   }
 
   cancelEraser = (e) => {
-    e.preventDefault();
     this.setState({ eraser: false });
   }
 
