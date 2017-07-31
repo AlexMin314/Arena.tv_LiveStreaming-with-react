@@ -167,6 +167,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     newRoom.currentTurn = 0;
     newRoom.winnerOfStage = ['init'];
     newRoom.countDownStarted = false;
+    newRoom.startTimer = false;
 
     // Make new room to firebase, redirect to room.
     firebase.database().ref('rooms').child(roomkey).set(newRoom).then(() => {
