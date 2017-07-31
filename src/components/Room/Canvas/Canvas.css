@@ -16,14 +16,14 @@
    flex: 8;
    justify-content: center;
    align-items: center;
-   min-height: 210px;
+   min-height: 350px;
  }
 
 #whiteBoard {
   position: absolute;
   height: 100%;
   width: 100%;
-  min-height: 210px;
+  min-height: 350px;
   cursor: url('../../../img/pencil.png') 0 16, auto;
 }
 
@@ -78,16 +78,29 @@
   padding: 10px;
   margin-right: 5px;
   height: 100%;
-  flex: 2;
-  min-height: 190px;
+  flex: 6;
+  min-height: 350px;
+  max-height: 350px;
 }
 .toolWrapper2 {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+
   margin-right: 5px;
   height: 100%;
   flex: 1;
+}
+.toolInnerWrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.toolOverlayer {
+  background: rgba(66, 66, 66, 0.10);
+  display: flex;
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
 .colorPickerWrapper, .lineWeightsWrapper, .editToolWrapper {
@@ -170,4 +183,12 @@
 
 .edits:hover {
   background: rgb(223, 221, 221);
+}
+
+/*********
+info playerTurn
+**********/
+
+.infoWrapper, .turnDiv {
+  margin-top: 10px;
 }

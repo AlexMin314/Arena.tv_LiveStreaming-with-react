@@ -222,23 +222,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     return this.state.currentPlayerId === this.props.user[0].id ? true : false;
   }
 
-  readyBtnDisplay = () => {
-    if (this.state.ready) {
-      return (
-      <button type="button"
-              className="btn btn-primary disabled"
-              onClick={this.gameReady}
-              key={uuid()}>
-              Waiting Others</button>
-    )} else { return (
-      <button type="button"
-              className="btn btn-primary"
-              onClick={this.gameReady}
-              key={uuid()}>
-              Game Ready</button>
-    )}
-  }
-
   skipTurn = () => {
     // clear canvas
     strokeClear(this.props.roomkey)
@@ -251,23 +234,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     // Stage Updater needed!
   };
 
-  readyBtnDisplay = () => {
-    if (this.state.ready) {
-      return (
-        <button type="button"
-                className="btn btn-primary disabled"
-                onClick={this.gameReady}
-                id="waitingBtn">
-                Waiting ...</button>
-    )} else {
-      return (
-        <button type="button"
-                className="btn btn-primary"
-                onClick={this.gameReady}
-                id="gameReadyBtn">
-                Ready</button>
-    )}
-  };
+
 
   /*
    * Time Remaining Functions
@@ -332,8 +299,10 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           if ( members[key].score === cache.topscore) {
             cache.users.push(<div className="winners"
                                   key={uuid()}>
-                                  {members[key].displayName + ' ' + members[key].score}
-                                  </div>)
+                                {members[key].displayName}
+                                <i className="fa fa-trophy fa-2x" aria-hidden="true"></i>
+                                {members[key].score}
+                             </div>)
           }
         }
         return cache.users;
@@ -350,80 +319,38 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
             <div className="" id="mainContentWrapper">
               {/* Left SideBar + Center Canvas*/}
               {this.state.gameover || this.state.gameoverChk ? null : (
-                <Canvas/>
+                <Canvas gameReady={this.gameReady}
+                        ready={this.state.ready}
+                        currentPlayerId={this.state.currentPlayerId}
+                        gameover={this.state.gameover}
+                        gameoverChk={this.state.gameoverChk}
+                        currentWord={this.state.currentWord}
+                        currentStage={this.state.currentStage}
+                        currentPlayerTurn={this.state.currentPlayerTurn}
+                        skipTurn={this.skipTurn}/>
               )}
               {/* Right SideBar */}
               <div className="sidebars">
-                <div className="sideRow">
-                  {this.state.gameover || this.state.gameoverChk ? null : (
-                    <div>
-                      <button type="button"
-                              className="btn btn-primary"
-                              id="leaveRoomBtn"
-                              onClick={this.leaveRoom}>
-                              Leave</button>
-                    </div>
-                  )}
-                  <div className="readyWrapper">
-                    {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
-                  </div>
-                </div>
-              {this.props.gameStartInfo && (!this.state.gameover || !this.state.gameoverChk) ? isItYourTurn ? (
-                <div className="sideRow turnWrapper">
-                  <div className="">
-                    <div className="turnDiv shadowOut">
-                      <p className="playerTurn">
-                        Stage: {this.state.currentStage}
-                        <br/>
-                        Current Turn:
-                        <br/>
-                        {this.state.currentPlayerTurn}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="">
-                    <div className="skipTurnDiv">
-                      <button type="button"
-                              className="btn btn-primary"
-                              onClick={this.skipTurn}>Skip Turn</button>
-                    </div>
-                  </div>
-                  <div className="">
-                    <div className="curWordWrapper shadowOut">
-                      <div className="curWordTitle">Current Word</div>
-                      <div className="curWord">{this.state.currentWord}</div>
-                    </div>
-                  </div>
-                  <div className="">
+                <div className="sideRow"></div>
+                <div className="sideRow underSideRow">
+                {this.props.gameStartInfo && (!this.state.gameover || !this.state.gameoverChk) ? (
+                  <div className="turnWrapper">
                     <div className="timerDiv">
                       <h5> Time Remaining: </h5>
                       <div> {this.state.time.minutes} : {this.state.time.seconds} </div>
                     </div>
                   </div>
-                </div>
-              ) : (
-                <div className="sideRow turnWrapper">
-                  <div className="">
-                    <div className="turnDiv shadowOut">
-                      <p className="playerTurn">
-                        Stage: {this.state.currentStage}
-                        <br/>
-                        Current Turn:
-                        <br/>
-                        {this.state.currentPlayerTurn}
-                      </p>
-                    </div>
+                ) : null}
+                {this.state.gameover || this.state.gameoverChk ? null : (
+                  <div>
+                    <button type="button"
+                            className="btn btn-primary"
+                            id="leaveRoomBtn"
+                            onClick={this.leaveRoom}>
+                            Leave</button>
                   </div>
-                  <div className="">
-                    <div className="skipTurnDiv">
-                      <button type="button"
-                              className="btn btn-primary disabled">It is not your turn</button>
-                    </div>
-                  </div>
+                )}
                 </div>
-              ) : null}
-              <div className="sideRow">
-              </div>
               </div> {/* Sidebar End */}
             </div> {/* mainContentWrapper End */}
             <UserlistChat topic={this.state.topic}
