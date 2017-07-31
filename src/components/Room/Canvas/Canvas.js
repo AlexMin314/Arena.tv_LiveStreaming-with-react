@@ -32,6 +32,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
     this.drawings = [];
     this.weightTool = {};
+    this.aspectInfo = null;
     this.state = {
       countDown1: [],
       countDown2: [],
@@ -46,7 +47,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         b: '0',
         a: '100',
       },
-      weightPick: 3
+      weightPick: 3,
+      eraser: false
     }
   }
 
@@ -61,7 +63,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
           correctAnswerNotice : [{classname:'correctAnswerNotice startHide',
                                     name:data.val().name}]
         })
-        setTimeout(() => this.setState({ correctAnswerNotice: [] }), 2000)
+        setTimeout(() => this.setState({ correctAnswerNotice: [] }), 1500)
       }
     })
     const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
@@ -103,12 +105,10 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     const ctx = canvas.getContext("2d");
     // getting local settings
     let cRect = canvas.getBoundingClientRect();
-    let width = canvas.clientWidth;
-    let height = canvas.clientHeight;
-    let aspect = width / height;
+    let aspect = canvas.clientWidth / canvas.clientHeight;
     let resizeCanvas;
-    canvas.height = height;
-    canvas.width = width;
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
     let drawing = false;
 
     // Canvas Drawing Logic for init loading and add_child.
@@ -126,12 +126,12 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       ctx.beginPath();
       // condition for clicking(just dot) or dragging(line)
       if (arr.length > 1 && arr[pastIdx].mv === 'drag') {
-        ctx.moveTo(arr[pastIdx].mX * width, arr[pastIdx].mY * height)
+        ctx.moveTo(arr[pastIdx].mX * canvas.width , arr[pastIdx].mY * canvas.height)
       }
       if(arr[curIdx].mv === ('start' || 'end')) {
-        ctx.moveTo(arr[curIdx].mX * width - 1, arr[curIdx].mY * height)
+        ctx.moveTo(arr[curIdx].mX * canvas.width  - 1, arr[curIdx].mY * canvas.height)
       }
-      ctx.lineTo(arr[curIdx].mX * width, arr[curIdx].mY * height);
+      ctx.lineTo(arr[curIdx].mX * canvas.width , arr[curIdx].mY * canvas.height);
       ctx.closePath();
       ctx.stroke();
     }
@@ -146,9 +146,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         ctx.lineWidth = arr[i].wg;
 
         ctx.beginPath();
-        ctx.moveTo(arr[i].mX * width, arr[i].mY * height)
+        ctx.moveTo(arr[i].mX * canvas.width, arr[i].mY * canvas.height)
         if (i < arr.length - 1 && arr[i].mv !== 'end') {
-          ctx.lineTo(arr[i + 1].mX * width, arr[i + 1].mY * height);
+          ctx.lineTo(arr[i + 1].mX * canvas.width, arr[i + 1].mY * canvas.height);
         }
         ctx.closePath();
         ctx.stroke();
@@ -158,14 +158,14 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     // helper function for caculating mouse coordinate.
     const coordinator = (e, move, aspect, color, weight) => {
       const cRect = canvas.getBoundingClientRect();
-      const mX = (e.clientX - cRect.left) / width;
-      const mY = (e.clientY - cRect.top) / height;
+      const mX = (e.clientX - cRect.left) / canvas.width;
+      const mY = (e.clientY - cRect.top) / canvas.height;
       const mv = move;
       const ap = aspect;
-      const cl = color;
+      let cl = color;
+      if (this.state.eraser) cl = { r: '255', g: '255', b: '255', a: '100' }
       const wg = weight;
-      const id = uuid();
-      return { mX, mY, mv, ap, cl, wg, id }
+      return { mX, mY, mv, ap, cl, wg }
     }
 
 
@@ -214,11 +214,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       resizeCanvas = setTimeout(() => {
         // updating local settings.
         cRect = canvas.getBoundingClientRect();
-        width = canvas.clientWidth;
-        height = canvas.clientHeight;
-        aspect = width / height;
-        canvas.width = width;
-        canvas.height = height;
+        aspect = canvas.clientWidth / canvas.clientHeight;
+        canvas.height = canvas.clientHeight;
+        canvas.width = canvas.clientWidth;
         // getting drawing information from firebase
         firebase.database().ref('rooms/' + this.props.roomkey + '/stroke')
           .once('value')
@@ -234,7 +232,6 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
           })
       }, 500);
     })
-
 
 
   } // componentDidMount Ends.
@@ -328,21 +325,26 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
    */
 
   handleClick = () => {
+
     this.setState({ displayColorPicker: !this.state.displayColorPicker })
   };
 
   handleClose = () => {
     this.setState({ displayColorPicker: false })
+    const formerKey = (this.state.weightPick - 3) / 5 + 1
+    this.weightPicker(null, formerKey);
   };
 
   handleChange = (color) => {
-    this.setState({ color: color.rgb })
+    this.setState({
+      color: color.rgb,
+      eraser: false
+    })
   };
 
-  weightPicker = (e) => {
-    console.log(e.target)
+  weightPicker = (e, formerKey) => {
     for(const key in this.weightTool) {
-      if (key == e.target.id.slice(-1)) {
+      if (key == (e === null ? formerKey : e.target.id.slice(-1))) {
         this.setState({ weightPick: 3 + (key - 1) * 5 });
         setTimeout(() => {
           this.weightTool[key].className = 'weights shadowOut selected';
@@ -380,11 +382,20 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
   clearAllDrawings = () => {
     // clear canvas
+    this.setState({ eraser: false });
     if (this.props.turnInfo.id === this.props.user[0].id) strokeClear(this.props.roomkey)
   }
 
-  undo = () => {
+  undo = (e) => {
     if (this.props.turnInfo.id === this.props.user[0].id) undoRecent(this.props.roomkey)
+  }
+
+  eraser = (e) => {
+    this.setState({ eraser: !this.state.eraser });
+  }
+
+  cancelEraser = (e) => {
+    this.setState({ eraser: false });
   }
 
 
@@ -432,7 +443,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
             <div className="colorPickerWrapper">
               Color Picker
               <div className="colorPicker">
-                <i className="fa fa-pencil-square fa-lg shadowOut" style={ styles.pencilLogo } ></i>
+                <i className="fa fa-pencil-square fa-lg shadowOut"
+                   style={ styles.pencilLogo }
+                   onClick={this.cancelEraser}></i>
                 <div className="colorPickerPallet shadowOut">
                   <div style={ styles.swatch } onClick={ this.handleClick }>
                     <div style={ styles.color }></div>
@@ -462,8 +475,11 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
                   <i className="fa fa-undo fa-lg" aria-hidden="true"
                      onClick={this.undo}></i>
                 </div>
-                <div className="weights shadowOut">
-                  <i className="fa fa-eraser fa-lg" aria-hidden="true"></i>
+                <div className={this.state.eraser ? "weights shadowOut selected" : "weights shadowOut"}
+                     key={uuid()}>
+                  <i className="fa fa-eraser fa-lg"
+                     aria-hidden="true"
+                     onClick={this.eraser}></i>
                 </div>
               </div>
             </div>
