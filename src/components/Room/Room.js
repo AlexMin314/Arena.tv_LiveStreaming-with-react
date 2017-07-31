@@ -177,9 +177,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   playAgain = () => {
     this.setState({ ready: false });
     this.setState({ gameoverChk: false });
-    //allMemeberReadyUpdating(this.props.roomkey);
-    readyUpdating(this.props.roomkey, this.state.memberKey, false);
-    triggerUpdatingGameStart(this.props.roomkey);
+    allMemeberReadyUpdating(this.props.roomkey);
   }
 
   /**
@@ -220,7 +218,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     // Turn Changing.
     turnChangingLogic(this.props.roomkey);
     // currentWord Generation requesting
-    currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic)
+    currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, false)
     // Start timer
     this.startTimer();
     // Stage Updater needed!

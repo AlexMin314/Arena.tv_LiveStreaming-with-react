@@ -32,7 +32,6 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
     this.drawings = [];
     this.weightTool = {};
-    this.aspectInfo = null;
     this.state = {
       countDown1: [],
       countDown2: [],
@@ -69,6 +68,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
     const countDownRef = firebase.database().ref('rooms/' + this.props.roomkey + '/countDownStarted');
     startRef.on('value', (data) => {
+      console.log(this.props.roomkey)
+      console.log(newItems)
+      console.log(data.val())
       if(data.val()) {
         winnerRef.once('value', (data) => {
           turnNoticeRef.once('value', (data) => {
@@ -396,6 +398,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
   cancelEraser = (e) => {
     this.setState({ eraser: false });
+    this.cursor.style.cursor = "url(../../../img/pencil.png) 0 16, auto";
   }
 
 
@@ -444,8 +447,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
               Color Picker
               <div className="colorPicker">
                 <i className="fa fa-pencil-square fa-lg shadowOut"
-                   style={ styles.pencilLogo }
-                   onClick={this.cancelEraser}></i>
+                   style={ styles.pencilLogo }></i>
                 <div className="colorPickerPallet shadowOut">
                   <div style={ styles.swatch } onClick={ this.handleClick }>
                     <div style={ styles.color }></div>
