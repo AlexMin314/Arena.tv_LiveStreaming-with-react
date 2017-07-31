@@ -46,7 +46,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
         b: '0',
         a: '100',
       },
-      weightPick: 3
+      weightPick: 3,
+      eraser: false
     }
   }
 
@@ -61,7 +62,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
           correctAnswerNotice : [{classname:'correctAnswerNotice startHide',
                                     name:data.val().name}]
         })
-        setTimeout(() => this.setState({ correctAnswerNotice: [] }), 2000)
+        setTimeout(() => this.setState({ correctAnswerNotice: [] }), 1500)
       }
     })
     const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
@@ -162,10 +163,10 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
       const mY = (e.clientY - cRect.top) / height;
       const mv = move;
       const ap = aspect;
-      const cl = color;
+      let cl = color;
+      if (this.state.eraser) cl = { r: '255', g: '255', b: '255', a: '100' }
       const wg = weight;
-      const id = uuid();
-      return { mX, mY, mv, ap, cl, wg, id }
+      return { mX, mY, mv, ap, cl, wg }
     }
 
 
@@ -328,6 +329,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
    */
 
   handleClick = () => {
+
     this.setState({ displayColorPicker: !this.state.displayColorPicker })
   };
 
@@ -336,7 +338,10 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   };
 
   handleChange = (color) => {
-    this.setState({ color: color.rgb })
+    this.setState({
+      color: color.rgb,
+      eraser: false
+    })
   };
 
   weightPicker = (e) => {
@@ -380,11 +385,23 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
 
   clearAllDrawings = () => {
     // clear canvas
+    this.setState({ eraser: false });
     if (this.props.turnInfo.id === this.props.user[0].id) strokeClear(this.props.roomkey)
   }
 
-  undo = () => {
+  undo = (e) => {
+    e.preventDefault();
     if (this.props.turnInfo.id === this.props.user[0].id) undoRecent(this.props.roomkey)
+  }
+
+  eraser = (e) => {
+    e.preventDefault();
+    this.setState({ eraser: !this.state.eraser });
+  }
+
+  cancelEraser = (e) => {
+    e.preventDefault();
+    this.setState({ eraser: false });
   }
 
 
@@ -432,7 +449,9 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
             <div className="colorPickerWrapper">
               Color Picker
               <div className="colorPicker">
-                <i className="fa fa-pencil-square fa-lg shadowOut" style={ styles.pencilLogo } ></i>
+                <i className="fa fa-pencil-square fa-lg shadowOut"
+                   style={ styles.pencilLogo }
+                   onClick={this.cancelEraser}></i>
                 <div className="colorPickerPallet shadowOut">
                   <div style={ styles.swatch } onClick={ this.handleClick }>
                     <div style={ styles.color }></div>
@@ -462,8 +481,11 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
                   <i className="fa fa-undo fa-lg" aria-hidden="true"
                      onClick={this.undo}></i>
                 </div>
-                <div className="weights shadowOut">
-                  <i className="fa fa-eraser fa-lg" aria-hidden="true"></i>
+                <div className={this.state.eraser ? "weights shadowOut selected" : "weights shadowOut"}
+                     key={uuid()}>
+                  <i className="fa fa-eraser fa-lg"
+                     aria-hidden="true"
+                     onClick={this.eraser}></i>
                 </div>
               </div>
             </div>
