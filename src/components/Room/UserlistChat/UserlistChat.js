@@ -26,8 +26,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       messages: [],
       userList: [],
       currentWord: '',
-      hasGameStarted: false,
-      score: 0
+      hasGameStarted: false
     }
   }
 
@@ -79,7 +78,6 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
      // Get currentWord of the turn
      const curKeywordRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentWord');
      curKeywordRef.on('value', (data) => {
-       console.log(data.val());
        this.setState({ currentWord: data.val() })
      });
 
