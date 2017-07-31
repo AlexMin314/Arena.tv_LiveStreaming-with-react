@@ -43,7 +43,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       gameoverChk: false,
       time: {},
       seconds: 180,
-      timer: 0
+      timer: 0,
+      winnerList: []
+
     }
   }
 
@@ -89,6 +91,31 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       if (data.val()) {
         this.setState({ gameoverChk: true });
       }
+      firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+        .once('value')
+        .then((snapshot) => {
+          if (snapshot.val()) {
+            const members = snapshot.val();
+            const cache = {
+              'topscore': 0,
+              'users': []
+            }
+            for (const key in members) {
+              if( members[key].score >= cache.topscore) {
+                cache.topscore = members[key].score;
+              }
+            }
+            for (const key in members) {
+              if ( members[key].score === cache.topscore) {
+                cache.users.push(<div className="winners"
+                                      key={uuid()}>
+                                      {members[key].displayName + ', Score: ' + members[key].score}
+                                      </div>)
+              }
+            }
+            this.setState({ winnerList: cache.users })
+          }
+        });
     });
 
     // Listener for current turn change
@@ -280,6 +307,39 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 ** End of time remaining functions *
 *///////////////////////////////////
 
+
+
+
+  /**
+   * gameover related.
+   */
+
+  winnerRender = () => {
+    firebase.database().ref('rooms/' + this.props.roomkey + '/members')
+      .once('value')
+      .then((snapshot) => {
+        const members = snapshot.val();
+        const cache = {
+          'topscore': 0,
+          'users': []
+        }
+        for (const key in members) {
+          if( members[key].score >= cache.topscore) {
+            cache.topscore = members[key].score;
+          }
+        }
+        for (const key in members) {
+          if ( members[key].score === cache.topscore) {
+            cache.users.push(<div className="winners"
+                                  key={uuid()}>
+                                  {members[key].displayName + ' ' + members[key].score}
+                                  </div>)
+          }
+        }
+        return cache.users;
+      });
+  }
+
   render() {
     const isItYourTurn = this.checkTurn();
     return (
@@ -374,11 +434,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         {this.state.gameover || this.state.gameoverChk ? (
           <div className="gameOverWapper">
             <div className="gameOver">GAME OVER!</div>
-            <div>Information</div>
-            <div>Information</div>
-            <div>Information</div>
-            <div>Information</div>
-            <div>Information</div>
+            <div>{this.state.winnerList}</div>
+            <div className="gameOverSubtitle">Congratulations!</div>
             <div className="gameOverBtns">
               <button type="button"
                       className="btn btn-primary"
