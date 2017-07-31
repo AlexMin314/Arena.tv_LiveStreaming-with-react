@@ -76,7 +76,7 @@ class Signup extends Component {
         const {username, email} = this.state;
         const userId = user.uid;
         const localUser = {
-          username: username,
+          displayName: username,
           email: email,
           photo: 'http://www.perlworkshop.nl/nlpw2016/img/default-avatar.png'
         }
