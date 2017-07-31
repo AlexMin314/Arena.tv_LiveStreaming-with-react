@@ -143,7 +143,7 @@ export const triggerUpdatingGameStart = (roomkey) => {
       let allReadyChecker = true;
       // If only one user exist, the game will not start.
       if (Object.keys(memberList).length === 1) allReadyChecker = false;
-      // Check all memeber's ready status
+      // Check all member's ready status
       for (const key in memberList) {
         if (!memberList[key].ready) {
           allReadyChecker = false;
@@ -164,7 +164,8 @@ const updatingGameStart = (roomkey, data) => {
   firebase.database().ref('rooms/' + roomkey).update({
     gameStart: data,
     stages: 1,
-    currentTurn: 0
+    currentTurn: 0,
+    startTimer: true
   });
 };
 
