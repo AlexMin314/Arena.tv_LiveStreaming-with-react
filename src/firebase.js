@@ -66,9 +66,17 @@ export const allMemeberReadyUpdating = (roomkey) => {
     .then((snapshot) => {
       const allMembers = snapshot.val();
       for(const key in allMembers) {
-        firebase.database().ref('rooms/' + roomkey + '/members/'+ key)
-          .update({ready: false});
+        firebase.database().ref('rooms/' + roomkey + '/members/' + key)
+          .update({ready: false, score: 0});
       }
+      triggerUpdatingGameStart(roomkey)
+      resettingWinnerArray(roomkey);
+    })
+    .then(() => {
+      firebase.database().ref('rooms/' + roomkey).once('value')
+        .then((snapshot) => {
+          window.location.href = '/room/' + snapshot.val().roomName;
+        })
     })
 }
 
@@ -114,6 +122,11 @@ export const stageWinnerUpdater = (roomkey, winner) => {
         gameOverUpdator(roomkey, true);
       }
     })
+}
+const resettingWinnerArray = (roomKey) => {
+  console.log('entered!')
+  firebase.database().ref('rooms/' + roomKey + '/winnerOfStage')
+    .set( {'0': 'init'} )
 }
 
 // Game over status updator
@@ -162,12 +175,21 @@ export const currentWordGenerating = (roomKey, uid, topic, host) => {
     .once('value')
     .then((snapshot) => {
       const memberList = snapshot.val();
-      for (const key in memberList) {
-        if (memberList[key].id === uid) {
-          currentWordGenerationRequest(roomKey, topic)
-        }
-      };
-    });
+      if (!host) {
+        for (const key in memberList) {
+          if (memberList[key].id === uid) {
+            currentWordGenerationRequest(roomKey, topic)
+          }
+        };
+      } else {
+        for (const key in memberList) {
+          if (key === '1') {
+            currentWordGenerationRequest(roomKey, topic)
+          }
+        };
+      }
+    }
+  );
 };
 
 // currentWord Generation logic
@@ -177,9 +199,10 @@ const currentWordGenerationRequest = (roomKey, topic) => {
     .then((snapshot) => {
       const topicArr = snapshot.val();
       const randomNum = getRandomIntInRange(1, topicArr.length - 1)
-      firebase.database().ref('rooms/' + roomKey).update({
-        'currentWord': topicArr[randomNum]
-      });
+      const roomInfo = firebase.database().ref('rooms/' + roomKey);
+      if (roomInfo && topicArr[randomNum]) {
+        roomInfo.update({ 'currentWord': topicArr[randomNum] });
+      }
     });
 }
 

@@ -92,7 +92,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
 
       // Assign slot number to user.
       userList.forEach((e, idx) => {
-        if (e.id === data.val().id) e.slotNum = idx;
+        if (e.id === data.val().id && e!== true) e.slotNum = idx;
       });
       this.setState({ userList: userList });
     });

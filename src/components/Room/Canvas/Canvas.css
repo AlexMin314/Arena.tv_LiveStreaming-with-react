@@ -24,6 +24,7 @@
   height: 100%;
   width: 100%;
   min-height: 210px;
+  cursor: url('../../../img/pencil.png') 0 16, auto;
 }
 
 .gameStartNotice {
@@ -121,6 +122,10 @@
   justify-content: center;
   align-items: center;
   padding: 0;
+  cursor: pointer;
+}
+.weights:hover {
+  background: rgb(222, 222, 222);
 }
 .clearBtn {
   display: flex;
@@ -130,6 +135,7 @@
   align-items: center;
   margin-right: 5px;
   font-size: 12px;
+  cursor: pointer;
 }
 .clearBtn:hover {
   background: rgb(223, 221, 221);
@@ -137,6 +143,7 @@
 
 .selected {
   background: rgb(222, 222, 222);
+  border: 1px solid rgb(120, 120, 120);
 }
 
 #weightTypes1 {
