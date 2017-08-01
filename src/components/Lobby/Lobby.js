@@ -23,6 +23,7 @@ import TextField from 'material-ui/TextField';
 import List from 'material-ui/List/List';
 import ListItem from 'material-ui/List/ListItem';
 import Avatar from 'material-ui/Avatar';
+import Badge from 'material-ui/Badge';
 
 import './Lobby.css';
 
@@ -35,6 +36,11 @@ const globalChatStyle = {
   paddingBottom: '200px',
   overflow: 'auto',
 }
+const badgeStyle = {
+  position: 'absolute',
+  bottom: '0',
+  right: '0'
+}
 
 export class Lobby extends Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -46,7 +52,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       errorMessage: '',
       open: false,
       chatmsg: '',
-      chatList: []
+      chatList: [],
+      missedMsg: 0
     }
   }
 
@@ -204,7 +211,10 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 /**
  * Chat related
  */
-  toggleChatDrawer = () => this.setState({open: !this.state.open});
+  toggleChatDrawer = () => {
+    this.setState({open: !this.state.open});
+    this.setState({ missedMsg: 0});
+  }
   handleClose = () => this.setState({open: false});
 
   onChangeChat = (e) => {
@@ -235,11 +245,21 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   componentDidMount() {
     this.scrollToBottom();
-    firebase.database().ref('message/').on('child_added', (data) => {
-      const chatListArr = this.state.chatList;
-      chatListArr.push(data.val())
-      this.setState({chatList: chatListArr});
-    })
+
+    firebase.database().ref('message/').limitToLast(1).on('child_added', (data) => {
+        const chatListArr = this.state.chatList;
+        const newMessage = data.val();
+
+        if (this.state.open)  {
+          this.setState({ missedMsg: 0});
+        } else {
+          let unreadNum = this.state.missedMsg;
+          unreadNum += 1;
+          this.setState({ missedMsg: unreadNum});
+        }
+        chatListArr.push(newMessage)
+        this.setState({chatList: chatListArr});
+    });
   }
 
   renderChat = () => {
@@ -310,12 +330,18 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             <br/>
             <div className="errorMessage">{this.state.errorMessage}</div>
           </div>
+          <Badge badgeContent={this.state.missedMsg}
+                 primary={true}
+                 className='chatBadge'
+                 style={badgeStyle}/>
           <FloatingActionButton secondary={true}
                                 className="chatToggle"
                                 style={chatToggleStyle}
                                 onTouchTap={this.toggleChatDrawer}>
+
             <FontIcon className="material-icons">chat</FontIcon>
           </FloatingActionButton>
+
           <Drawer width={400} openSecondary={true}
                   open={this.state.open}
                   onRequestChange={(open) => this.setState({open})}

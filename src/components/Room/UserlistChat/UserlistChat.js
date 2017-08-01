@@ -38,7 +38,7 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
     const messageRef = firebase.database().ref('rooms/' + this.props.roomkey + '/message');
 
     // Chat Updater
-    messageRef.on('child_added', (data) => {
+    messageRef.limitToLast(1).on('child_added', (data) => {
       const messages = this.state.messages;
       const userList = this.state.userList;
       const newMsgObj = data.val();
