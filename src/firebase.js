@@ -19,13 +19,17 @@ export const firebaseDB = firebase.database();
  */
 
 
-//  This helper is for updating the 'room' name in user object.
+//  This helper is for updating the 'room' key in user object.
 export const userRoomUpdating = (uid, roomkey) => {
     const updates = {};
     updates.room = roomkey;
     firebase.database().ref('users/' + uid).update(updates);
   };
 
+// This helper is for updating the 'room' name in Room object.
+export const updateRoomName = (roomkey, roomName) => {
+  firebase.database().ref('rooms/' + roomkey).update ({ roomName: roomName });
+}
 
 // This helper is for updating/removing the members info.
 export const roomMemberUpdating = (roomkey, memberKey, updateObj, remove, path) => {

@@ -31,6 +31,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     super(props)
 
     this.state = {
+      roomName: '',
       msg: '',
       chatInput: '',
       ready: false,
@@ -51,6 +52,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   componentDidMount() {
+    // Get Room name from firebase and store it in react state
+      const roomNameRef = firebase.database().ref('rooms/' + this.props.roomkey + '/roomName');
+      roomNameRef.once('value', (snapshot) => {
+        if(snapshot.val()) {
+          const roomName = snapshot.val();
+          this.setState({ roomName: roomName });
+        }
+      })
 
     // Get member Key and room Topic
     firebase.database().ref('/rooms/' + this.props.roomkey)
@@ -81,7 +90,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, true);
       }
       // Start the timer when the game starts
-      if(data.val() && !this.props.timer) {
+      if((data.val() && !this.props.timer) || (data.val() && this.props.timer === false)) {
           this.setState({
             time: this.secondsToTime(90),
             seconds: 90,
@@ -98,6 +107,10 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       this.setState({ gameover: data.val() })
       if (data.val()) {
         this.setState({ gameoverChk: true });
+        this.props.updateTimer(false);
+        this.resetTimer();
+        // set gameStart to false --> Alex, we can do this in the updatingGameStart function in firebase.js
+        firebase.database().ref('rooms/' + this.props.roomkey).update({ gameStart: false });
       }
       firebase.database().ref('rooms/' + this.props.roomkey + '/members')
         .once('value')
@@ -363,9 +376,23 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                         currentPlayerTurn={this.state.currentPlayerTurn}
                         skipTurn={this.skipTurn}/>
               )}
+
               {/* Right SideBar */}
               <div className="sidebars">
-                <div className="sideRow"></div>
+                <div className="sideRow">
+                <div className="roomInfoDiv">
+                  <div className="roomNameDiv">
+                   Room Name:
+                   <br/>
+                    {this.state.roomName}
+                  </div>
+                  <div className="roomTopicDiv">
+                    Room Topic:
+                    <br/>
+                    {this.state.topic}
+                  </div>
+                </div>
+                </div>
                 <div className="sideRow underSideRow">
                 {this.props.gameStartInfo && (!this.state.gameover || !this.state.gameoverChk) ? (
                   <div className="turnWrapper">

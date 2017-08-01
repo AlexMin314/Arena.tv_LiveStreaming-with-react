@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 // Import firebase
-import { userRoomUpdating } from '../../firebase';
+import { userRoomUpdating, updateRoomName } from '../../firebase';
 import firebase from '../../firebase';
 
 // Import Actions
 import { updateRoom } from '../../actions/roomActions';
 import { updateGameStart } from '../../actions/gameActions';
+import { updateTimerStatus } from '../../actions/timerActions';
 
 import './Lobby.css';
 
@@ -98,6 +99,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   // Quick Join
   onQuickJoin = (e) => {
     e.preventDefault();
+    this.props.updateTimer(false);
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
       const rooms = snapshot.val();
       this.roomJoinLogic(rooms, null);
@@ -143,12 +145,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     let roomName = this.state.roomName.split(' ').join('');
     // If input field was empty, room name is room key.
     if (roomName === '') roomName = roomkey;
-
+    // Update room name in firebase
+    updateRoomName(roomkey, roomName);
     // User info updating
     userRoomUpdating(this.props.user[0].id, roomkey);
     // Room Key updating on redux
     this.props.roomUpdating(roomkey);
-
+    this.props.updateTimer(false);
     // Updating object
     const userInfo = this.props.user[0];
     userInfo.ready = false;
@@ -285,6 +288,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     gameStart: (checker) => {
       dispatch(updateGameStart(checker))
+    },
+    updateTimer: (timerStatus) => {
+      dispatch(updateTimerStatus(timerStatus))
     }
   }
 }
