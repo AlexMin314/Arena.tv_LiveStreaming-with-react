@@ -3,33 +3,41 @@
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
+  min-height: 500px;
 }
 
 .brandWrapper {
-  position: absolute;
   display: flex;
+  flex: 5;
   flex-direction: column;
+}
+.sectionSpliter {
+  display: flex;
+  flex: 2;
 }
 
 .brandName {
   font-size: 80px;
-  font-weight: 900;
-  margin-bottom: 50px;
+  margin-bottom: 5px;
   background: -webkit-linear-gradient(300deg,#822fba, #ff79fa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: gradient 1s ease infinite;
-  -webkit-animation: gradient 1s ease infinite;
+  animation: gradient 10s ease infinite;
+  -webkit-animation: gradient 10s ease infinite;
+}
+#brandPencil {
+  background: -webkit-linear-gradient(300deg,#822fba, #ff79fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient 10s ease infinite;
+  -webkit-animation: gradient 10s ease infinite;
 }
 
 .introText {
-  font-size: 20px;
-  font-weight: 900;
-  color: rgb(31, 150, 236);
-  text-shadow: black 2px 2px 2px, black 2px 2px 2px;
+  font-size: 28px;
 }
 
 .taglineText {
@@ -40,36 +48,42 @@
   font-size: 18px;
 }
 
-ul, li {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  font-size: 15px;
+.underLine {
+  width: 100%;
+  position: relative;
+  height: 3px;
+  margin-bottom: 70px;
+  background: -webkit-linear-gradient(300deg,#822fba, #ff79fa);
+  animation: gradient 10s ease infinite;
+  -webkit-animation: gradient 10s ease infinite;
 }
-
-ul {
-  margin: 2em 0;
-}
-
-li {
-  margin: 1em;
-  margin-left: 3em;
-}
-
-li:before {
-  content: '\f006';
-  font-family: 'FontAwesome';
-  float: left;
-  margin-left: -1.5em;
-  color: #0074D9;
-}
-
-.mainIconWrapper {
+.contentWapper {
   display: flex;
   flex-direction: row;
 }
+.mainIconWrapper {
+  margin-top: 5px;
+  display: flex;
+  padding-left: 20px;
+  flex-direction: column;
+}
 .mainIcon {
   margin: 10px;
+  margin-right: 20px;
+}
+.mainIconRow {
+  display: flex;
+  align-items: center;
+}
+.mainIconText {
+  font-size: 18px;
+}
+
+.homeBtnWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 40px;
 }
 
 #mainSignInBtn {
@@ -79,10 +93,7 @@ li:before {
 }
 
 #OR {
-  display: inline-block;
   margin: 0 15px;
-  margin-top: 65px;
-  font-weight: 900;
 }
 
 #mainSignUp {
@@ -91,10 +102,133 @@ li:before {
   font-weight: 900;
 }
 
+.exampleWrapper {
+  display: flex;
+  flex: 2;
+  height: 100%;
+  align-items: center;
+  padding-left: 30px;
+  width: 420px;
+  height: 420px;
+}
+
 @media screen and (max-width:650px) {
-  .brandName {
-    font-size: 50px;
+  .mainIconText {
+    display:none;
   }
-  #mainSignInBtn {
+  .brandName {
+    font-size: 55px;
+    margin-bottom: 50px;
+  }
+  .introText {
+    font-size: 30px;
+    margin-bottom: 70px;
+    display: flex;
+    text-align: center;
+  }
+  .brandWrapper {
+    flex: 10;
+    justify-content: center;
+    align-items: center;
+  }
+  .contentWapper {
+    flex-direction: column;
+  }
+  .mainIconWrapper{
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+}
+@media screen and (max-width:380px) {
+  .brandName {
+    font-size: 35px;
+  }
+  .introText {
+    font-size: 20px;
+  }
+  .mainIconWrapper{
+  }
+}
+@media screen and (max-width:1100px) {
+  .brandWrapper {
+    flex: 8
+  }
+}
+
+#brandPencil {
+  animation-duration: 2s;
+  animation-fill-mode: both;
+  transform-origin: center center;
+  animation-name: swing;
+  animation-iteration-count: infinite;
+}
+.mainIcon, .mainIconText {
+  -webkit-backface-visibility: visible !important;
+  backface-visibility: visible !important;
+  animation-name: flipInX;
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+@keyframes swing {
+  20% {
+    transform: rotate3d(0, 0, 1, 15deg);
+  }
+
+  40% {
+    transform: rotate3d(0, 0, 1, -10deg);
+  }
+
+  60% {
+    transform: rotate3d(0, 0, 1, 5deg);
+  }
+
+  80% {
+    transform: rotate3d(0, 0, 1, -5deg);
+  }
+
+  to {
+    transform: rotate3d(0, 0, 1, 0deg);
+  }
+}
+
+.swing {
+  transform-origin: top center;
+  animation-name: swing;
+}
+
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+.animated.infinite {
+  animation-iteration-count: infinite;
+}
+
+@keyframes flipInX {
+  from {
+    transform: perspective(400px) rotate3d(1, 0, 0, 90deg);
+    animation-timing-function: ease-in;
+    opacity: 0;
+  }
+
+  40% {
+    transform: perspective(400px) rotate3d(1, 0, 0, -20deg);
+    animation-timing-function: ease-in;
+  }
+
+  60% {
+    transform: perspective(400px) rotate3d(1, 0, 0, 10deg);
+    opacity: 1;
+  }
+
+  80% {
+    transform: perspective(400px) rotate3d(1, 0, 0, -5deg);
+  }
+
+  to {
+    transform: perspective(400px);
   }
 }

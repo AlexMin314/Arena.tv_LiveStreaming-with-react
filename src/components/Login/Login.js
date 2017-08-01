@@ -12,8 +12,20 @@ import { isStillLoading } from '../../actions/loadingActions';
 // Import CSS
 import './Login.css';
 
+// Import UI
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+
 // Import Child Component
 import SocialBtn from './SocialBtn';
+
+const inputStyle = {
+  marginBottom: '20px'
+}
+const registerStyle = {
+  color: '#9c27b0'
+}
 
 class Login extends Component {
 
@@ -54,7 +66,7 @@ class Login extends Component {
     // Firebase observer to listen if user has signed in
     // If signed in, fire off action to add user to local store
     firebase.auth().onAuthStateChanged(user => {
-      if(user && user.providerData[0].providerId == "facebook.com" || user.providerData[0].providerId === "twitter.com" || user.providerData[0].providerId === "google.com") {
+      if(user && (user.providerData[0].providerId == "facebook.com" || user.providerData[0].providerId === "twitter.com" || user.providerData[0].providerId === "google.com")) {
         // Set the reference to the users object in firebase
         const usersRef = firebaseDB.ref('users');
 
@@ -130,7 +142,7 @@ class Login extends Component {
   render() {
     return (
       <div className="container-fluid contentBody">
-        { this.props.isStillLoading[0] && this.props.user.length === 0 ?
+        { this.props.isStillLoading[0] && this.props.user[0] === null ?
         (
           <div className="spinnerWrapper">
             <div className="cssload-loader">
@@ -145,29 +157,34 @@ class Login extends Component {
         ) : (
             <div className="signInContentWrapper">
               <div className="signInContent">
-                <h2> Login </h2>
-                <div className="errors"><h3 className="errorMessage">{this.state.error.message}</h3></div>
-                <div className = "loginForm">
-                Email<input type="text"
-                            name="email"
-                            onChange={this.emailpasswordInput}
-                            value={this.state.email}
-                            className="form-control"
-                            placeholder="Enter Email"/>
-                <br/>
-                Password<input type="password"
-                            name="password"
-                            onChange={this.emailpasswordInput}
-                            value={this.state.password}
-                            className="form-control"
-                            placeholder="Enter Password"/>
-                <br/>
-                  <button className="btn btn-primary hvr-outline-out"
-                          onClick={this.login}>Login</button>
-                </div>
+                <h2 className="signUpTitle">Sign In</h2>
+                EMAIL
+                <TextField hintText="enter email"
+                           name="email"
+                           style={inputStyle}
+                           onChange={this.emailpasswordInput}
+                           value={this.state.email}
+                           errorText={this.state.error.message.includes('password') ? null : this.state.error.message}/>
+                PASSWORD
+                <TextField hintText="enter password"
+                           type="password"
+                           name="password"
+                           style={inputStyle}
+                           onChange={this.emailpasswordInput}
+                           value={this.state.password}
+                           errorText={this.state.error.message.includes('password') ? this.state.error.message : null}/>
+                 <RaisedButton label="sign in"
+                               className="signinButton"
+                               onTouchTap={this.login}
+                               primary={true}/>
+                               {/* 'hvr-outline-out' */}
                 <div className="goToSignUp">
-                  Don't have a MindTap account yet?<br/>
-                  <a href="/signup">Register Now</a>
+                  Don't have a <span id="mindTapText">MindTap</span> account yet?
+                  <FlatButton label="Register Now"
+                              href="/signup"
+                              style={registerStyle}
+                              className="registerNow"
+                              fullWidth={true} />
                 </div>
                 <SocialBtn/>
               </div>

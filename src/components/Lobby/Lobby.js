@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import uuid from 'uuid/v4';
 
 // Import firebase
 import { userRoomUpdating } from '../../firebase';
@@ -9,9 +10,31 @@ import firebase from '../../firebase';
 import { updateRoom } from '../../actions/roomActions';
 import { updateGameStart } from '../../actions/gameActions';
 
+// Import UI
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import FontIcon from 'material-ui/FontIcon';
+import Drawer from 'material-ui/Drawer';
+import RaisedButton from 'material-ui/RaisedButton';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import TextField from 'material-ui/TextField';
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import Avatar from 'material-ui/Avatar';
+
 import './Lobby.css';
 
 // Import child Components
+//
+const chatToggleStyle = {
+
+}
+const globalChatStyle = {
+  marginBottom: '200px',
+  overflow: 'auto'
+}
 
 export class Lobby extends Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -20,7 +43,10 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     this.state = {
       roomName: '',
       roomTopic: 'TV',
-      errorMessage: ''
+      errorMessage: '',
+      open: false,
+      chatmsg: '',
+      chatList: []
     }
   }
 
@@ -175,6 +201,68 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     });
   };
 
+/**
+ * Chat related
+ */
+  toggleChatDrawer = () => this.setState({open: !this.state.open});
+  handleClose = () => this.setState({open: false});
+
+  onChangeChat = (e) => {
+    this.setState({chatmsg: e.target.value});
+  }
+  onKeypressChat = (e) => {
+    if (e.key === 'Enter') {
+      const message = this.messageHelper();
+      firebase.database().ref('message/').push(message);
+      this.setState({chatmsg: ''});
+    }
+  }
+  onClickSend = (e) => {
+    const message = this.messageHelper();
+    firebase.database().ref('message/').push(message);
+    this.setState({chatmsg: ''});
+  }
+
+  messageHelper = () => {
+    const message = {};
+    message.text = this.state.chatmsg;
+    message.senderID = this.props.user[0].id;
+    message.senderName = this.props.user[0].displayName;
+    message.photo = this.props.user[0].photo;
+    message.key = uuid();
+    return message;
+  }
+
+  componentDidMount() {
+    firebase.database().ref('message/').on('child_added', (data) => {
+      const chatListArr = this.state.chatList;
+      chatListArr.push(data.val())
+      this.setState({chatList: chatListArr});
+    })
+  }
+
+  renderChat = () => {
+    const returnArr = []
+
+    this.state.chatList.forEach((e, i) => {
+      returnArr.push(
+        <div className="chatContentWrapper">
+          <ListItem disabled={true}
+                    leftAvatar={<Avatar src={e.photo} />}>
+            <div>{e.senderName}</div>
+            <div>Image Avatar</div>
+            <div>{e.text}</div>
+          </ListItem>
+        </div>
+      )
+    })
+
+
+
+
+    return returnArr;
+  }
+
   render() {
 
     return (
@@ -204,6 +292,33 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             <br/>
             <div className="errorMessage">{this.state.errorMessage}</div>
           </div>
+          <FloatingActionButton secondary={true}
+                                className="chatToggle"
+                                style={chatToggleStyle}
+                                onTouchTap={this.toggleChatDrawer}>
+            <FontIcon className="material-icons">chat</FontIcon>
+          </FloatingActionButton>
+          <Drawer width={400} openSecondary={true}
+                  open={this.state.open}
+                  onRequestChange={(open) => this.setState({open})}
+                  docked={false}
+                  containerClassName="globalChat"
+                  containerStyle={globalChatStyle}>
+            <AppBar iconElementRight={<IconButton><NavigationClose onTouchTap={this.handleClose}/></IconButton>}
+                    iconClassNameLeft='chatLeftIconNone'
+                    />
+            <div className="chatInputGroup">
+              <TextField floatingLabelText="messages..."
+                         fullWidth={true}
+                         onChange={this.onChangeChat}
+                         onKeyPress={this.onKeypressChat}
+                         value={this.state.chatmsg}/>
+              <RaisedButton label="Send" secondary={true}
+                            className="sendBtn"
+                            onTouchTap={this.onClickSend}/>
+            </div>
+            {this.renderChat()}
+          </Drawer>
         </div> {/* contentBody Wrapper End*/}
 
 
