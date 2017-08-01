@@ -8,11 +8,12 @@ import App from './components/App/App';
 import './index.css';
 
 // Import API
-import { getUsers, setUsers } from './API/userAPI';
-import { getRoom, setRoom } from './API/roomAPI';
-import { getGame, setGame } from './API/gameAPI';
-import { getTurn, setTurn } from './API/turnAPI';
+import { setUsers } from './API/userAPI';
+import { setRoom } from './API/roomAPI';
+import { setGame } from './API/gameAPI';
+import { setTurn } from './API/turnAPI';
 import { setLoading } from './API/loadingAPI';
+import { setTimerStatus } from './API/timerAPI';
 
 import registerServiceWorker from './registerServiceWorker';
 
@@ -31,6 +32,7 @@ store.subscribe(() => {
   setRoom(state.room);
   setGame(state.gameStart);
   setTurn(state.currentTurn);
+  setTimerStatus(state.timerStatus);
 })
 
 // This dispatcher is for the flow of storing user login status.

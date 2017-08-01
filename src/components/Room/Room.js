@@ -19,6 +19,7 @@ import './Room.css';
 // Import Actions
 import { updateGameStart } from '../../actions/gameActions';
 import { updateCurrentTurn } from '../../actions/turnActions';
+import { updateTimerStatus } from '../../actions/timerActions';
 
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
@@ -44,8 +45,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       time: {},
       seconds: 180,
       timer: 0,
+      timerStarted: false,
       winnerList: []
-
     }
   }
 
@@ -83,6 +84,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, true);
       }
     });
+
+    // Listener for timer, start timer when game starts
+    const timerRef = firebase.database().ref('rooms/' + this.props.roomkey + '/startTimer');
+    timerRef.on('value', (startTimer) => {
+      if(startTimer.val() && !this.props.timer) {
+        this.startTimer();
+      }
+    })
 
     // Get gameover
     const gameoverRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameover');
@@ -224,13 +233,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   skipTurn = () => {
     // clear canvas
+    // this.setState ({ timer: 0 });
+    // this.startTimer();
     strokeClear(this.props.roomkey)
     // Turn Changing.
     turnChangingLogic(this.props.roomkey);
     // currentWord Generation requesting
     currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, false)
-    // Start timer
-    this.startTimer();
+
     // Stage Updater needed!
   };
 
@@ -254,7 +264,14 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   startTimer = () => {
-    if(this.state.timer === 0) setInterval(this.countDown, 1000);
+    if(this.state.timer === 0) {
+      setInterval(this.countDown, 1000);
+    }
+  }
+
+  resetTimer = () => {
+    clearInterval(this.state.timer);
+    this.setState({ seconds: 180 });
   }
 
   countDown = () => {
@@ -262,12 +279,16 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     let seconds = this.state.seconds - 1;
     this.setState({
       time: this.secondsToTime(seconds),
-      seconds: seconds,
+      seconds: seconds
     });
 
     // Check if we're at zero.
     if (seconds <= 0) {
       clearInterval(this.state.timer);
+      this.setState({
+        time: this.secondsToTime(180)
+      })
+      // this.skipTurn();
     }
   }
 /***********************************
@@ -387,7 +408,8 @@ const mapStateToProps = (state) => {
       user: state.user,
       roomkey: state.room,
       gameStartInfo: state.gameStart,
-      turnInfo: state.currentTurn
+      turnInfo: state.currentTurn,
+      timer: state.timerStatus
     }
 }
 
@@ -398,6 +420,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     currentTurn: (index) => {
       dispatch(updateCurrentTurn(index))
+    },
+    updateTimer: (timerStatus) => {
+      dispatch(updateTimerStatus(timerStatus))
     }
   }
 }
