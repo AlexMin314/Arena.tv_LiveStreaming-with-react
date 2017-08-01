@@ -47,9 +47,9 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
         {isLoggedIn.length>0 ?
           <nav className="navbarWrapper">
             <a id="brandName" href="/">MindTap <i className="fa fa-pencil" aria-hidden="true"></i></a>
-            <a id="logout" href="/" onClick={this.logout}>Log Out</a>            
+            <a id="logout" href="/" onClick={this.logout}>Log Out</a>
             <div className="greetingWrapper">
-              <h5 className="greeting"> Welcome, {this.props.user[0].displayName ? this.props.user[0].displayName : this.props.user[0].username}</h5>
+              <h5 className="greeting"> Welcome, {this.props.user[0].displayName}</h5>
               <img className="userPhoto" src={this.props.user[0].photo}/>
             </div>
           </nav>

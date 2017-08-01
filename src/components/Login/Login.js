@@ -166,7 +166,7 @@ class Login extends Component {
                           onClick={this.login}>Login</button>
                 </div>
                 <div className="goToSignUp">
-                  Don't have a MindTap account yet?<br/>
+                  Dont have a MindTap account yet?<br/>
                   <a href="/signup">Register Now</a>
                 </div>
                 <SocialBtn/>
