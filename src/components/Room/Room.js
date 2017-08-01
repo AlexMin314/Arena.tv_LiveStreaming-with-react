@@ -43,7 +43,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       gameover: false,
       gameoverChk: false,
       time: {},
-      seconds: 180,
+      seconds: 90,
       timer: 0,
       startTheTimer: false,
       winnerList: []
@@ -83,8 +83,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       // Start the timer when the game starts
       if(data.val() && !this.props.timer) {
           this.setState({
-            time: this.secondsToTime(180),
-            seconds: 180,
+            time: this.secondsToTime(90),
+            seconds: 90,
             startTheTimer: true
           })
           this.props.updateTimer(true);
@@ -132,12 +132,12 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       if(this.props.timer) {
         // reset the timer and start it again when turn changes
         this.setState({
-          time: this.secondsToTime(180),
-          seconds: 180,
+          time: this.secondsToTime(90),
+          seconds: 90,
           startTheTimer: true
         })
         clearInterval(this.state.timer);
-        if(this.state.seconds === 180) this.startTimer();
+        if(this.state.seconds === 90) this.startTimer();
         // end of timer
       }
       if (!this.state.gameover) {
@@ -289,12 +289,16 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         seconds: seconds  // keeps track of the countdown
       })
         // Check if we're at zero.
-      if (seconds <= 170 && this.props.turnInfo.id === this.props.user[0].id) {
+      if (seconds <= 0 && this.props.turnInfo.id === this.props.user[0].id) {
         this.resetTimer();
         this.skipTurn();
       }
-      if (seconds <= 170 && this.props.turnInfo.id !== this.props.user[0].id) {
+      if (seconds <= 0 && this.props.turnInfo.id !== this.props.user[0].id) {
         clearInterval(this.state.timer);
+        this.setState({
+          time: this.secondsToTime(90),
+          seconds: 90
+        })
       }
   }
 
