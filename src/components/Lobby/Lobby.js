@@ -46,6 +46,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   constructor(props){
     super(props)
+
     this.state = {
       roomName: '',
       roomTopic: 'TV',
@@ -213,6 +214,12 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
  */
   toggleChatDrawer = () => {
     this.setState({open: !this.state.open});
+
+    const chatList = this.state.chatList;
+    chatList.forEach((e) => {
+      if(!e.read) e.read = true;
+    })
+
     this.setState({ missedMsg: 0});
   }
   handleClose = () => this.setState({open: false});
@@ -249,10 +256,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     firebase.database().ref('message/').limitToLast(1).on('child_added', (data) => {
         const chatListArr = this.state.chatList;
         const newMessage = data.val();
-
         if (this.state.open)  {
+          newMessage.read = true;
           this.setState({ missedMsg: 0});
         } else {
+          newMessage.read = false;
           let unreadNum = this.state.missedMsg;
           unreadNum += 1;
           this.setState({ missedMsg: unreadNum});

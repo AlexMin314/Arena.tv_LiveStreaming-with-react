@@ -146,7 +146,7 @@ Chat
   word-break: break-all;
 }
 .chatContentWrapper {
-  border-bottom: 1px solid rgb(228, 227, 227);
+
 }
 .chatSenderLeft, .chatSenderRight {
   margin-bottom: 10px;
