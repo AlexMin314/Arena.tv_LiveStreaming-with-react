@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 // Import Actions
 import {removeUser} from '../../../actions/userActions';
 import { isStillLoading } from '../../../actions/loadingActions';
+import { updateTimerStatus } from '../../../actions/timerActions';
 
 // Import Firebase
 import firebase from '../../../firebase';
@@ -28,6 +29,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
   // logout onClick event listener
   logout = () => {
     this.props.triggerLoading(false);
+    this.props.updateTimer(null);
     // Remove user from firebase session
     firebase.auth().signOut().then(() => {
       // Remove user from local store
@@ -75,6 +77,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     triggerLoading: (result) => {
       dispatch(isStillLoading(result))
+    },
+    updateTimer: (timerStatus) => {
+      dispatch(updateTimerStatus(timerStatus))
     }
   }
 }

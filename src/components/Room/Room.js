@@ -73,22 +73,24 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     // Get gameStart status - game start!
     const readyRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
     readyRef.on('value', (data) => {
+
       // Game Start! update to redux
       this.props.gameStart(data.val())
       // currentWord Generation requesting
       if (this.state.topic) {
         currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, true);
       }
+      // Start the timer when the game starts
+      if(data.val() && !this.props.timer) {
+          this.setState({
+            time: this.secondsToTime(180),
+            seconds: 180,
+            startTheTimer: true
+          })
+          this.props.updateTimer(true);
+          this.startTimer();
+      }
     });
-
-    // // Listener for timer, start timer when game starts
-    // const timerRef = firebase.database().ref('rooms/' + this.props.roomkey + '/startTimer');
-    // timerRef.once('value', (startTimer) => {
-    //   if(startTimer.val() && !this.props.timer) {
-    //     // this.setState({ startTheTimer: true });
-    //     // this.startTimer();
-    //   }
-    // })
 
     // Get gameover
     const gameoverRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameover');
@@ -127,7 +129,19 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     // Listener for current turn change
     const turnRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
     turnRef.on('value', (snapshot) => {
+      if(this.props.timer) {
+        // reset the timer and start it again when turn changes
+        this.setState({
+          time: this.secondsToTime(180),
+          seconds: 180,
+          startTheTimer: true
+        })
+        clearInterval(this.state.timer);
+        if(this.state.seconds === 180) this.startTimer();
+        // end of timer
+      }
       if (!this.state.gameover) {
+
       const nextTurn = snapshot.val();
       firebase.database().ref('rooms/' + this.props.roomkey + '/members')
         .once('value', (snapshot) => {
@@ -139,13 +153,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               }
               this.setState({
                 currentPlayerTurn: keyArray[nextTurn].displayName,
-                currentPlayerId: keyArray[nextTurn].id,
-                time: this.secondsToTime(180),
-                seconds: 180,
-                startTheTimer: true
+                currentPlayerId: keyArray[nextTurn].id
               });
-              clearInterval(this.state.timer);
-              if(this.state.seconds === 180) this.startTimer();
               const updator = {
                 index: nextTurn,
                 id: keyArray[nextTurn].id,
@@ -210,6 +219,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     if(this.props.user[0].id === this.props.turnInfo.id) strokeClear(this.props.roomkey)
     // updating to firebase
     roomMemberUpdating(this.props.roomkey, this.state.memberKey, {}, true, '/lobby');
+    this.props.updateTimer(null);
   }
 
   playAgain = () => {
@@ -242,8 +252,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, false)
     // Stage Updater needed!
   };
-
-
 
   /*
    * Time Remaining Functions
@@ -281,25 +289,23 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         seconds: seconds  // keeps track of the countdown
       })
         // Check if we're at zero.
-      if (seconds <= 160 && this.props.turnInfo.id === this.props.user[0].id) {
+      if (seconds <= 170 && this.props.turnInfo.id === this.props.user[0].id) {
         this.resetTimer();
         this.skipTurn();
       }
-      if (seconds <= 160 && this.props.turnInfo.id !== this.props.user[0].id) {
+      if (seconds <= 170 && this.props.turnInfo.id !== this.props.user[0].id) {
         clearInterval(this.state.timer);
       }
   }
 
   resetTimer = () => {
     clearInterval(this.state.timer);
+    firebase.database().ref('rooms/' + this.props.roomkey).update({ startTimer: false });
   }
 
 /***********************************
 ** End of time remaining functions *
 *///////////////////////////////////
-
-
-
 
   /**
    * gameover related.
@@ -360,8 +366,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                 {this.props.gameStartInfo && (!this.state.gameover || !this.state.gameoverChk) ? (
                   <div className="turnWrapper">
                     <div className="timerDiv">
-                      <h5> Time Remaining: </h5>
-                      <div> {this.state.time.minutes} : {this.state.time.seconds} </div>
+                      <h5 className="timeRemainingText"> Timer </h5>
+                      <div className="timeDisplay"> {this.state.time.minutes} : {this.state.time.seconds} </div>
                     </div>
                   </div>
                 ) : null}
