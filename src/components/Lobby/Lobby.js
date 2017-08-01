@@ -32,8 +32,8 @@ const chatToggleStyle = {
 
 }
 const globalChatStyle = {
-  marginBottom: '200px',
-  overflow: 'auto'
+  paddingBottom: '200px',
+  overflow: 'auto',
 }
 
 export class Lobby extends Component { // eslint-disable-line react/prefer-stateless-function
@@ -234,6 +234,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   }
 
   componentDidMount() {
+    this.scrollToBottom();
     firebase.database().ref('message/').on('child_added', (data) => {
       const chatListArr = this.state.chatList;
       chatListArr.push(data.val())
@@ -245,22 +246,39 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     const returnArr = []
 
     this.state.chatList.forEach((e, i) => {
+      let checker = false;
+      if (e.senderID === this.props.user[0].id) {
+        checker = true;
+      }
       returnArr.push(
-        <div className="chatContentWrapper">
-          <ListItem disabled={true}
-                    leftAvatar={<Avatar src={e.photo} />}>
-            <div>{e.senderName}</div>
-            <div>Image Avatar</div>
-            <div>{e.text}</div>
-          </ListItem>
+        <div className="chatContentWrapper" key={uuid()}>
+          {checker ? (
+            <ListItem disabled={true}
+                      rightAvatar={<Avatar src={e.photo} />}>
+              <div className="rightChatWrapper">
+                <div className="chatSenderRight">{'@ ' + e.senderName}</div>
+                <div className="chatTextRight">{e.text}</div>
+              </div>
+            </ListItem>
+          ) : (
+            <ListItem disabled={true}
+                      leftAvatar={<Avatar src={e.photo} />}>
+              <div className="chatSenderLeft">{'@ ' + e.senderName}</div>
+              <div>{e.text}</div>
+            </ListItem>
+          )}
         </div>
       )
     })
-
-
-
-
     return returnArr;
+  }
+
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom(); // auto scroll down.
   }
 
   render() {
@@ -317,7 +335,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                             className="sendBtn"
                             onTouchTap={this.onClickSend}/>
             </div>
-            {this.renderChat()}
+            <div className="chatListWrapper">
+              {this.renderChat()}
+              <div id="messagesEnd"
+                   ref={(el) => this.messagesEnd = el} />
+            </div>
           </Drawer>
         </div> {/* contentBody Wrapper End*/}
 

@@ -106,11 +106,11 @@ Chat
   bottom: 0;
   right: 0;
   width: 100%;
+  height: 140px;
   display: flex;
   flex-direction: column;
-  padding: 30px;
+  padding: 0 30px;
   justify-content: flex-start;
-  border: 1px solid red;
 }
 .sendBtn {
 
@@ -124,12 +124,36 @@ Chat
   margin-bottom: 30px;
 }
 .globalChat {
-  border: 2px solid blue;
-  height: 100%
-}
 
-.globalChat::-webkit-scrollbar {
+}
+.chatListWrapper::-webkit-scrollbar {
   display: none;
+}
+.chatListWrapper {
+  position: absolute;
+  top: 0;
+  padding-top: 150px;
+  padding-bottom: 10px;
+  overflow: auto;
+  height: 82%;
+  width: 100%;
+  word-break: break-all;
+}
+.chatContentWrapper {
+  border-bottom: 1px solid rgb(228, 227, 227);
+}
+.chatSenderLeft, .chatSenderRight {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.rightChatWrapper {
+  display: flex;
+  flex-direction: column;
+}
+.chatSenderRight, .chatTextRight {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
 }
 
 @media screen and (max-width:450px) {
@@ -206,5 +230,10 @@ Chat
 @media screen and (max-width:830px) {
   .lobbyContentWrapper {
     width: 60%;
+  }
+}
+@media screen and (max-height:650px) {
+  .chatListWrapper {
+    height: 75%;
   }
 }
