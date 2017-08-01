@@ -45,7 +45,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       time: {},
       seconds: 180,
       timer: 0,
-      timerStarted: false,
+      startTheTimer: false,
       winnerList: []
     }
   }
@@ -61,7 +61,6 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
           const members = room.members;
           for(const key in members) {
             if (members[key].id === this.props.user[0].id) {
-              console.log()
               this.setState({
                 memberKey: key,
                 topic: room.roomTopic
@@ -76,22 +75,20 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     readyRef.on('value', (data) => {
       // Game Start! update to redux
       this.props.gameStart(data.val())
-      // Time remaining for Turn
-      const timeLeft = this.secondsToTime(this.state.seconds);
-      this.setState({ time: timeLeft });
       // currentWord Generation requesting
       if (this.state.topic) {
         currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, true);
       }
     });
 
-    // Listener for timer, start timer when game starts
-    const timerRef = firebase.database().ref('rooms/' + this.props.roomkey + '/startTimer');
-    timerRef.on('value', (startTimer) => {
-      if(startTimer.val() && !this.props.timer) {
-        this.startTimer();
-      }
-    })
+    // // Listener for timer, start timer when game starts
+    // const timerRef = firebase.database().ref('rooms/' + this.props.roomkey + '/startTimer');
+    // timerRef.once('value', (startTimer) => {
+    //   if(startTimer.val() && !this.props.timer) {
+    //     // this.setState({ startTheTimer: true });
+    //     // this.startTimer();
+    //   }
+    // })
 
     // Get gameover
     const gameoverRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameover');
@@ -142,8 +139,13 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               }
               this.setState({
                 currentPlayerTurn: keyArray[nextTurn].displayName,
-                currentPlayerId: keyArray[nextTurn].id
+                currentPlayerId: keyArray[nextTurn].id,
+                time: this.secondsToTime(180),
+                seconds: 180,
+                startTheTimer: true
               });
+              clearInterval(this.state.timer);
+              if(this.state.seconds === 180) this.startTimer();
               const updator = {
                 index: nextTurn,
                 id: keyArray[nextTurn].id,
@@ -233,14 +235,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 
   skipTurn = () => {
     // clear canvas
-    // this.setState ({ timer: 0 });
-    // this.startTimer();
     strokeClear(this.props.roomkey)
     // Turn Changing.
     turnChangingLogic(this.props.roomkey);
     // currentWord Generation requesting
     currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.state.topic, false)
-
     // Stage Updater needed!
   };
 
@@ -253,8 +252,10 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     let convertToMinutes = secs % (60 * 60);
     let minutes = Math.floor(convertToMinutes / 60);
 
-    let convertToSeconds = convertToMinutes % 60;
+    let convertToSeconds = (convertToMinutes % 60);
     let seconds = Math.ceil(convertToSeconds);
+
+    if (seconds === 0) seconds = "00";
 
     let obj = {
       "minutes": minutes,
@@ -264,33 +265,35 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   startTimer = () => {
-    if(this.state.timer === 0) {
-      setInterval(this.countDown, 1000);
+    if(this.state.startTheTimer) {
+      let timer = setInterval(this.countDown, 1000);
+      this.setState({
+        timer: timer
+      })
     }
-  }
-
-  resetTimer = () => {
-    clearInterval(this.state.timer);
-    this.setState({ seconds: 180 });
   }
 
   countDown = () => {
     // Remove one second, set state so a re-render happens.
-    let seconds = this.state.seconds - 1;
-    this.setState({
-      time: this.secondsToTime(seconds),
-      seconds: seconds
-    });
-
-    // Check if we're at zero.
-    if (seconds <= 0) {
-      clearInterval(this.state.timer);
+      let seconds = (this.state.seconds - 1);
       this.setState({
-        time: this.secondsToTime(180)
+        time: this.secondsToTime(seconds),
+        seconds: seconds  // keeps track of the countdown
       })
-      // this.skipTurn();
-    }
+        // Check if we're at zero.
+      if (seconds <= 160 && this.props.turnInfo.id === this.props.user[0].id) {
+        this.resetTimer();
+        this.skipTurn();
+      }
+      if (seconds <= 160 && this.props.turnInfo.id !== this.props.user[0].id) {
+        clearInterval(this.state.timer);
+      }
   }
+
+  resetTimer = () => {
+    clearInterval(this.state.timer);
+  }
+
 /***********************************
 ** End of time remaining functions *
 *///////////////////////////////////
