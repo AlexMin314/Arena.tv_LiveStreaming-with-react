@@ -25,12 +25,22 @@ import FlatButton from 'material-ui/FlatButton';
 import Toggle from 'material-ui/Toggle';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import Avatar from 'material-ui/Avatar';
 
 const iconStyles = {
   marginRight: 24,
 };
 const displayNone = {
   display: "none",
+}
+const avatar = {
+
+}
+const appBarStyle = {
+
+}
+const icon = {
+  color: 'white'
 }
 
 /**
@@ -51,6 +61,9 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
       // Remove user from local store
       this.props.setUserUpdate({});
     })
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 300)
   }
 
   goHome = () => {
@@ -69,7 +82,19 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
               </div>}
             iconElementLeft={null}
             iconStyleLeft={displayNone}
-            iconElementRight={isLoggedIn ? <Logged logout={this.logout} /> : <Login />}
+            className="appBar"
+            style={appBarStyle}
+            iconElementRight={isLoggedIn ? (
+              <div className="greetingWrapper">
+                <Avatar size="30"
+                        className="avatarClass"
+                        src={this.props.user[0].photo}
+                        style={avatar} />
+                <div className="greeting">Welcome,{this.props.user[0].displayName}</div>
+                <Logged logout={this.logout} />
+              </div>
+            ) : (
+              <Login />)}
           />
         </div>
       );
@@ -92,13 +117,12 @@ class Logged extends Component {
     super(props)
 
   }
-  static muiName = 'IconMenu';
 
   render() {
     return (
       <IconMenu
         {...this.props}
-        iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+        iconButtonElement={<IconButton iconStyle={icon}><MoreVertIcon /></IconButton>}
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
         anchorOrigin={{horizontal: 'right', vertical: 'top'}}
       >

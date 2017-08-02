@@ -10,6 +10,7 @@ import gameReducer from '../reducers/gameReducer';
 import turnReducer from '../reducers/turnReducer';
 import timerReducer from '../reducers/timerReducer';
 import navReducer from '../reducers/navReducer';
+import lobbyReducer from '../reducers/lobbyReducer';
 
 export let initStore = () => {
 
@@ -21,7 +22,8 @@ export let initStore = () => {
     gameStart: gameReducer,
     currentTurn: turnReducer,
     timerStatus: timerReducer,
-    nav: navReducer
+    nav: navReducer,
+    lobby: lobbyReducer
   });
 
   // Create the store with all the reducers and allow for chrome redux dev tools to run and read reducers

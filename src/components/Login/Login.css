@@ -14,11 +14,11 @@
 }
 
 #mindTapText {
-  color: #9c27b0;
+  color: rgb(255, 64, 129);
 }
 .registerNow {
   margin-top: 5px;
-  color: #9c27b0;
+  color: rgb(255, 64, 129);
 }
 
 .goToSignUp {
@@ -43,7 +43,7 @@
 }
 
 .advice {
-  font-size: 30px;
+  font-size: 20px;
   display: flex;
 }
 

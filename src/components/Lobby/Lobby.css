@@ -7,23 +7,42 @@
   justify-content: center;
   align-items: center;
 }
-
+.paperWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 .lobbyContentWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.lobbyContentWrapper1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.lobbyContentWrapper2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 120%;
+  max-width: 280px;
+}
+.lobbyClose {
+  align-self: flex-end;
 
 }
 
 .subtitleText {
-  font-size: 30px;
+  font-size: 28px;
   margin: auto;
-}
-
-
-#createRoomBtn {
-  margin-right: 20px;
-}
-
-#quickJoinBtn {
-  margin-right: 20px;
+  align-self: flex-start;
+  width: 100%;
 }
 
 .category {
@@ -44,13 +63,24 @@
 
 .category:hover {
   border-radius: 10px;
-  background-color: rgba(99, 99, 99, 0.5);
+}
+
+.categoryAni:hover {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+  animation-name: tada;
 }
 
 .errorMessage {
-  display: inline-block;
+  margin-top: 5px;
+  color: red;
   font-size: 12px;
-  padding-top: 10px;
+  height: 15px;
+  width: 100%;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
 }
 
 .successMessage {
@@ -82,18 +112,16 @@
 }
 
 
-/* Create Room Modal */
-#createRoomModalLabel {
-  font-size: 30px;
-  margin-top: 10px;
+/* Room Join */
+.joinRoomBtn {
+  margin-top: 20px;
 }
-
-.modalSubtitle {
-  font-size: 18px;
+.joinRoomInput {
   margin-top: 30px;
-  margin-bottom: 5px;
 }
 
+
+/* Create Room Modal */
 .categoryModal {
   height: 60px;
   margin: 5px;
@@ -101,13 +129,25 @@
   padding-top: 20px;
 }
 
-#modalTopic {
-  width: 100%;
-}
-
 #mRadio1, #mRadio2, #mRadio3, #mRadio4, #mRadio5 {
   margin: 0;
   padding: 0;
+}
+
+.roomCreateBtn {
+  margin-top: 25px;
+  width: 100%;
+}
+
+.roomCreateInput {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.categoryRadio {
+  -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+        box-sizing: border-box;
 }
 
 /***
@@ -116,7 +156,19 @@ Chat
 .chatLeftIconNone {
   display: none;
 }
-
+.chatWrapperForBottom {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding-top: 10px;
+  padding-bottom: 120px;
+  overflow: auto;
+  word-break: break-all;
+  top: 0;
+}
+.chatWrapperForBottom::-webkit-scrollbar {
+  display: none;
+}
 .chatInputGroup {
   position: absolute;
   bottom: 0;
@@ -133,6 +185,7 @@ Chat
 }
 .chatBadge {
   position: absolute;
+  animation-iteration-count: 5;
   bottom: 0;
   right: 0;
   margin-right: 75px;
@@ -144,9 +197,6 @@ Chat
   right: 0;
   margin-right: 30px;
   margin-bottom: 30px;
-}
-.globalChat {
-
 }
 .chatListWrapper::-webkit-scrollbar {
   display: none;
@@ -178,27 +228,19 @@ Chat
   padding-right: 10px;
 }
 
-@media screen and (max-width:450px) {
+@media screen and (max-width:480px) {
   .lobbyContentWrapper {
     margin-top: 30px;
     width: auto;
   }
   .category {
-    width: 65px;
-    height: 65px;
+    width: 55px;
+    height: 55px;
     font-size: 12px;
   }
   .categoryModal {
     height: 40px;
     width: 40px;
-  }
-  #modalTopic {
-    height: 70px;
-  }
-  #createRoomBtn, #quickJoinBtn {
-    font-size: 11px;
-    height: 60px;
-    padding: 10px;
   }
   .chatToggle {
     display: none !important;
@@ -209,13 +251,15 @@ Chat
     margin-bottom: -20px;
     z-index: 10000;
   }
+  .paperWrapper {
+    flex-direction: column;
+  }
 }
-@media screen and (max-height:450px) {
+@media screen and (max-height:480px) {
   .lobbyContentWrapper {
     margin-top: 30px;
     width: auto;
   }
-
   .category {
     width: 55px;
     height: 55px;
@@ -225,24 +269,24 @@ Chat
     height: 40px;
     width: 40px;
   }
-  #modalTopic {
-    height: 70px;
-  }
-  #createRoomModalLabel {
-    font-size: 25px;
-  }
-  #createRoomBtn, #quickJoinBtn {
-    font-size: 11px;
-    height: 40px;
-    padding: 10px;
-  }
   .chatToggle {
     display: none !important;
   }
   .subtitleText {
-    font-size: 25px;
+    font-size: 16px;
   }
   .chatBadge {
+    display: none !important;
+  }
+  .joinRoomInput {
+    margin-top: 10px;
+  }
+  .roomCreateInput, .roomCreateBtn {
+    margin: 0;
+  }
+}
+@media screen and (max-height:480px) and (max-width:700px) {
+  .roomCreateInput, .lobbyClose {
     display: none !important;
   }
 }

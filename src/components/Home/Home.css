@@ -19,17 +19,21 @@
   flex: 2;
 }
 
+#mainStartBtn {
+  margin: auto;
+}
+
 .brandName {
   font-size: 80px;
   margin-bottom: 5px;
-  background: -webkit-linear-gradient(300deg,#822fba, #ff79fa);
+  background: -webkit-linear-gradient(300deg,rgb(255, 64, 129), #ff79fa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient 10s ease infinite;
   -webkit-animation: gradient 10s ease infinite;
 }
 #brandPencil {
-  background: -webkit-linear-gradient(300deg,#822fba, #ff79fa);
+  background: -webkit-linear-gradient(300deg,rgb(255, 64, 129), #ff79fa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: gradient 10s ease infinite;
@@ -37,6 +41,7 @@
 }
 
 .introText {
+  margin-top: 20px;
   font-size: 28px;
 }
 
@@ -51,8 +56,8 @@
 .underLine {
   width: 100%;
   position: relative;
-  height: 3px;
-  margin-bottom: 70px;
+  height: 2px;
+  margin-bottom: 30px;
   background: -webkit-linear-gradient(300deg,#822fba, #ff79fa);
   animation: gradient 10s ease infinite;
   -webkit-animation: gradient 10s ease infinite;
@@ -84,6 +89,7 @@
   flex-direction: row;
   align-items: center;
   margin-top: 40px;
+  border: 3px solid -webkit-linear-gradient(300deg,#822fba, #ff79fa);
 }
 
 #mainSignInBtn {
@@ -140,7 +146,15 @@
     align-items: center;
   }
 }
-@media screen and (max-width:380px) {
+@media screen and (max-width:450px) {
+  .brandName {
+    font-size: 45px;
+  }
+  .introText {
+    font-size: 25px;
+  }
+}
+@media screen and (max-width:400px) {
   .brandName {
     font-size: 35px;
   }

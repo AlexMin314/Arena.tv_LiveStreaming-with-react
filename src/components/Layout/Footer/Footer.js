@@ -3,14 +3,19 @@ import { connect } from 'react-redux';
 
 import './Footer.css';
 
+// import actions
+import { updateNav } from '../../../actions/navActions';
+import { updateLobby } from '../../../actions/lobbyActions';
+
+
 // import UI
 import FontIcon from 'material-ui/FontIcon';
 import {BottomNavigation, BottomNavigationItem} from 'material-ui/BottomNavigation';
 import Paper from 'material-ui/Paper';
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on';
 
-const recentsIcon = <FontIcon className="material-icons">public</FontIcon>;
-const favoritesIcon = <FontIcon className="material-icons">keyboard</FontIcon>;
+const recentsIcon = <FontIcon className="material-icons">input</FontIcon>;
+const favoritesIcon = <FontIcon className="material-icons">home</FontIcon>;
 const nearbyIcon = <FontIcon className="material-icons">chat</FontIcon>;
 
 /**
@@ -26,7 +31,11 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
     }
   }
 
-  select = (index) => this.setState({selectedIndex: index});
+  select = (index) => {
+    this.setState({selectedIndex: index});
+    this.props.navUpdating(index);
+    this.props.updateLobby(null);
+  }
 
   render() {
 
@@ -47,14 +56,14 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
         </div>
       ) : (
         <Paper zDepth={1}>
-          <BottomNavigation selectedIndex={this.state.selectedIndex}>
+          <BottomNavigation selectedIndex={this.props.navInfo}>
             <BottomNavigationItem
-              label={"Quick Join"}
+              label="Join Room"
               icon={recentsIcon}
               onTouchTap={() => this.select(0)}
             />
             <BottomNavigationItem
-              label="Join Existing"
+              label="Create Room"
               icon={favoritesIcon}
               onTouchTap={() => this.select(1)}
             />
@@ -74,13 +83,19 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
 
 const mapStateToProps = (state) => {
     return {
-      user: state.user
+      user: state.user,
+      navInfo: state.nav
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    // nothing to see here...
+    navUpdating: (nav) => {
+      dispatch(updateNav(nav))
+    },
+    updateLobby: (status) => {
+      dispatch(updateLobby(status))
+    }
   }
 }
 

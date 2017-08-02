@@ -24,13 +24,21 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
+const muiTheme = getMuiTheme({
+  fontFamily: 'Quicksand',
+  palette: {
+
+  }
+});
+
+
 class App extends Component {
 
   render() {
     const userLoggedIn = getUsers()[0]; // Check if user is logged in by accessing local storage, returns undefined if user is not logged in
     return (
       <Router>
-        <MuiThemeProvider>
+        <MuiThemeProvider muiTheme={muiTheme}>
           <Layout>
               <Switch>
               <Route exact path="/" component={userLoggedIn ? Lobby : Home}/>
