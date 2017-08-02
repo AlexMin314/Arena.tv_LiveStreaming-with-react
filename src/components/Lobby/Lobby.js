@@ -556,7 +556,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
               <div className="subtitleText"><hr/></div>
               <RaisedButton label="Create" secondary={true} fullWidth={true}
                             className="roomCreateBtn"
-                            onTouchTap={this.onJoinExistingRoo}/>
+                            onTouchTap={this.onRoomCreation}/>
             </div>
           ) : this.props.lobbyInfo === null ? (
           <div className="lobbyContentWrapper">
@@ -609,7 +609,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                        value={this.state.roomName}/>
             <RaisedButton label="Join" secondary={true} fullWidth={true}
                           className="joinRoomBtn"
-                          onTouchTap={this.onRoomCreation}/>
+                          onTouchTap={this.roomJoinLogic}/>
           </div>
         ) : null}
 
