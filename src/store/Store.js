@@ -9,6 +9,7 @@ import roomReducer from '../reducers/roomReducer';
 import gameReducer from '../reducers/gameReducer';
 import turnReducer from '../reducers/turnReducer';
 import timerReducer from '../reducers/timerReducer';
+import navReducer from '../reducers/navReducer';
 
 export let initStore = () => {
 
@@ -19,7 +20,8 @@ export let initStore = () => {
     room: roomReducer,
     gameStart: gameReducer,
     currentTurn: turnReducer,
-    timerStatus: timerReducer
+    timerStatus: timerReducer,
+    nav: navReducer
   });
 
   // Create the store with all the reducers and allow for chrome redux dev tools to run and read reducers
