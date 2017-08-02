@@ -133,8 +133,8 @@ class Login extends Component {
   }
 
   randomTip = () => {
-    const tipsArray = ["Use the \"Skip Turn\" button if you are not sure how to draw!", "Use multiple colors for better illustration", "Don\'t hesitate to guess whenever anything comes to mind", "The pen is mightier than the sword", "Two colors are better than one!", "Use Quick Join to join a random game quickly", "Keep track of the time remaining while you are drawing!", "You can join your friend's room using the \"Join Room\" button"];
-    const randomNum = this.getRandomIntInRange(0,7);
+    const tipsArray = ["Quick Tip: Use the \"Skip Turn\" button if you are not sure how to draw!", "Quick Tip: Use multiple colors for better illustration", "Quick Tip: Don\'t hesitate to guess whenever anything comes to mind", "Quick Tip: Points are given to the first person who answers correctly", "Quick Tip Don\'t be afraid to use more colors!", "Quick Tip: Use Quick Join to join a random game quickly", "Quick Tip: Keep track of the time remaining while you are drawing!", "Quick Tip: You can join your friend's room using the \"Join Existing\" button", "Quick Tip: Use the different line weights to add depth to your drawing", "Quick Tip: Be expressive in your drawings! Call forth your inner Rembrandt", "Quick Tip: Always keep the theme of what you are drawing in focus", "Quick Tip: Turn automatically changes every time a correct answer is given or when time runs out!", "Quick Tip: First to 30 points wins the game!", "Quick Tip: When the game is over, you can choose to play again or leave the room"];
+    const randomNum = this.getRandomIntInRange(0,13);
     const returnedString = tipsArray[randomNum];
     return returnedString;
   }
