@@ -21,6 +21,7 @@
 
 #mainStartBtn {
   margin: auto;
+  z-index: 1000;
 }
 
 .brandName {

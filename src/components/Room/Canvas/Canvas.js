@@ -25,6 +25,10 @@ import { updateCurrentTurn } from '../../../actions/turnActions';
 // Import child
 import ChatInput from '../ChatInput/ChatInput';
 
+// Import UI
+import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon'
+
 export class Canvas extends Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props){
@@ -412,12 +416,13 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
                  Waiting ...</button>
      )} else {
        return (
-         <button type="button"
-                 className="btn btn-primary active"
-                 onClick={this.props.gameReady}
-                 id="gameReadyBtn"
-                 key={uuid()}>
-                 Ready</button>
+         <div className="homeBtnWrapper animated infinite pulse">
+           <a className="btn-draw"
+              id="mainStartBtn"
+              onClick={this.props.gameReady}
+              href="#"
+              key={uuid()}><span>READY</span></a>
+         </div>
      )}
    };
 
@@ -523,19 +528,18 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
               <div className="infoWrapper">
                 <div className="curWordWrapper">
                   <div className="curWordTitle">Your Word</div>
-                  <div className="curWord">- {this.props.currentWord}</div>
+                  <div className="curWord pointColor">- {this.props.currentWord}</div>
                 </div>
                 <div className="turnDiv">
                   <p className="playerTurn">
                     Turn Host
                     <br/>
-                    - {this.props.currentPlayerTurn}
+                    <div className="pointColor">- {this.props.currentPlayerTurn}</div>
                   </p>
                 </div>
                 <div className="skipTurnDiv">
-                  <button type="button"
-                          className="btn btn-primary"
-                          onClick={this.props.skipTurn}>Skip Turn</button>
+                  <RaisedButton label="Skip Turn" primary={true}
+                                onTouchTap={this.props.skipTurn}/>
                 </div>
               </div>
             ) : (
@@ -544,7 +548,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
                   <p className="playerTurn">
                     Turn Host
                     <br/>
-                    - {this.props.currentPlayerTurn}
+                    <div className="pointColor">- {this.props.currentPlayerTurn}</div>
                   </p>
                 </div>
                 <div className="skipTurnDiv">
@@ -554,7 +558,10 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
               </div>
             ) : null}
           </div>
-          <div className="toolWrapper2"></div>
+          <div className="toolWrapper2">
+            <FontIcon className="material-icons" color="rgb(97, 95, 94)">help</FontIcon>
+            <span>Press anykey for chat.</span>
+          </div>
         </div>
         {/* Center */}
         <div className="canvasWrapper shadowOut">
@@ -564,10 +571,10 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
           {this.gameStartNotice()}
           {this.correctAnswerNotice()}
           {this.yourTurnNotice()}
+          <canvas id="whiteBoard"></canvas>
           <div className="readyWrapper">
             {this.props.gameStartInfo ? null : this.readyBtnDisplay()}
           </div>
-          <canvas id="whiteBoard"></canvas>
           <ChatInput/>
         </div>
       </div>
