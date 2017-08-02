@@ -1,55 +1,24 @@
-.header {
-  width: 100%;
-  flex: 0 0 auto;
-}
-
-.navbarWrapper {
-  margin: 0;
-  border-radius: 0px;
-}
-
-#signIn, #brandName, #logout {
-  text-decoration: none !important;
-  display: inline-block;
-  color: #9c27b0;
-  font-size: 20px;
-  margin: 15px;
-  padding-left: 10px;
-  font-weight: 900;
-  text-shadow: #999999 1px 1px 1px;
-}
 
 .greeting {
-  display: inline-flex;
-  margin: 16px 0;
-  margin-right: 10px;
+  display: flex;
+  margin: 0 5px;
 }
-
 .greetingWrapper {
-  float: right;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 
-.userPhoto {
-  border-radius: 100%;
-  width: 30px;
-  height: 30px;
-}
-
-#signIn, #logout {
-  float: right;
-  padding-right: 10px;
-}
-
-#brandName {
-  float: left;
-}
-
-#signIn:hover, #brandName:hover {
-  color: #9c27b0;
-}
-
-@media screen and (max-width:430px) {
-  .userPhoto, .greeting  {
+@media screen and (max-width:430px)  {
+  .greeting {
     display: none;
+  }
+}
+
+@media screen and (max-height:480px) {
+  .appBar {
+    height: 50px;
   }
 }

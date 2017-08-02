@@ -24,7 +24,7 @@ const inputStyle = {
   marginBottom: '20px'
 }
 const registerStyle = {
-  color: '#9c27b0'
+  color: 'rgb(255, 64, 129)'
 }
 
 class Login extends Component {

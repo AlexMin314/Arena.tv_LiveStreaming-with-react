@@ -17,7 +17,6 @@ const btnstyle = {
   width: '90%',
   fontSize: '20px',
   margin: '0 20px',
-  border: '1px solid red'
 };
 const btnLabelStyle = {
   fontSize: '20px'
@@ -63,9 +62,6 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
               MindTap <i className="fa fa-pencil"
                          id="brandPencil"></i>
             </div>
-            <div className="underLine hidden-xs-down ">
-              want sketch line here
-            </div>
             <div className="contentWapper">
               <div className="rightSideWrapper">
                 <div className="introText">
@@ -95,10 +91,9 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
                     <span className="mainIconText">Fastest finger first to score points.</span>
                   </div>
                 </div>
+
                 <div className="homeBtnWrapper animated infinite pulse">
-                  <FlatButton label="Let's Play" primary={true}
-                                style={btnstyle} onClick={this.onSignIn}
-                                labelStyle={btnLabelStyle}/>
+                  <a className="btn-draw" id="mainStartBtn" onClick={this.onSignIn} href="#"><span>Let's Play</span></a>
                 </div>
               </div>
               <div className="mainIconWrapper hidden-sm-down">

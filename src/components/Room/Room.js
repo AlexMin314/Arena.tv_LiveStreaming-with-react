@@ -130,7 +130,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               if ( members[key].score === cache.topscore) {
                 cache.users.push(<div className="winners"
                                       key={uuid()}>
-                                      {members[key].displayName + ', Score: ' + members[key].score}
+                                      {members[key].displayName}
+                                      <i className="fa fa-trophy fa-2x" aria-hidden="true"></i>
+                                      {members[key].score}
                                       </div>)
               }
             }
@@ -343,37 +345,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 ** End of time remaining functions *
 *///////////////////////////////////
 
-  /**
-   * gameover related.
-   */
 
-  winnerRender = () => {
-    firebase.database().ref('rooms/' + this.props.roomkey + '/members')
-      .once('value')
-      .then((snapshot) => {
-        const members = snapshot.val();
-        const cache = {
-          'topscore': 0,
-          'users': []
-        }
-        for (const key in members) {
-          if( members[key].score >= cache.topscore) {
-            cache.topscore = members[key].score;
-          }
-        }
-        for (const key in members) {
-          if ( members[key].score === cache.topscore) {
-            cache.users.push(<div className="winners"
-                                  key={uuid()}>
-                                {members[key].displayName}
-                                <i className="fa fa-trophy fa-2x" aria-hidden="true"></i>
-                                {members[key].score}
-                             </div>)
-          }
-        }
-        return cache.users;
-      });
-  }
 
   render() {
     const isItYourTurn = this.checkTurn();
