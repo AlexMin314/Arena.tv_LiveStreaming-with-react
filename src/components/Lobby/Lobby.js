@@ -703,10 +703,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
 
           {/* chat part */}
-          <Badge badgeContent={this.state.missedMsg}
-                 primary={true}
-                 className='chatBadge animated infinite rubberBand'
-                 style={badgeStyle}/>
+          {this.state.missedMsg > 0 ? (
+            <Badge badgeContent={this.state.missedMsg}
+                   primary={true}
+                   key={uuid()}
+                   className='chatBadge animated infinite rubberBand'
+                   style={badgeStyle}/>
+          ) : null}
           <FloatingActionButton secondary={true}
                                 className="chatToggle"
                                 style={chatToggleStyle}
