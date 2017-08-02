@@ -15,6 +15,7 @@
   width: 100%;
   flex: 10;
   flex-direction: row;
+  padding-top: 25px;
 }
 
 .sidebars {
@@ -110,7 +111,7 @@
   justify-content:flex-end;
 }
 
-#waitingBtn, #gameReadyBtn, #leaveRoomBtn, .turnWrapper {
+#waitingBtn, #gameReadyBtn, .leaveRoomBtn, .turnWrapper {
   margin-left: 5px;
 }
 
@@ -120,6 +121,6 @@
   font-size: 25px;
 }
 
- #leaveRoomBtn {
+ .leaveRoomBtn {
    margin-top: 30px;
  }
