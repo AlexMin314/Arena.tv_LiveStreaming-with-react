@@ -9,6 +9,7 @@ import firebase from '../../firebase';
 // Import Actions
 import { updateRoom } from '../../actions/roomActions';
 import { updateGameStart } from '../../actions/gameActions';
+import { updateNav } from '../../actions/navActions';
 
 // Import UI
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -457,6 +458,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     gameStart: (checker) => {
       dispatch(updateGameStart(checker))
+    },
+    navUpdating: (nav) => {
+      dispatch(updateNav(nav))
     }
   }
 }
