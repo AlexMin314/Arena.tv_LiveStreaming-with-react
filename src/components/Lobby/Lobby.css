@@ -35,10 +35,16 @@
 }
 .lobbyClose {
   align-self: flex-end;
-
 }
 
 .subtitleText {
+  font-size: 24px;
+  margin: auto;
+  align-self: flex-start;
+  width: 100%;
+  display: inline-flex;
+}
+.subtitleTextLiner {
   font-size: 28px;
   margin: auto;
   align-self: flex-start;
@@ -286,7 +292,7 @@ Chat
   }
 }
 @media screen and (max-height:480px) and (max-width:700px) {
-  .roomCreateInput, .lobbyClose {
+  .roomCreateInput {
     display: none !important;
   }
 }

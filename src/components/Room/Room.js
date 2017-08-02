@@ -25,6 +25,9 @@ import { updateTimerStatus } from '../../actions/timerActions';
 import UserlistChat from './UserlistChat/UserlistChat';
 import Canvas from './Canvas/Canvas';
 
+// Import UI
+import RaisedButton from 'material-ui/RaisedButton';
+
 export class Room extends Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props){
@@ -395,11 +398,9 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                 ) : null}
                 {this.state.gameover || this.state.gameoverChk ? null : (
                   <div>
-                    <button type="button"
-                            className="btn btn-primary"
-                            id="leaveRoomBtn"
-                            onClick={this.leaveRoom}>
-                            Leave</button>
+                  <RaisedButton label="Leave" primary={true}
+                                className="leaveRoomBtn"
+                                onTouchTap={this.leaveRoom}/>
                   </div>
                 )}
                 </div>

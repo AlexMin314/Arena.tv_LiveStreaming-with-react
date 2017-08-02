@@ -1,4 +1,31 @@
+#headerBrandName:hover {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+  animation-name: tada;
+  text-shadow: 1px 1px rgb(163, 163, 163), 1px 1px rgb(78, 77, 77);
+}
+@keyframes tada {
+  from {
+    transform: scale3d(1, 1, 1);
+  }
 
+  10%, 20% {
+    transform: scale3d(.9, .9, .9) rotate3d(0, 0, 1, -3deg);
+  }
+
+  30%, 50%, 70%, 90% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+  }
+
+  40%, 60%, 80% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+  }
+
+  to {
+    transform: scale3d(1, 1, 1);
+  }
+}
 .greeting {
   display: flex;
   margin: 0 5px;
