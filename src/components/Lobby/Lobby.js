@@ -269,7 +269,10 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   }
 
   clearModalState = () => {
-    this.setState({ modalErrorMessage: '' });
+    this.setState({
+      modalSuccessMessage: '',
+      modalErrorMessage: ''
+    });
   }
 
   render() {

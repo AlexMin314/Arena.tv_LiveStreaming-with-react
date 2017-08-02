@@ -164,10 +164,12 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               for (const key in members) {
                 keyArray.push(members[key]);
               }
-              this.setState({
-                currentPlayerTurn: keyArray[nextTurn].displayName,
-                currentPlayerId: keyArray[nextTurn].id
-              });
+              if(keyArray.length > 1) {
+                this.setState({
+                  currentPlayerTurn: keyArray[nextTurn].displayName,
+                  currentPlayerId: keyArray[nextTurn].id
+                });
+
               const updator = {
                 index: nextTurn,
                 id: keyArray[nextTurn].id,
@@ -175,6 +177,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                 stage: this.state.currentStage
               }
               this.props.currentTurn(updator);
+              }
             } // If snapshot.val() ends
           });
         } // If !this.state.gameover ends.
@@ -194,10 +197,12 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               for (const key in members) {
                 keyArray.push(members[key]);
               }
-              this.setState({
-                currentPlayerTurn: keyArray[nextTurn].displayName,
-                currentPlayerId: keyArray[nextTurn].id
-              });
+              if (keyArray.length > 1) {
+                this.setState({
+                  currentPlayerTurn: keyArray[nextTurn].displayName,
+                  currentPlayerId: keyArray[nextTurn].id
+                });
+              }
               const updator = {
                 index: nextTurn,
                 id: keyArray[nextTurn].id,
