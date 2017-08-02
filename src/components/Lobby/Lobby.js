@@ -49,9 +49,10 @@ const badgeStyle = {
   right: '0'
 }
 const lobbymenu = {
-  margin: 20,
+  margin: 8,
+  padding: 0,
   width: 120,
-  height: 100,
+  height: 80,
   fontSize: 18,
   textAlign: 'center'
 }
@@ -334,6 +335,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 /**
  * Chat related
  */
+   scrollToBottom = () => {
+     this.messagesEnd.scrollIntoView();
+     if (!this.state.open && this.props.navInfo === 2) {
+       this.messagesEnd1.scrollIntoView();
+     }
+   }
+
   toggleChatDrawer = () => {
     this.setState({open: !this.state.open});
 
@@ -350,16 +358,18 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     this.setState({chatmsg: e.target.value});
   }
   onKeypressChat = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && this.state.chatmsg !== '') {
       const message = this.messageHelper();
       firebase.database().ref('message/').push(message);
       this.setState({chatmsg: ''});
     }
   }
   onClickSend = (e) => {
-    const message = this.messageHelper();
-    firebase.database().ref('message/').push(message);
-    this.setState({chatmsg: ''});
+    if (this.state.chatmsg !== '') {
+      const message = this.messageHelper();
+      firebase.database().ref('message/').push(message);
+      this.setState({chatmsg: ''});
+    }
   }
 
   messageHelper = () => {
@@ -431,10 +441,6 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     return returnArr;
   }
 
-  scrollToBottom = () => {
-    this.messagesEnd.scrollIntoView();
-  }
-
   componentDidUpdate() {
     this.scrollToBottom(); // auto scroll down.
   }
@@ -491,11 +497,27 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
         <div className="row lobbyContent">
           {this.props.navInfo === 2 ? (
             <div className="lobbyContentWrapper">
+              <div className="chatWrapperForBottom">
+                {this.renderChat()}
+                <div id="messagesEnd1"
+                     key={uuid()}
+                     ref={(el) => this.messagesEnd1 = el} />
+              </div>
+              <div className="chatInputGroup">
+                <TextField floatingLabelText="messages..."
+                           fullWidth={true}
+                           onChange={this.onChangeChat}
+                           onKeyPress={this.onKeypressChat}
+                           value={this.state.chatmsg}/>
+                <RaisedButton label="Send" secondary={true}
+                              className="sendBtn"
+                              onTouchTap={this.onClickSend}/>
+              </div>
             </div>
           ) : this.props.navInfo === 1 ? (
             <div className="lobbyContentWrapper">
               <IconButton className="lobbyClose" onTouchTap={this.renderHandlerClose}><NavigationClose /></IconButton>
-              <div className="subtitleText">Room name / Topic</div>
+              <div className="subtitleText animated bounce">Create Room</div>
               <div className="subtitleText"><hr/></div>
               <TextField floatingLabelText={this.state.modalSuccessMessage}
                          hintText="(optional) Enter room name..."
@@ -538,29 +560,31 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             </div>
           ) : this.props.lobbyInfo === null ? (
           <div className="lobbyContentWrapper">
-            <div className="paperWrapper">
-            <Paper style={lobbymenu} className="pulse1" zDepth={2}>
-              <button className="pulse1"
-                      onClick={this.renderHandler}
-                      id='b1'>BY<br/>TOPIC</button>
-            </Paper>
-            <Paper style={lobbymenu} onTouchTap={this.onQuickJoin} className="pulse1" zDepth={2}>
-              <button className="pulse1"
-                      onClick={this.onQuickJoin}
-                      id='b2'>QUICK<br/>JOIN</button>
-            </Paper>
-            <Paper style={lobbymenu} className="pulse1" zDepth={2}>
-              <button className="pulse1"
-                      onClick={this.renderHandler}
-                      id='b3'>BY<br/>NAME</button>
-            </Paper>
+            <div className="subtitleText animated bounce">Join Room</div>
+            <div className="subtitleText"><hr/></div>
+            <div className="paperWrapper animated zoomIn">
+              <Paper style={lobbymenu} className="pulse1" zDepth={2}>
+                <button className="pulse1"
+                        onClick={this.renderHandler}
+                        id='b1'>BY<br/>TOPIC</button>
+              </Paper>
+              <Paper style={lobbymenu} onTouchTap={this.onQuickJoin} className="pulse1" zDepth={2}>
+                <button className="pulse1"
+                        onClick={this.onQuickJoin}
+                        id='b2'>QUICK<br/>JOIN</button>
+              </Paper>
+              <Paper style={lobbymenu} className="pulse1" zDepth={2}>
+                <button className="pulse1"
+                        onClick={this.renderHandler}
+                        id='b3'>BY<br/>NAME</button>
+              </Paper>
             </div>
             <div className="errorMessage">{this.state.errorMessage}</div>
           </div>
         ) : this.props.lobbyInfo === 'b1' ? (
           <div className="lobbyContentWrapper1">
             <IconButton className="lobbyClose" onTouchTap={this.renderHandlerClose}><NavigationClose /></IconButton>
-            <div className="subtitleText">Select a Topic</div>
+            <div className="subtitleText animated bounce">Select a Topic</div>
             <div className="subtitleText"><hr/></div>
             <div className="categoryWrapper">
               <div className="category categoryAni TV" onClick={this.topicJoin}>TV</div>
@@ -574,7 +598,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
         ) : this.props.lobbyInfo === 'b3' ? (
           <div className="lobbyContentWrapper2">
             <IconButton className="lobbyClose" onTouchTap={this.renderHandlerClose}><NavigationClose /></IconButton>
-            <div className="subtitleText">Enter room name</div>
+            <div className="subtitleText animated bounce">Enter room name</div>
             <div className="subtitleText"><hr/></div>
             <TextField floatingLabelText={this.state.modalSuccessMessage}
                        hintText="Enter room name here..."
@@ -593,7 +617,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
           {/* chat part */}
           <Badge badgeContent={this.state.missedMsg}
                  primary={true}
-                 className='chatBadge'
+                 className='chatBadge animated infinite rubberBand'
                  style={badgeStyle}/>
           <FloatingActionButton secondary={true}
                                 className="chatToggle"
@@ -625,114 +649,12 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             <div className="chatListWrapper">
               {this.renderChat()}
               <div id="messagesEnd"
+                   key={uuid()}
                    ref={(el) => this.messagesEnd = el} />
             </div>
           </Drawer>
 
         </div> {/* contentBody Wrapper End*/}
-
-
-
-
-
-        {/* Create Room Modal */}
-        <div className="modal" id="createRoomModal" role="dialog"
-             aria-labelledby="createRoomModalLabel" aria-hidden="true">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title"
-                    id="createRoomModalLabel">CREATE ROOM</h5>
-                <button type="button"
-                        className="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div> {/* End of modal-header */}
-              <div className="modal-body">
-                <div className="modalSubtitle">Room Name</div>
-                  <input type="text" className="form-control"
-                         placeholder="Enter RoomName...(optional)"
-                         onChange={this.onRoomName}/>
-                <div className="modalSubtitle">Select Topic</div>
-                <div className="btn-group" id="modalTopic" data-toggle="buttons">
-                  <label className="btn btn-primary active" id="mRadio1"
-                         onClick={this.onRadioSelect}>
-                    <input type="radio" autoComplete="off"/>
-                    <div className="category categoryModal TV">TV</div>
-                  </label>
-                  <label className="btn btn-primary" id="mRadio2"
-                         onClick={this.onRadioSelect}>
-                    <input type="radio" autoComplete="off"/>
-                    <div className="category categoryModal game">GAMES</div>
-                  </label>
-                  <label className="btn btn-primary" id="mRadio3"
-                         onClick={this.onRadioSelect}>
-                    <input type="radio" autoComplete="off"/>
-                    <div className="category categoryModal IT">ANIME</div>
-                  </label>
-                  <label className="btn btn-primary" id="mRadio4"
-                         onClick={this.onRadioSelect}>
-                    <input type="radio" autoComplete="off"/>
-                    <div className="category categoryModal logos">LOGOS</div>
-                  </label>
-                  <label className="btn btn-primary" id="mRadio5"
-                         onClick={this.onRadioSelect}>
-                    <input type="radio" autoComplete="off"/>
-                    <div className="category categoryModal travel">TRAVEL</div>
-                  </label>
-                </div> {/* End of btn-group id=modalTopic */}
-              </div> {/* End of modal-body */}
-              <div className="modal-footer">
-                <button type="button"
-                        className="btn btn-secondary"
-                        data-dismiss="modal">CLOSE</button>
-                <button type="button"
-                        className="btn btn-primary"
-                        onClick={this.onRoomCreation}>CREATE</button>
-              </div> {/* End of modal-footer */}
-            </div> {/* End of modal-content */}
-          </div> {/* End of modal-dialog */}
-        </div> {/* End of modal id=createRoomModal */}
-
-        {/* Create Room Modal */}
-        <div className="modal" id="joinRoomModal" role="dialog"
-             aria-labelledby="joinRoomModalLabel" aria-hidden="true">
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title"
-                    id="joinRoomModalLabel">JOIN ROOM</h5>
-                <button type="button"
-                        className="close"
-                        data-dismiss="modal"
-                        aria-label="Close">
-                  <span aria-hidden="true">×</span>
-                </button>
-              </div> {/* End of modal-header */}
-              <div className="modal-body">
-                <div className="modalSubtitle">Room Name</div>
-                  <input type="text" className="form-control"
-                         placeholder="Enter RoomName"
-                         onChange={this.onRoomName}
-                         value={this.state.roomName}/>
-                <div className="errorMessage">{this.state.modalErrorMessage}</div>
-                <div className="successMessage animated flash">{this.state.modalSuccessMessage}</div>
-              </div> {/* End of modal-body */}
-              <div className="modal-footer">
-                <button type="button"
-                        className="btn btn-secondary"
-                        data-dismiss="modal"
-                        onClick={this.clearModalState}>CLOSE</button>
-                <button type="button"
-                        className="btn btn-primary"
-                        onClick={this.onJoinExistingRoom}>JOIN</button>
-              </div> {/* End of modal-footer */}
-            </div> {/* End of modal-content */}
-          </div> {/* End of modal-dialog */}
-        </div> {/* End of modal id=joinRoomModal */}
-
       </div>
     );
   }

@@ -1,9 +1,8 @@
 .footer {
   width: 100%;
-  color: #9c27b0;
+  color: rgb(0, 188, 212);
   flex: 0 0 auto;
   height: 50px;
-  text-shadow:#999999 1px 1px 1px;
 }
 
 .footer-content-left {
@@ -24,7 +23,7 @@
 }
 
 #git, .footer-content-right {
-  color: #9c27b0;
+  color: rgb(0, 188, 212);
 }
 
 .footer-content-right:hover {
