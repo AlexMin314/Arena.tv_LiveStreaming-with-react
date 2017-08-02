@@ -26,6 +26,7 @@ import Toggle from 'material-ui/Toggle';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import Avatar from 'material-ui/Avatar';
+import FontIcon from 'material-ui/FontIcon';
 
 const iconStyles = {
   marginRight: 24,
@@ -50,6 +51,10 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
 
   constructor(props) {
     super(props)
+
+    this.state = {
+      sound: true
+    }
   }
 
   // logout onClick event listener
@@ -71,6 +76,10 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
   }
 
   toggleSound = (e, logged) => {
+
+    // tempral part
+    this.setState({ sound: !this.state.sound })
+
     let defaultClick = document.getElementById('clicked');
     let socialClick = document.getElementById('mouseClicked');
     let mainMusic = document.getElementById('mainMusic');
@@ -102,23 +111,35 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
             className="appBar"
             style={appBarStyle}
             iconElementRight={isLoggedIn ? (
-              <div className="greetingWrapper">
-                <Avatar size="30"
-                        className="avatarClass"
-                        src={this.props.user[0].photo}
-                        style={avatar} />
-                <div className="greeting">Welcome,{this.props.user[0].displayName}</div>
-                <Logged logout={this.logout} />
+              <div className="headerWrapper">
+                <Toggle
+                  label={this.state.sound ? (
+                    <FontIcon className="material-icons" color="white">volume_up</FontIcon>
+                  ) : (
+                    <FontIcon className="material-icons" color="white">volume_off</FontIcon>
+                  )}
+                  defaultToggled={true}
+                  className="toggle"
+                  onToggle={this.toggleSound}
+                  labelPosition="left"
+                  style={{display:'flex'}}
+                  thumbSwitchedStyle={{backgroundColor: 'rgb(255, 64, 129)'}}
+                  trackSwitchedStyle={{backgroundColor: 'rgb(252, 182, 224)'}}
+                  labelStyle={{display:'flex', color:'white'}} />
+                <div className="greetingWrapper">
+                  <Avatar size="30"
+                          className="avatarClass"
+                          src={this.props.user[0].photo}
+                          style={avatar} />
+                  <div className="greeting">
+                    Welcome,{this.props.user[0].displayName}
+                  </div>
+                  <Logged logout={this.logout} />
+                </div>
               </div>
             ) : (
               <Login />)}
           />
-          <Toggle
-            label="Sound"
-            defaultToggled={true}
-            onToggle={this.toggleSound}
-            labelPosition="right"
-            style={{margin: 20}} />
         </div>
       );
   }
