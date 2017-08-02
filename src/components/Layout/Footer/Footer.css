@@ -38,3 +38,17 @@
 .fa-github {
   color: black;
 }
+
+.bottomChat {
+  display: none !important;
+}
+@media screen and (max-width:450px) {
+  .bottomChat {
+    display: block !important;
+  }
+}
+@media screen and (max-height:450px) {
+  .bottomChat {
+    display: block !important;
+  }
+}

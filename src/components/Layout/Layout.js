@@ -28,7 +28,9 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
 }
 
 const mapStateToProps = (state) => {
-  return {}
+  return {
+    user: state.user
+  }
 }
 
 export default connect(mapStateToProps)(Home);

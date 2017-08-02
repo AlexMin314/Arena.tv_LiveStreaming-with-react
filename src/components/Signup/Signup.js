@@ -11,6 +11,15 @@ import { addUser } from '../../actions/userActions';
 // Import CSS
 import './Signup.css';
 
+// Import UI
+import TextField from 'material-ui/TextField';
+import RaisedButton from 'material-ui/RaisedButton';
+
+const inputStyle = {
+  marginBottom: '20px'
+}
+
+
 class Signup extends Component {
 
   constructor(props) {
@@ -22,14 +31,19 @@ class Signup extends Component {
       confirmPassword: '',
       error: {
         message: ''
-      }
+      },
+      passwordError:''
     }
   }
 
   // Event listener for Email and Password input fields
   uepInput = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
+      passwordError: '',
+      error: {
+        message:''
+      }
     })
   }
 
@@ -46,7 +60,7 @@ class Signup extends Component {
         email: '',
         password: '',
         confirmPassword: '',
-        error: {message: 'Passwords do not match'} });
+        passwordError: 'Passwords do not match'});
     }
 
     // Getting email and password from state
@@ -61,7 +75,8 @@ class Signup extends Component {
             email: '',
             password: '',
             confirmPassword: '',
-            error});
+            error
+          });
         })
     }
 
@@ -117,39 +132,42 @@ class Signup extends Component {
     return (
       <div className="container-fluid contentBody">
         <div className="row signupContentWrapper">
-          <div className="col-md-12">
-            <h2>Sign Up</h2>
-            <div className="errors"><h3 className="errorMessage">{this.state.error.message}</h3></div>
-          </div>
-          <div className="form">
-            <div className="form-group">
-              Username<input type="text"
-                          name="username"
-                          onChange={this.uepInput}
-                          value={this.state.username}
-                          className="form-control"
-                          placeholder="Enter Username"/>
-              Email<input type="text"
-                          name="email"
-                          onChange={this.uepInput}
-                          value={this.state.email}
-                          className="form-control"
-                          placeholder="Enter Email"/>
-              Password<input type="password"
-                          name="password"
-                          onChange={this.uepInput}
-                          value={this.state.password}
-                          className="form-control"
-                          placeholder="Enter Password"/>
-              Confirm Password<input type="password"
-                          name="confirmPassword"
-                          onChange={this.uepInput}
-                          value={this.state.confirmPassword}
-                          className="form-control"
-                          placeholder="Retype password"/>
-              <button className="btn btn-primary signupButton"
-                      onClick={this.signup}>Sign Up</button>
-            </div>
+          <div className="signupWrapper">
+            <h2 className="signUpTitle">Sign Up</h2>
+            USERNAME
+            <TextField hintText="username"
+                       name="username"
+                       style={inputStyle}
+                       onChange={this.uepInput}
+                       value={this.state.username}
+                       errorText=''/>
+            EMAIL
+            <TextField hintText="email"
+                       name="email"
+                       style={inputStyle}
+                       onChange={this.uepInput}
+                       value={this.state.email}
+                       errorText={this.state.error.message.includes('Password') ? null : this.state.error.message}/>
+            PASSWORD
+            <TextField hintText="password"
+                       type="password"
+                       name="password"
+                       style={inputStyle}
+                       onChange={this.uepInput}
+                       value={this.state.password}
+                       errorText={this.state.error.message.includes('Password') ? this.state.error.message : null}/>
+            CONFIRM PASSWORD
+            <TextField hintText="password"
+                       type="password"
+                       name="confirmPassword"
+                       style={inputStyle}
+                       onChange={this.uepInput}
+                       value={this.state.confirmPassword}
+                       errorText={this.state.passwordError}/>
+            <RaisedButton label="sign up"
+                          className="signupButton"
+                          onTouchTap={this.signup}
+                          primary={true}/>
           </div>
         </div>
       </div>

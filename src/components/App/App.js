@@ -18,21 +18,29 @@ import Room from '../Room/Room';
 // Import CSS
 import './App.css';
 
+// Import theme
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
+
 class App extends Component {
 
   render() {
     const userLoggedIn = getUsers()[0]; // Check if user is logged in by accessing local storage, returns undefined if user is not logged in
     return (
       <Router>
-        <Layout>
-          <Switch>
-            <Route exact path="/" component={userLoggedIn ? Lobby : Home}/>
-            <Route exact path='/signup' component={userLoggedIn ? Lobby : Signup}/>
-            <Route exact path='/login' component={userLoggedIn ? Lobby : Login}/>
-            <Route exact path='/room/:id' component={userLoggedIn ? Room : Home}/>
-            <Route exact path='/lobby' component={userLoggedIn ? Lobby : Home}/>
-          </Switch>
-        </Layout>
+        <MuiThemeProvider>
+          <Layout>
+              <Switch>
+              <Route exact path="/" component={userLoggedIn ? Lobby : Home}/>
+              <Route exact path='/signup' component={userLoggedIn ? Lobby : Signup}/>
+              <Route exact path='/login' component={userLoggedIn ? Lobby : Login}/>
+              <Route exact path='/room/:id' component={userLoggedIn ? Room : Home}/>
+              <Route exact path='/lobby' component={userLoggedIn ? Lobby : Home}/>
+            </Switch>
+          </Layout>
+        </MuiThemeProvider>
       </Router>
     );
   }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import uuid from 'uuid/v4';
 
 // Import firebase
 import { userRoomUpdating, updateRoomName } from '../../firebase';
@@ -8,20 +9,56 @@ import firebase from '../../firebase';
 // Import Actions
 import { updateRoom } from '../../actions/roomActions';
 import { updateGameStart } from '../../actions/gameActions';
+
+import { updateNav } from '../../actions/navActions';
 import { updateTimerStatus } from '../../actions/timerActions';
+
+// Import UI
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import FontIcon from 'material-ui/FontIcon';
+import Drawer from 'material-ui/Drawer';
+import RaisedButton from 'material-ui/RaisedButton';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import TextField from 'material-ui/TextField';
+import List from 'material-ui/List/List';
+import ListItem from 'material-ui/List/ListItem';
+import Avatar from 'material-ui/Avatar';
+import Badge from 'material-ui/Badge';
+
 
 import './Lobby.css';
 
 // Import child Components
+//
+const chatToggleStyle = {
+
+}
+const globalChatStyle = {
+  paddingBottom: '200px',
+  overflow: 'auto',
+}
+const badgeStyle = {
+  position: 'absolute',
+  bottom: '0',
+  right: '0'
+}
 
 export class Lobby extends Component { // eslint-disable-line react/prefer-stateless-function
 
   constructor(props){
     super(props)
+
     this.state = {
       roomName: '',
       roomTopic: 'TV',
       errorMessage: '',
+      open: false,
+      chatmsg: '',
+      chatList: [],
+      missedMsg: 0,
       modalSuccessMesage: '',
       modalErrorMessage: '',
       allPassed: false
@@ -256,6 +293,105 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     });
   };
 
+/**
+ * Chat related
+ */
+  toggleChatDrawer = () => {
+    this.setState({open: !this.state.open});
+
+    const chatList = this.state.chatList;
+    chatList.forEach((e) => {
+      if(!e.read) e.read = true;
+    })
+
+    this.setState({ missedMsg: 0});
+  }
+  handleClose = () => this.setState({open: false});
+
+  onChangeChat = (e) => {
+    this.setState({chatmsg: e.target.value});
+  }
+  onKeypressChat = (e) => {
+    if (e.key === 'Enter') {
+      const message = this.messageHelper();
+      firebase.database().ref('message/').push(message);
+      this.setState({chatmsg: ''});
+    }
+  }
+  onClickSend = (e) => {
+    const message = this.messageHelper();
+    firebase.database().ref('message/').push(message);
+    this.setState({chatmsg: ''});
+  }
+
+  messageHelper = () => {
+    const message = {};
+    message.text = this.state.chatmsg;
+    message.senderID = this.props.user[0].id;
+    message.senderName = this.props.user[0].displayName;
+    message.photo = this.props.user[0].photo;
+    message.key = uuid();
+    return message;
+  }
+
+  componentDidMount() {
+    this.scrollToBottom();
+
+    firebase.database().ref('message/').limitToLast(1).on('child_added', (data) => {
+        const chatListArr = this.state.chatList;
+        const newMessage = data.val();
+        if (this.state.open)  {
+          newMessage.read = true;
+          this.setState({ missedMsg: 0});
+        } else {
+          newMessage.read = false;
+          let unreadNum = this.state.missedMsg;
+          unreadNum += 1;
+          this.setState({ missedMsg: unreadNum});
+        }
+        chatListArr.push(newMessage)
+        this.setState({chatList: chatListArr});
+    });
+  }
+
+  renderChat = () => {
+    const returnArr = []
+
+    this.state.chatList.forEach((e, i) => {
+      let checker = false;
+      if (e.senderID === this.props.user[0].id) {
+        checker = true;
+      }
+      returnArr.push(
+        <div className="chatContentWrapper" key={uuid()}>
+          {checker ? (
+            <ListItem disabled={true}
+                      rightAvatar={<Avatar src={e.photo} />}>
+              <div className="rightChatWrapper">
+                <div className="chatSenderRight">{'@ ' + e.senderName}</div>
+                <div className="chatTextRight">{e.text}</div>
+              </div>
+            </ListItem>
+          ) : (
+            <ListItem disabled={true}
+                      leftAvatar={<Avatar src={e.photo} />}>
+              <div className="chatSenderLeft">{'@ ' + e.senderName}</div>
+              <div>{e.text}</div>
+            </ListItem>
+          )}
+        </div>
+      )
+    })
+    return returnArr;
+  }
+
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom(); // auto scroll down.
+  }
   /**
    * Join Existing Room Logic
    */
@@ -308,8 +444,45 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                     data-target="#joinRoomModal">JOIN EXISTING</button>
             <br/>
             <div className="errorMessage">{this.state.errorMessage}</div>
-          </div> {/* End of lobbyContentWrapper */}
-        </div> {/* End of lobbyContent */}
+          </div>
+          <Badge badgeContent={this.state.missedMsg}
+                 primary={true}
+                 className='chatBadge'
+                 style={badgeStyle}/>
+          <FloatingActionButton secondary={true}
+                                className="chatToggle"
+                                style={chatToggleStyle}
+                                onTouchTap={this.toggleChatDrawer}>
+
+            <FontIcon className="material-icons">chat</FontIcon>
+          </FloatingActionButton>
+
+          <Drawer width={400} openSecondary={true}
+                  open={this.state.open}
+                  onRequestChange={(open) => this.setState({open})}
+                  docked={false}
+                  containerClassName="globalChat"
+                  containerStyle={globalChatStyle}>
+            <AppBar iconElementRight={<IconButton><NavigationClose onTouchTap={this.handleClose}/></IconButton>}
+                    iconClassNameLeft='chatLeftIconNone'
+                    />
+            <div className="chatInputGroup">
+              <TextField floatingLabelText="messages..."
+                         fullWidth={true}
+                         onChange={this.onChangeChat}
+                         onKeyPress={this.onKeypressChat}
+                         value={this.state.chatmsg}/>
+              <RaisedButton label="Send" secondary={true}
+                            className="sendBtn"
+                            onTouchTap={this.onClickSend}/>
+            </div>
+            <div className="chatListWrapper">
+              {this.renderChat()}
+              <div id="messagesEnd"
+                   ref={(el) => this.messagesEnd = el} />
+            </div>
+          </Drawer>
+        </div> {/* contentBody Wrapper End*/}
 
 
         {/* Create Room Modal */}
@@ -429,6 +602,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     gameStart: (checker) => {
       dispatch(updateGameStart(checker))
+    },
+    navUpdating: (nav) => {
+      dispatch(updateNav(nav))
     },
     updateTimer: (timerStatus) => {
       dispatch(updateTimerStatus(timerStatus))

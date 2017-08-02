@@ -1,19 +1,16 @@
 .lobbyContent {
   position: absolute;
+  display: flex;
   width: 100%;
   height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .lobbyContentWrapper {
-  position: absolute;
-  top: 45%;
-  left: 50%;
-  -ms-transform: translateX(-50%) translateY(-50%);
-  -moz-transform: translateX(-50%) translateY(-50%);
-  -webkit-transform: translateX(-50%) translateY(-50%);
-  transform: translate(-50%, -50%);
-}
 
+}
 
 .subtitleText {
   font-size: 30px;
@@ -113,16 +110,72 @@
   padding: 0;
 }
 
-/* Join Room Modal */
-#joinRoomModalLabel {
-  font-size: 30px;
-  margin-top: 10px;
+/***
+Chat
+***/
+.chatLeftIconNone {
+  display: none;
 }
 
-.modalSubtitle {
-  font-size: 18px;
-  margin-top: 30px;
-  margin-bottom: 5px;
+.chatInputGroup {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 140px;
+  display: flex;
+  flex-direction: column;
+  padding: 0 30px;
+  justify-content: flex-start;
+}
+.sendBtn {
+
+}
+.chatBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 75px;
+  margin-bottom: 60px;
+}
+.chatToggle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 30px;
+  margin-bottom: 30px;
+}
+.globalChat {
+
+}
+.chatListWrapper::-webkit-scrollbar {
+  display: none;
+}
+.chatListWrapper {
+  position: absolute;
+  top: 0;
+  padding-top: 150px;
+  padding-bottom: 10px;
+  overflow: auto;
+  height: 82%;
+  width: 100%;
+  word-break: break-all;
+}
+.chatContentWrapper {
+
+}
+.chatSenderLeft, .chatSenderRight {
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.rightChatWrapper {
+  display: flex;
+  flex-direction: column;
+}
+.chatSenderRight, .chatTextRight {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 10px;
 }
 
 @media screen and (max-width:450px) {
@@ -147,6 +200,51 @@
     height: 60px;
     padding: 10px;
   }
+  .chatToggle {
+    display: none !important;
+  }
+  .chatBadge {
+    margin: 0;
+    margin-right: 80px;
+    margin-bottom: -20px;
+    z-index: 10000;
+  }
+}
+@media screen and (max-height:450px) {
+  .lobbyContentWrapper {
+    margin-top: 30px;
+    width: auto;
+  }
+
+  .category {
+    width: 55px;
+    height: 55px;
+    font-size: 12px;
+  }
+  .categoryModal {
+    height: 40px;
+    width: 40px;
+  }
+  #modalTopic {
+    height: 70px;
+  }
+  #createRoomModalLabel {
+    font-size: 25px;
+  }
+  #createRoomBtn, #quickJoinBtn {
+    font-size: 11px;
+    height: 40px;
+    padding: 10px;
+  }
+  .chatToggle {
+    display: none !important;
+  }
+  .subtitleText {
+    font-size: 25px;
+  }
+  .chatBadge {
+    display: none !important;
+  }
 }
 @media screen and (max-width:650px) {
   .subtitleText {
@@ -166,3 +264,67 @@
     width: 60%;
   }
 }
+@media screen and (max-height:650px) {
+  .chatListWrapper {
+    height: 75%;
+  }
+}
+
+/* iPhone 6 landscape */
+@media only screen and (min-device-width: 375px)
+  and (max-device-width: 667px)
+  and (orientation: landscape)
+  and (-webkit-min-device-pixel-ratio: 2){
+    .chatBadge {
+      margin: 0;
+      margin-right: 180px;
+      margin-bottom: -20px;
+      z-index: 10000;
+    }
+    .lobbyContentWrapper {
+      margin: auto;
+    }
+ }
+
+/* iPhone 6 portrait */
+@media only screen
+  and (min-device-width: 375px)
+  and (max-device-width: 667px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 2){
+    .chatBadge {
+      margin: 0;
+      margin-right: 80px;
+      margin-bottom: -20px;
+      z-index: 10000;
+    }
+}
+
+/* iPhone 6 Plus landscape */
+@media only screen
+  and (min-device-width: 414px)
+  and (max-device-width: 736px)
+  and (orientation: landscape)
+  and (-webkit-min-device-pixel-ratio: 3) {
+    .chatBadge {
+      margin: 0;
+      margin-right: 210px;
+      margin-bottom: -20px;
+      z-index: 10000;
+    }
+   }
+
+/* iPhone 6 Plus portrait */
+@media only screen
+  and (min-device-width: 414px)
+  and (max-device-width: 736px)
+  and (orientation: portrait)
+  and (-webkit-min-device-pixel-ratio: 3)
+{ }
+
+/* iPhone 6 and 6 Plus */
+@media only screen
+  and (max-device-width: 640px),
+  only screen and (max-device-width: 667px),
+  only screen and (max-width: 480px)
+{ }

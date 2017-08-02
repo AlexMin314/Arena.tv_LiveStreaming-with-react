@@ -14,6 +14,7 @@ import { setGame } from './API/gameAPI';
 import { setTurn } from './API/turnAPI';
 import { setLoading } from './API/loadingAPI';
 import { setTimerStatus } from './API/timerAPI';
+import { setNav } from './API/navAPI';
 
 import registerServiceWorker from './registerServiceWorker';
 
@@ -33,6 +34,7 @@ store.subscribe(() => {
   setGame(state.gameStart);
   setTurn(state.currentTurn);
   setTimerStatus(state.timerStatus);
+  setNav(state.nav);
 })
 
 // This dispatcher is for the flow of storing user login status.
