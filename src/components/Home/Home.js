@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-// Child components
 
 // Import static files
 import './Home.css';
 
 //Import UI
 import FlatButton from 'material-ui/FlatButton';
-
 
 /**
  * App's Index Page
@@ -28,7 +26,6 @@ const stylePaper = {
   width: "420px",
   height: "420px",
   backgroundImage: "url('../../img/TV.png')"
-
 };
 
 
@@ -41,11 +38,19 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
 
   onSignIn = (e) => {
     e.preventDefault();
-    window.location.href = '/login';
+    let clicked = document.getElementById('clicked');
+    clicked.play();
+    setTimeout(() => {window.location.href = '/login'},50);
   }
   onSignUp = (e) => {
     e.preventDefault();
     window.location.href = '/signup';
+  }
+
+  componentDidMount() {
+    let mainMusic = document.getElementById('mainMusic');
+    mainMusic.play();
+    mainMusic.loop = true;
   }
 
   render() {
@@ -92,7 +97,7 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
                 </div>
                 <div className="homeBtnWrapper animated infinite pulse">
                   <FlatButton label="Let's Play" primary={true}
-                                style={btnstyle} onTouchTap={this.onSignIn}
+                                style={btnstyle} onClick={this.onSignIn}
                                 labelStyle={btnLabelStyle}/>
                 </div>
               </div>

@@ -50,17 +50,21 @@ class Login extends Component {
   // Event listener for Login button
   login = (e) => {
     e.preventDefault();
-    this.props.triggerLoading(true);
-    const {email, password} = this.state;
-    // Log in via firebase auth
-    firebase.auth().signInWithEmailAndPassword(email, password)
-      .catch(error => {
-        this.props.triggerLoading(false);
-        this.setState({
-          email: '',
-          password: '',
-          error});
-      })
+    let clicked = document.getElementById('clicked');
+    clicked.play();
+    setTimeout(() => {
+      this.props.triggerLoading(true);
+      const {email, password} = this.state;
+      // Log in via firebase auth
+      firebase.auth().signInWithEmailAndPassword(email, password)
+        .catch(error => {
+          this.props.triggerLoading(false);
+          this.setState({
+            email: '',
+            password: '',
+            error});
+        })
+    },100);
     }
   componentWillMount() {
     // Firebase observer to listen if user has signed in
