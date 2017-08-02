@@ -54,7 +54,7 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
             MindTap &hearts;<span> Alex . EL </span>
             All rights reserved 2017.</h5>
         </div>
-      ) : (
+      ) : this.props.startInfo === null ? (
         <Paper zDepth={1}>
           <BottomNavigation selectedIndex={this.props.navInfo}>
             <BottomNavigationItem
@@ -75,7 +75,7 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
             />
           </BottomNavigation>
         </Paper>
-      )}
+      ) : null}
       </div>
     );
   }
@@ -84,7 +84,8 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
 const mapStateToProps = (state) => {
     return {
       user: state.user,
-      navInfo: state.nav
+      navInfo: state.nav,
+      startInfo: state.gameStart
     }
 }
 

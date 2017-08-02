@@ -59,6 +59,10 @@ const lobbymenu = {
   fontSize: 18,
   textAlign: 'center'
 }
+const exitIcon = {
+  alignSelf: 'flex-end',
+  marginLeft: 'auto'
+}
 
 
 export class Lobby extends Component { // eslint-disable-line react/prefer-stateless-function
@@ -149,7 +153,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
           this.setState({ errorMessage: 'All rooms are currently full, please wait and try again or create a room!' });
         } else {
           // Get a random number within the range of the size of the availableRooms array
-          const randomNum = this.getRandomIntInRange(0, availableRooms.length);
+          const randomNum = getRandomIntInRange(0, availableRooms.length);
           // Assign the filtered room to variable
           const roomName = availableRooms[randomNum].roomInfo.roomName;
           // Add member count of the filtered room
@@ -604,9 +608,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             </div>
           ) : this.props.navInfo === 1 ? (
             <div className="lobbyContentWrapper">
-              <IconButton className="lobbyClose" onTouchTap={this.renderHandlerClose}><NavigationClose /></IconButton>
-              <div className="subtitleText animated bounce">Create Room</div>
-              <div className="subtitleText"><hr/></div>
+              <div className="subtitleText animated bounce">
+                Create Room
+                <IconButton className="lobbyClose" style={exitIcon} onTouchTap={this.renderHandlerClose}><NavigationClose /></IconButton>
+              </div>
+              <div className="subtitleTextLiner"><hr/></div>
               <TextField floatingLabelText={this.state.modalSuccessMessage}
                          hintText="(optional) Enter room name..."
                          errorText={this.state.modalErrorMessage}
@@ -641,7 +647,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                   <div className="category categoryModal travel">TRAVEL</div>
                 </label>
               </div> {/* End of Radio */}
-              <div className="subtitleText"><hr/></div>
+              <div className="subtitleTextLiner"><hr/></div>
               <RaisedButton label="Create" secondary={true} fullWidth={true}
                             className="roomCreateBtn"
                             onTouchTap={this.onRoomCreation}/>
@@ -649,14 +655,14 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
           ) : this.props.lobbyInfo === null ? (
           <div className="lobbyContentWrapper">
             <div className="subtitleText animated bounce">Join Room</div>
-            <div className="subtitleText"><hr/></div>
+            <div className="subtitleTextLiner"><hr/></div>
             <div className="paperWrapper animated zoomIn">
               <Paper style={lobbymenu} className="pulse1" zDepth={2}>
                 <button className="pulse1"
                         onClick={this.renderHandler}
                         id='b1'>BY<br/>TOPIC</button>
               </Paper>
-              <Paper style={lobbymenu} onTouchTap={this.onQuickJoin} className="pulse1" zDepth={2}>
+              <Paper style={lobbymenu} className="pulse1" zDepth={2}>
                 <button className="pulse1"
                         onClick={this.onQuickJoin}
                         id='b2'>QUICK<br/>JOIN</button>
@@ -671,9 +677,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
           </div>
         ) : this.props.lobbyInfo === 'b1' ? (
           <div className="lobbyContentWrapper1">
-            <IconButton className="lobbyClose" onTouchTap={this.renderHandlerClose}><NavigationClose /></IconButton>
-            <div className="subtitleText animated bounce">Select a Topic</div>
-            <div className="subtitleText"><hr/></div>
+            <div className="subtitleText animated bounce">
+              Select a Topic
+              <IconButton className="lobbyClose" style={exitIcon} onTouchTap={this.renderHandlerClose}><NavigationClose /></IconButton>
+            </div>
+            <div className="subtitleTextLiner"><hr/></div>
             <div className="categoryWrapper">
               <div className="category categoryAni TV" onClick={this.topicJoin}>TV</div>
               <div className="category categoryAni game" onClick={this.topicJoin}>GAMES</div>
@@ -685,9 +693,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
           </div>
         ) : this.props.lobbyInfo === 'b3' ? (
           <div className="lobbyContentWrapper2">
-            <IconButton className="lobbyClose" onTouchTap={this.renderHandlerClose}><NavigationClose /></IconButton>
-            <div className="subtitleText animated bounce">Enter room name</div>
-            <div className="subtitleText"><hr/></div>
+            <div className="subtitleText animated bounce">
+              Enter Room Name
+              <IconButton className="lobbyClose" style={exitIcon} onTouchTap={this.renderHandlerClose}><NavigationClose /></IconButton>
+            </div>
+            <div className="subtitleTextLiner"><hr/></div>
             <TextField floatingLabelText={this.state.modalSuccessMessage}
                        hintText="Enter room name here..."
                        errorText={this.state.modalErrorMessage}

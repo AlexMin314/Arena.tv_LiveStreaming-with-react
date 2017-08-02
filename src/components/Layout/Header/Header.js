@@ -104,7 +104,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
           <AppBar
             title={
               <div>
-                <span onClick={this.goHome}>MindTap <i className="fa fa-pencil" aria-hidden="true"></i></span>
+                <span id='headerBrandName' onClick={this.goHome}>MindTap <i className="fa fa-pencil" aria-hidden="true"></i></span>
               </div>}
             iconElementLeft={null}
             iconStyleLeft={displayNone}
@@ -132,7 +132,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
                           src={this.props.user[0].photo}
                           style={avatar} />
                   <div className="greeting">
-                    Welcome,{this.props.user[0].displayName}
+                    Hi,{this.props.user[0].displayName}
                   </div>
                   <Logged logout={this.logout} />
                 </div>
