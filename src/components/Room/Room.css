@@ -23,6 +23,36 @@
   flex: 2;
   flex-direction: column;
 }
+
+@font-face {
+  font-family: digitalTime;
+  src: url('../../fonts/digital-7.ttf');
+}
+
+.timeRemainingText {
+  font-family: digitalTime;
+  font-size: 25px;
+  color: white;
+  text-shadow: 1px 1px 4px black, 2px 4px 2px black;
+}
+
+.timeDisplay {
+  animation-name: timeglow;
+  animation-duration: 1.5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate;
+  font-family: digitalTime;
+  font-size: 30px;
+  color: red;
+  text-shadow: 2px 2px 2px black, 1px 1px 1px black, 2px 2px 2px black;
+}
+
+@keyframes timeglow {
+    from {text-shadow: 2px 2px 2px black, 1px 1px 1px black, 2px 2px 2px black;}
+    to {text-shadow: 2px 2px 2px black, 1px 1px 1px black, 2px 2px 2px black, 3px 3px 3px black, 4px 4px 4px black, 5px 5px 5px black;}
+}
+
 /**********
  game over
 ************/
