@@ -25,6 +25,10 @@
   margin-right: 20px;
 }
 
+#quickJoinBtn {
+  margin-right: 20px;
+}
+
 .category {
   display: inline-block;
   height: 80px;
@@ -52,6 +56,18 @@
   padding-top: 10px;
 }
 
+.successMessage {
+  font-family: Verdana;
+  color: rgb(92, 232, 42);
+  display: inline-block;
+  font-size: 15px;
+  padding-top: 10px;
+  animation-duration: 5s;
+  animation-delay: 5s;
+  animation-iteration-count: infinite;
+  text-shadow: 1px 1.5px 1px rgb(70, 70, 70);
+}
+
 .TV {
   background-image: url('../../img/TV.png');
 }
@@ -69,7 +85,7 @@
 }
 
 
-/* Modal */
+/* Create Room Modal */
 #createRoomModalLabel {
   font-size: 30px;
   margin-top: 10px;
@@ -95,6 +111,18 @@
 #mRadio1, #mRadio2, #mRadio3, #mRadio4, #mRadio5 {
   margin: 0;
   padding: 0;
+}
+
+/* Join Room Modal */
+#joinRoomModalLabel {
+  font-size: 30px;
+  margin-top: 10px;
+}
+
+.modalSubtitle {
+  font-size: 18px;
+  margin-top: 30px;
+  margin-bottom: 5px;
 }
 
 @media screen and (max-width:450px) {
