@@ -28,7 +28,10 @@ import ListItem from 'material-ui/List/ListItem';
 import Avatar from 'material-ui/Avatar';
 import Badge from 'material-ui/Badge';
 
+// Import Utilities
+import { getRandomIntInRange } from '../../API/utilityAPI';
 
+// Import CSS
 import './Lobby.css';
 
 // Import child Components
@@ -68,11 +71,6 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   componentDidMount() {
     // Reseting game start value in redux.
     this.props.gameStart(false)
-  }
-
-  // Helper Function to return a random number between a specified range
-  getRandomIntInRange = (min, max) => {
-    return Math.floor(Math.random() * (max - min)) + min;
   }
 
   /**
@@ -336,8 +334,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   componentDidMount() {
     this.scrollToBottom();
-
-    firebase.database().ref('message/').limitToLast(1).on('child_added', (data) => {
+    let randomNum = getRandomIntInRange(5,10);
+    firebase.database().ref('message/').limitToLast(randomNum).on('child_added', (data) => {
         const chatListArr = this.state.chatList;
         const newMessage = data.val();
         if (this.state.open)  {
@@ -445,10 +443,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             <br/>
             <div className="errorMessage">{this.state.errorMessage}</div>
           </div>
-          <Badge badgeContent={this.state.missedMsg}
-                 primary={true}
-                 className='chatBadge'
-                 style={badgeStyle}/>
+          {this.state.missedMsg === 0 ? null : (
+            <Badge badgeContent={this.state.missedMsg}
+                   primary={true}
+                   className='chatBadge'
+                   style={badgeStyle}/>
+          )}
+
           <FloatingActionButton secondary={true}
                                 className="chatToggle"
                                 style={chatToggleStyle}
