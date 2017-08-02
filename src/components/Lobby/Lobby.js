@@ -64,7 +64,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       missedMsg: 0,
       modalSuccessMesage: '',
       modalErrorMessage: '',
-      allPassed: false
+      allPassed: false,
+      onlineUsersCount: 0
     }
   }
 
@@ -333,6 +334,47 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   }
 
   componentDidMount() {
+  // Logic for displaying online users in lobby
+    const userObj = this.props.user[0];
+    const onlineUsersRef = firebase.database().ref('/onlineUsers');
+    const onlineUsersCountRef = firebase.database().ref('/onlineUsersCount');
+    let userIsAlreadyOnline = false;
+    onlineUsersRef.once('value', (snapshot) => {
+      const usersOnlineObj = snapshot.val();
+      for(const key in usersOnlineObj) {
+        if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
+        && (usersOnlineObj[key].email === this.props.user[0].email)) {
+          userIsAlreadyOnline = true
+        } // end of if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
+      } // end of for(const key in usersOnlineObj)
+
+      if(userIsAlreadyOnline) {
+        onlineUsersCountRef.once('value', (snapshot) => {
+          if(!snapshot.val()) firebase.database().ref().update({ onlineUsersCount: 1});
+          else this.setState({ onlineUsersCount: snapshot.val() });
+        })
+      }
+
+      else {
+        onlineUsersCountRef.once('value', (snapshot) => {
+          if(!snapshot.val()) firebase.database().ref().update({ onlineUsersCount: 1});
+          else {
+            let currentUserCount = snapshot.val();
+            const newUserCount = currentUserCount + 1;
+            firebase.database().ref().update({
+              onlineUsersCount: newUserCount
+            })
+            this.setState({ onlineUsersCount: newUserCount })
+            onlineUsersRef.push(userObj);
+          } // end of nearest else above
+        }) // end of onlineUsersCountRef.once('value', (snapshot)
+      } // end of else
+    }) // end of onlineUsersRef.once('value', (snapshot)
+
+  /**************************
+  ** End of Online User Logic
+  *//////////////////////////
+
     this.scrollToBottom();
     let randomNum = getRandomIntInRange(5,10);
     firebase.database().ref('message/').limitToLast(randomNum).on('child_added', (data) => {
@@ -350,6 +392,51 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
         chatListArr.push(newMessage)
         this.setState({chatList: chatListArr});
     });
+  } // End of componentDidMount
+
+  componentWillUnmount() {
+    const userObj = this.props.user[0];
+    const onlineUsersRef = firebase.database().ref('/onlineUsers');
+    const onlineUsersCountRef = firebase.database().ref('/onlineUsersCount');
+    let userIsInLobby = false;
+    onlineUsersRef.once('value', (snapshot) => {
+      const usersOnlineObj = snapshot.val();
+      for(const key in usersOnlineObj) {
+        if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
+        && (usersOnlineObj[key].email === this.props.user[0].email)) {
+          userIsInLobby = true
+        } // end of if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
+      } // end of for(const key in usersOnlineObj)
+
+      if(!userIsInLobby) {
+        onlineUsersCountRef.once('value', (snapshot) => {
+          this.setState({ onlineUsersCount: snapshot.val() });
+        })
+      }
+
+      else {
+        onlineUsersCountRef.once('value', (snapshot) => {
+          if(snapshot.val()) {
+            let currentUserCount = snapshot.val();
+            const newUserCount = currentUserCount - 1;
+            firebase.database().ref().update({
+              onlineUsersCount: newUserCount
+            })
+            this.setState({ onlineUsersCount: newUserCount })
+            onlineUsersRef.once('value',(snapshot) =>{
+              const usersObj = snapshot.val();
+              let onlineUserKeyToRemove = '';
+              for(const key in usersObj) {
+                if((usersObj[key].displayName === this.props.user[0].displayName) && (usersObj[key].email === this.props.user[0].email))
+                onlineUserKeyToRemove = key;
+              }
+              firebase.database().ref('/onlineUsers/' + onlineUserKeyToRemove).remove();
+            })
+          }
+
+        }) // end of onlineUsersCountRef.once('value', (snapshot)
+      } // end of else
+    }) // end of onlineUsersRef.once('value', (snapshot)
   }
 
   renderChat = () => {
@@ -464,8 +551,10 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                   docked={false}
                   containerClassName="globalChat"
                   containerStyle={globalChatStyle}>
-            <AppBar iconElementRight={<IconButton><NavigationClose onTouchTap={this.handleClose}/></IconButton>}
+            <AppBar iconElementLeft={<IconButton tooltip="Users Online"></IconButton>}
+                    iconElementRight={<IconButton><NavigationClose onTouchTap={this.handleClose}/></IconButton>}
                     iconClassNameLeft='chatLeftIconNone'
+                    title={this.state.onlineUsersCount}
                     />
             <div className="chatInputGroup">
               <TextField floatingLabelText="messages..."
