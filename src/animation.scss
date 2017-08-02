@@ -1,0 +1,146 @@
+/*
+  https://developer.mozilla.org/en/docs/Web/CSS/box-shadow
+  box-shadow: [inset?] [top] [left] [blur] [size] [color];
+
+  Tips:
+    - We're setting all the blurs to 0 since we want a solid fill1.
+    - Add the inset keyword so the box-shadow is on the inside of the element
+    - Animating the inset shadow on hover looks like the element is fill1ing in from whatever side you specify ([top] and [left] accept negative values to become [bottom] and [right])
+    - Multiple shadows can be stacked
+    - If you're animating multiple shadows, be sure to keep the same number of shadows so the animation is smooth. Otherwise, you'll get something choppy.
+*/
+
+// Animate the size, inside
+.fill1:hover,
+.fill1:focus {
+  box-shadow: inset 0 0 0 2em rgb(255, 64, 129);
+}
+
+.pulse1 {
+  background: #60daaa;
+  margin: 0;
+  border: 0;
+  height: inherit;
+  width: inherit;
+  text-shadow: 1px 1.5px 1px rgb(121, 121, 121);
+}
+
+// Animate the size, outside
+.pulse1:hover,
+.pulse1:focus {
+  animation: pulse1 1s;
+  box-shadow: 0 0 0 2em rgba(#fff,0);
+}
+
+@keyframes pulse1 {
+  0% { box-shadow: 0 0 0 0 rgb(255, 64, 129); }
+}
+
+// Stack multiple shadows, one from the left, the other from the right
+.close:hover,
+.close:focus {
+  box-shadow:
+    inset -3.5em 0 0 0 var(--hover),
+    inset 3.5em 0 0 0 var(--hover);
+}
+
+// Size can also be negative; see how it's smaller than the element
+.raise:hover,
+.raise:focus {
+  box-shadow: 0 0.5em 0.5em -0.4em var(--hover);
+  transform: translateY(-0.25em);
+}
+
+// Animating from the bottom
+.up:hover,
+.up:focus {
+  box-shadow: inset 0 -3.25em 0 0 var(--hover);
+}
+
+// And from the left
+.slide:hover,
+.slide:focus {
+  box-shadow: inset 6.5em 0 0 0 var(--hover);
+}
+
+// Multiple shadows, one on the outside, another on the inside
+.offset {
+  box-shadow:
+    0.3em 0.3em 0 0 var(--color),
+    inset 0.3em 0.3em 0 0 var(--color);
+
+  &:hover,
+  &:focus {
+    box-shadow:
+      0 0 0 0 var(--hover),
+      inset 6em 3.5em 0 0 var(--hover);
+  }
+}
+
+//=== Set button colors
+// If you wonder why use Sass vars or CSS custom properties...
+  // Make a map with the class names and matching colors
+$colors: (
+  fill1: #a972cb,
+  pulse1: white,
+  close: #ff7f82,
+  raise: #ffa260,
+  up: #e4cb58,
+  slide: #8fc866,
+  offset: #19bc8b
+);
+$background: #fefefe;
+$text: #4b507a;
+
+$cyan: #60daaa;
+$yellow: #fbca67;
+$orange: #ff8a30;
+$red: #f45e61;
+$purple: #6477b9;
+$blue: #0eb7da;
+// Sass variables compile to a static string; CSS variables are dynamic and inherited
+  // Loop through the map and set CSS custom properties using Sass variables
+@each $button, $color in $colors {
+  .#{$button} {
+    --color: $color;
+    --hover: adjust-hue($color, 45deg);
+  }
+}
+
+// Now every button will have different colors as set above. We get to use the same structure, only changing the custom properties.
+button {
+  color: var(--color);
+  transition: 0.25s;
+
+  &:hover,
+  &:focus {
+    border-color: rgb(255, 64, 129);
+    color: #fff;;
+    background: rgb(255, 64, 129);
+  }
+}
+
+//=== Pen styling, ignore
+
+
+// Basic button styles
+button {
+  background: none;
+  border: 2px solid;
+  font: inherit;
+  line-height: 1;
+  margin: 0.5em;
+  padding: 1em 2em;
+}
+
+
+/*
+  As a bonus, I will now begin including a shoddily written limerick or other high literary masterpiece in all my pens. Misspelled visual rhymes and two left feet are the spice of life. You're welcome.
+
+  [1/?] Glass cannon
+  There was a young dev on the frontend
+  delighted to see folks affronted
+    They claimed satisfaction
+    provoking a reaction
+  but threw quite a fit when confronted
+*/

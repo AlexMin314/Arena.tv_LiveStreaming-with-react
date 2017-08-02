@@ -7,16 +7,45 @@
   justify-content: center;
   align-items: center;
 }
-
+.paperWrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 .lobbyContentWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.lobbyContentWrapper1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.lobbyContentWrapper2 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 500px;
+}
+.lobbyClose {
+  align-self: flex-end;
 
 }
 
 .subtitleText {
-  font-size: 30px;
+  font-size: 28px;
   margin: auto;
+  align-self: flex-start;
+  width: 100%;
 }
+.menuCircle {
 
+}
 
 #createRoomBtn {
   margin-right: 20px;
@@ -44,13 +73,24 @@
 
 .category:hover {
   border-radius: 10px;
-  background-color: rgba(99, 99, 99, 0.5);
+}
+
+.categoryAni:hover {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+  animation-iteration-count: infinite;
+  animation-name: tada;
 }
 
 .errorMessage {
-  display: inline-block;
+  margin-top: 5px;
+  color: red;
   font-size: 12px;
-  padding-top: 10px;
+  height: 15px;
+  width: 100%;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
 }
 
 .successMessage {
@@ -81,19 +121,16 @@
   background-image: url('../../img/travel.png');
 }
 
+/* Room Join */
+.joinRoomBtn {
+  margin-top: 20px;
+}
+.joinRoomInput {
+  margin-top: 30px;
+}
+
 
 /* Create Room Modal */
-#createRoomModalLabel {
-  font-size: 30px;
-  margin-top: 10px;
-}
-
-.modalSubtitle {
-  font-size: 18px;
-  margin-top: 30px;
-  margin-bottom: 5px;
-}
-
 .categoryModal {
   height: 60px;
   margin: 5px;
@@ -101,13 +138,25 @@
   padding-top: 20px;
 }
 
-#modalTopic {
-  width: 100%;
-}
-
 #mRadio1, #mRadio2, #mRadio3, #mRadio4, #mRadio5 {
   margin: 0;
   padding: 0;
+}
+
+.roomCreateBtn {
+  margin-top: 25px;
+  width: 100%;
+}
+
+.roomCreateInput {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.categoryRadio {
+  -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+        box-sizing: border-box;
 }
 
 /***
