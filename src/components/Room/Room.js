@@ -164,19 +164,33 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               for (const key in members) {
                 keyArray.push(members[key]);
               }
-              if(keyArray.length > 1) {
+              if(!(nextTurn > keyArray.length)) {
                 this.setState({
                   currentPlayerTurn: keyArray[nextTurn].displayName,
                   currentPlayerId: keyArray[nextTurn].id
                 });
-
-              const updator = {
-                index: nextTurn,
-                id: keyArray[nextTurn].id,
-                name: keyArray[nextTurn].displayName,
-                stage: this.state.currentStage
-              }
-              this.props.currentTurn(updator);
+                const updatorIfMoreThanOne = {
+                  index: nextTurn,
+                  id: keyArray[nextTurn].id,
+                  name: keyArray[nextTurn].displayName,
+                  stage: this.state.currentStage
+                }
+                this.props.currentTurn(updatorIfMoreThanOne);
+              } else {
+                this.setState({
+                  currentPlayerTurn: this.props.user[0].displayName,
+                  currentPlayerId: this.props.user[0].id
+                })
+                let nextTurnForOne = nextTurn;
+                if(nextTurnForOne > 0) nextTurnForOne -= 1
+                else nextTurnForOne = 0
+                const updatorIfOnlyOne = {
+                  index: nextTurnForOne,
+                  id: this.props.user[0].id,
+                  name: this.props.user[0].displayName,
+                  stage: this.state.currentStage
+                }
+                this.props.currentTurn(updatorIfOnlyOne);
               }
             } // If snapshot.val() ends
           });
