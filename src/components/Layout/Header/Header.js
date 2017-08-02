@@ -70,6 +70,23 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
     window.location.href = '/';
   }
 
+  toggleSound = (e, logged) => {
+    let defaultClick = document.getElementById('clicked');
+    let socialClick = document.getElementById('mouseClicked');
+    let mainMusic = document.getElementById('mainMusic');
+
+    // Toggle sound off if value is false
+    if(!logged) {
+      defaultClick.muted = true;
+      socialClick.muted = true;
+      mainMusic.muted = true;
+    } else {
+      defaultClick.muted = false;
+      socialClick.muted = false;
+      mainMusic.muted = false;
+    }
+  }
+
   render() {
     {/* Conditional render for 'is user logged in' */}
     const isLoggedIn = this.props.user[0];
@@ -96,6 +113,12 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
             ) : (
               <Login />)}
           />
+          <Toggle
+            label="Sound"
+            defaultToggled={true}
+            onToggle={this.toggleSound}
+            labelPosition="right"
+            style={{margin: 20}} />
         </div>
       );
   }

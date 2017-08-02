@@ -22,85 +22,96 @@ class SocialBtn extends Component {
 
   // Facebook Login Onclick listener
   facebookLogin = () => {
-    this.props.triggerLoading(true);
-    // assign provider variable for facebook
-    const provider = new firebase.auth.FacebookAuthProvider();
-    // redirect to sign in with facebook via firebase
-    firebase.auth().signInWithRedirect(provider);
-    // catch the result of facebook login
+    let clicked = document.getElementById('mouseClicked');
+    clicked.play();
+    setTimeout(() => {
+      this.props.triggerLoading(true);
+      // assign provider variable for facebook
+      const provider = new firebase.auth.FacebookAuthProvider();
+      // redirect to sign in with facebook via firebase
+      firebase.auth().signInWithRedirect(provider);
+      // catch the result of facebook login
 
-    firebase.auth().getRedirectResult().then((result) => {
-      if (result.credential) {
-        // Provides a Facebook Access Token which can be used to access the Facebook API.
-        const token = result.credential.accessToken;
-      }
-      // The store the signed in user info in user variable
-      const user = result.user;
-    }).catch(error => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      const credential = error.credential;
-      // ...
-    });
+      firebase.auth().getRedirectResult().then((result) => {
+        if (result.credential) {
+          // Provides a Facebook Access Token which can be used to access the Facebook API.
+          const token = result.credential.accessToken;
+        }
+        // The store the signed in user info in user variable
+        const user = result.user;
+      }).catch(error => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        const credential = error.credential;
+        // ...
+      });
+    },300);
   }
 
   // Twitter Login Onclick listener
   twitterLogin = () => {
-    this.props.triggerLoading(true);
-    // assign provider variable for twitter
-    const provider = new firebase.auth.TwitterAuthProvider();
-    // redirect to sign in with facebook via firebase
-    firebase.auth().signInWithRedirect(provider);
+    let clicked = document.getElementById('mouseClicked');
+    clicked.play();
+    setTimeout(() => {
+      this.props.triggerLoading(true);
+      // assign provider variable for twitter
+      const provider = new firebase.auth.TwitterAuthProvider();
+      // redirect to sign in with facebook via firebase
+      firebase.auth().signInWithRedirect(provider);
 
-    // catch the result of facebook login
-    firebase.auth().getRedirectResult().then(result => {
-      if (result.credential) {
-        // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
-        // You can use these server side with your app's credentials to access the Twitter API.
-        const token = result.credential.accessToken;
-        const secret = result.credential.secret;
+      // catch the result of facebook login
+      firebase.auth().getRedirectResult().then(result => {
+        if (result.credential) {
+          // This gives you a the Twitter OAuth 1.0 Access Token and Secret.
+          // You can use these server side with your app's credentials to access the Twitter API.
+          const token = result.credential.accessToken;
+          const secret = result.credential.secret;
+          // ...
+        }
+        // The signed-in user info.
+        const user = result.user;
+      }).catch(error => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        const credential = error.credential;
         // ...
-      }
-      // The signed-in user info.
-      const user = result.user;
-    }).catch(error => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      const credential = error.credential;
-      // ...
-    });
+      });
+    },300);
   }
 
   // Google Login Onclick listener
   googleLogin = () => {
-    this.props.triggerLoading(true);
-    // assign provider variable for twitter
-    const provider = new firebase.auth.GoogleAuthProvider();
-    // Pop up for google login
-    firebase.auth().signInWithPopup(provider).then(result => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const token = result.credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-
-    }).catch(error => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      const credential = error.credential;
-      // ...
-    });
+    let clicked = document.getElementById('mouseClicked');
+    clicked.play();
+    setTimeout(() => {
+      this.props.triggerLoading(true);
+      // assign provider variable for twitter
+      const provider = new firebase.auth.GoogleAuthProvider();
+      // Pop up for google login
+      firebase.auth().signInWithPopup(provider).then(result => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const token = result.credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+      }).catch(error => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The firebase.auth.AuthCredential type that was used.
+        const credential = error.credential;
+        // ...
+      });
+    },300);
   }
 
   render() {
@@ -119,7 +130,7 @@ class SocialBtn extends Component {
         </div>
         <div className="col-4 text-center">
           <div className="icon-circle">
-            <a className="igoogle" title="Google+" onClick={this.googleLogin}><i className="fa fa-google-plus" /></a>
+            <a href='#' className="igoogle" title="Google+" onClick={this.googleLogin}><i className="fa fa-google-plus" /></a>
           </div>
         </div>
       </div>

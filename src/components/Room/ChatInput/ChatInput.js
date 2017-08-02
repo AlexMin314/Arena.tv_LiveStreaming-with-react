@@ -108,6 +108,12 @@ export class ChatInput extends Component { // eslint-disable-line react/prefer-s
   window.addEventListener('keydown', this.handleEscape);
   }
 
+  componentWillUnmount() {
+    // Remove event listeners when component unmounts
+    window.removeEventListener('keypress', this.handleKeyPress);
+    window.removeEventListener('keydown', this.handleEscape);
+  }
+
   render() {
 
       return (
