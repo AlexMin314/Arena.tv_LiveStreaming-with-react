@@ -389,7 +389,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                   <div className="stageDiv">
                    Stage
                    <br/>
-                    {this.state.currentStage ? this.state.currentStage : 0}
+                    {this.state.currentStage ? this.state.currentStage : 0} / 6
                   </div>
                   <div className="roomTopicDiv">
                     Room Topic
