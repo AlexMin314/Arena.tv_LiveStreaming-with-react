@@ -168,7 +168,7 @@ class Login extends Component {
 
   render() {
     return (
-      <FlatButton {...this.props} label="Sign In" href="/login" />
+      <FlatButton {...this.props} label="Sign In" href="/login" style={{color:'white'}} />
     );
   }
 }
