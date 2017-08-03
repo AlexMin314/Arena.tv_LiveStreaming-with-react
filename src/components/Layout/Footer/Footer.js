@@ -6,6 +6,7 @@ import './Footer.css';
 // import actions
 import { updateNav } from '../../../actions/navActions';
 import { updateLobby } from '../../../actions/lobbyActions';
+import { updateNotice } from '../../../actions/noticeActions';
 
 
 // import UI
@@ -35,6 +36,7 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
     this.setState({selectedIndex: index});
     this.props.navUpdating(index);
     this.props.updateLobby(null);
+    if (index === 2) this.props.updateNotice(0);
   }
 
   render() {
@@ -54,7 +56,7 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
             MindTap &hearts;<span> Alex . EL </span>
             All rights reserved 2017.</h5>
         </div>
-      ) : this.props.startInfo === null ? (
+      ) : this.props.lobbyInfo !== 'room' ? (
         <Paper zDepth={1}>
           <BottomNavigation selectedIndex={this.props.navInfo}>
             <BottomNavigationItem
@@ -85,7 +87,8 @@ const mapStateToProps = (state) => {
     return {
       user: state.user,
       navInfo: state.nav,
-      startInfo: state.gameStart
+      startInfo: state.gameStart,
+      lobbyInfo: state.lobby
     }
 }
 
@@ -96,6 +99,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateLobby: (status) => {
       dispatch(updateLobby(status))
+    },
+    updateNotice: (status) => {
+      dispatch(updateNotice(status))
     }
   }
 }

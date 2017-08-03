@@ -20,6 +20,7 @@ import './Room.css';
 import { updateGameStart } from '../../actions/gameActions';
 import { updateCurrentTurn } from '../../actions/turnActions';
 import { updateTimerStatus } from '../../actions/timerActions';
+import { updateLobby } from '../../actions/lobbyActions';
 
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
@@ -55,6 +56,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   componentDidMount() {
+    this.props.updateLobby('room');
     // Get Room name from firebase and store it in react state
       const roomNameRef = firebase.database().ref('rooms/' + this.props.roomkey + '/roomName');
       roomNameRef.once('value', (snapshot) => {
@@ -455,7 +457,10 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateTimer: (timerStatus) => {
       dispatch(updateTimerStatus(timerStatus))
-    }
+    },
+    updateLobby: (status) => {
+      dispatch(updateLobby(status))
+    },
   }
 }
 
