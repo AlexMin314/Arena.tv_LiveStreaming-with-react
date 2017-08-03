@@ -395,23 +395,25 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     const onlineUsersCountRef = firebase.database().ref('/onlineUsersCount');
     let userIsAlreadyOnline = false;
     onlineUsersRef.once('value', (snapshot) => {
-      const usersOnlineObj = snapshot.val();
-      const currentNoOfUsers = Object.keys(usersOnlineObj).length;
-      for(const key in usersOnlineObj) {
-        if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
-        && (usersOnlineObj[key].email === this.props.user[0].email)) {
-          userIsAlreadyOnline = true
-        } // end of if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
-      } // end of for(const key in usersOnlineObj)
+      if(snapshot.val()) {
+        const usersOnlineObj = snapshot.val();
+        const currentNoOfUsers = Object.keys(usersOnlineObj).length;
+        for(const key in usersOnlineObj) {
+          if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
+          && (usersOnlineObj[key].email === this.props.user[0].email)) {
+            userIsAlreadyOnline = true
+          } // end of if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
+        } // end of for(const key in usersOnlineObj)
 
-      if(userIsAlreadyOnline) {
-        onlineUsersCountRef.once('value', (snapshot) => {
-          if(!snapshot.val()) {
-            firebase.database().ref().update({ onlineUsersCount: 1});
-            this.setState({ onlineUsersCount: 1 });
-          } else this.setState({ onlineUsersCount: currentNoOfUsers });
-        })
-      }
+        if(userIsAlreadyOnline) {
+          onlineUsersCountRef.once('value', (snapshot) => {
+            if(!snapshot.val()) {
+              firebase.database().ref().update({ onlineUsersCount: 1});
+              this.setState({ onlineUsersCount: 1 });
+            } else this.setState({ onlineUsersCount: currentNoOfUsers });
+          })
+        } // end of if(userIsAlreadyOnline)
+      } // end of if(snapshot.val())
 
       else {
         onlineUsersCountRef.once('value', (snapshot) => {
@@ -430,8 +432,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   // Logic for updating the state of online users when any user logs in or out
   firebase.database().ref('/onlineUsers').on('value', (snapshot) => {
-    const updatedUserCount = Object.keys(snapshot.val()).length;
-    this.setState({ onlineUsersCount: updatedUserCount });
+    if(snapshot.val()) {
+      const updatedUserCount = Object.keys(snapshot.val()).length;
+      this.setState({ onlineUsersCount: updatedUserCount });
+    }
+
   })
 
   /**************************
