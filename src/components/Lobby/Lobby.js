@@ -440,6 +440,9 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
         }) // end of onlineUsersCountRef.once('value', (snapshot)
       } // end of else
       } // end of if(snapshot.val())
+      else {
+        firebase.database().ref('/onlineUsers').push(this.props.user[0]);
+      }
     }) // end of onlineUsersRef.once('value', (snapshot)
 
     // Logic for updating the state of online users when any user logs in or out
