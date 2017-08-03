@@ -116,6 +116,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         this.resetTimer();
         // set gameStart to false --> Alex, we can do this in the updatingGameStart function in firebase.js
         firebase.database().ref('rooms/' + this.props.roomkey).update({ gameStart: false });
+        firebase.database().ref('rooms/' + this.props.roomkey + '/message').set({});
       }
       firebase.database().ref('rooms/' + this.props.roomkey + '/members')
         .once('value')
@@ -262,8 +263,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   playAgain = () => {
-    this.setState({ ready: false });
-    this.setState({ gameoverChk: false });
+    this.setState({
+      ready: false,
+      gameoverChk: false,
+      currentStage: 0
+    });
     allMemeberReadyUpdating(this.props.roomkey);
   }
 
