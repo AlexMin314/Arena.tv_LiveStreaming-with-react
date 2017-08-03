@@ -61,16 +61,16 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       if (latestChat === curTurnAnswer &&
          chatSender === me.id &&
          me.id !== this.props.turnInfo.id) {
-         let correctSound = document.getElementById('correct');
-         correctSound.play()
-         // stageWinnerUpdater for firebase
-         stageWinnerUpdater(this.props.roomkey, me);
-         // Turn changer
-         turnChangingLogic(this.props.roomkey)
-         // clear canvas
-         strokeClear(this.props.roomkey)
-         // currentWord Generation requesting
-         currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.props.topic)
+            let correct = document.getElementById('correct');
+            correct.play();
+           // stageWinnerUpdater for firebase
+           stageWinnerUpdater(this.props.roomkey, me);
+           // Turn changer
+           turnChangingLogic(this.props.roomkey)
+           // clear canvas
+           strokeClear(this.props.roomkey)
+           // currentWord Generation requesting
+           currentWordGenerating(this.props.roomkey, this.props.user[0].id, this.props.topic)
       }
     })
 
@@ -288,7 +288,8 @@ const mapStateToProps = (state) => {
       user: state.user,
       roomkey: state.room,
       gameStart: state.gameStart,
-      turnInfo: state.currentTurn
+      turnInfo: state.currentTurn,
+      sound: state.soundStatus
     }
 }
 
