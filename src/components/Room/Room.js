@@ -20,6 +20,7 @@ import './Room.css';
 import { updateGameStart } from '../../actions/gameActions';
 import { updateCurrentTurn } from '../../actions/turnActions';
 import { updateTimerStatus } from '../../actions/timerActions';
+import { updateLobby } from '../../actions/lobbyActions';
 
 // Import child Components
 import UserlistChat from './UserlistChat/UserlistChat';
@@ -55,6 +56,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   componentDidMount() {
+    this.props.updateLobby('room');
     // Get Room name from firebase and store it in react state
       const roomNameRef = firebase.database().ref('rooms/' + this.props.roomkey + '/roomName');
       roomNameRef.once('value', (snapshot) => {
@@ -115,6 +117,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
         // set gameStart to false --> Alex, we can do this in the updatingGameStart function in firebase.js
         firebase.database().ref('rooms/' + this.props.roomkey).update({ gameStart: false });
         firebase.database().ref('rooms/' + this.props.roomkey).update({ countDownStarted: false });
+        firebase.database().ref('rooms/' + this.props.roomkey + '/message').set({});
       }
       firebase.database().ref('rooms/' + this.props.roomkey + '/members')
         .once('value')
@@ -261,8 +264,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   playAgain = () => {
-    this.setState({ ready: false });
-    this.setState({ gameoverChk: false });
+    this.setState({
+      ready: false,
+      gameoverChk: false,
+      currentStage: 0
+    });
     allMemeberReadyUpdating(this.props.roomkey);
   }
 
@@ -377,12 +383,17 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                 <div className="sideRow">
                 <div className="roomInfoDiv">
                   <div className="roomNameDiv">
-                   Room Name:
+                   Room Name
                    <br/>
                     {this.state.roomName}
                   </div>
+                  <div className="stageDiv">
+                   Stage
+                   <br/>
+                    {this.state.currentStage ? this.state.currentStage : 0}
+                  </div>
                   <div className="roomTopicDiv">
-                    Room Topic:
+                    Room Topic
                     <br/>
                     {this.state.topic}
                   </div>
@@ -456,7 +467,10 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateTimer: (timerStatus) => {
       dispatch(updateTimerStatus(timerStatus))
-    }
+    },
+    updateLobby: (status) => {
+      dispatch(updateLobby(status))
+    },
   }
 }
 

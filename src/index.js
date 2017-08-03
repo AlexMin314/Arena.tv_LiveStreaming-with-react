@@ -19,6 +19,7 @@ import { setTimerStatus } from './API/timerAPI';
 import { setNav } from './API/navAPI';
 import { setLobby } from './API/lobbyAPI';
 import { setSoundStatus } from './API/soundAPI';
+import { setNotice } from './API/noticeAPI';
 
 import registerServiceWorker from './registerServiceWorker';
 
@@ -41,6 +42,7 @@ store.subscribe(() => {
   setNav(state.nav);
   setLobby(state.lobby);
   setSoundStatus(state.soundStatus);
+  setNotice(state.notice);
 })
 
 // This dispatcher is for the flow of storing user login status.
