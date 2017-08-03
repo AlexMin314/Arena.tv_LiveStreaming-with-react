@@ -29,6 +29,7 @@ import Canvas from './Canvas/Canvas';
 // Import UI
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
+import IconButton from 'material-ui/IconButton';
 
 export class Room extends Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -384,7 +385,15 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                 <div className="sideRow">
                 <div className="roomInfoDiv">
                   <div className="roomNameDiv">
-                   Room Name <i className="fa fa-clone iconSize" aria-hidden="true"></i>
+                    <div id="roomNameWordMargin">Room</div>
+                    <div>
+                      Name
+                      <IconButton tooltip="Copy"
+                                  children={<i className="material-icons">content_copy</i>}
+                                  iconStyle={{width:15, height:15, fontSize: 15}}
+                                  style={{width:15, height:15 , fontSize: 15}}
+                                  hoveredStyle={{color:'rgb(255, 64, 129)'}}/>
+                    </div>
                    <br/>
                     <div className='rightContent'>{this.state.roomName}</div>
                   </div>
