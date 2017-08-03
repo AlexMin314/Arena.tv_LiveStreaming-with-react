@@ -16,6 +16,13 @@ import firebase from '../../firebase';
 
 import './Room.css';
 
+// Import Utilities
+import { getRandomIntInRange,
+         clickSoundPlay,
+         clickSoundPlay2,
+         yaySoundPlay,
+         mouseclickSoundPlay } from '../../API/utilityAPI';
+
 // Import Actions
 import { updateGameStart } from '../../actions/gameActions';
 import { updateCurrentTurn } from '../../actions/turnActions';
@@ -115,6 +122,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     gameoverRef.on('value', (data) => {
       this.setState({ gameover: data.val() })
       if (data.val()) {
+        yaySoundPlay()
         this.setState({ gameoverChk: true });
         this.props.updateTimer(false);
         this.resetTimer();
@@ -260,6 +268,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    * Room related.
    */
   leaveRoom = () => {
+    clickSoundPlay();
     // clear canvas
     if(this.props.user[0].id === this.props.turnInfo.id) strokeClear(this.props.roomkey)
     // updating to firebase
@@ -268,6 +277,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   playAgain = () => {
+    clickSoundPlay();
     this.setState({
       ready: false,
       gameoverChk: false,
@@ -280,6 +290,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    * GameLogic related
    */
   gameReady = () => {
+    yaySoundPlay();
     this.setState({ ready: true });
     // Updating ready status of mine.
     readyUpdating(this.props.roomkey, this.state.memberKey, true);
@@ -292,6 +303,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   skipTurn = () => {
+    clickSoundPlay();
     // clear canvas
     strokeClear(this.props.roomkey)
     // Turn Changing.
@@ -360,6 +372,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 *///////////////////////////////////
 
   onCopy = (e) => {
+    mouseclickSoundPlay();
     const roomName = document.getElementById('roomNameGet').innerHTML;
     const tempInput = document.createElement('input');
     tempInput.setAttribute('value', roomName);

@@ -17,6 +17,9 @@ import { firebaseDB } from '../../../firebase';
 // Import CSS
 import './Header.css';
 
+// Import API
+import { clickSoundPlay, mouseclickSoundPlay } from '../../../API/utilityAPI';
+
 // Import UI
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
@@ -60,6 +63,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
 
   // logout onClick event listener
   logout = () => {
+    clickSoundPlay();
     const userObj = this.props.user[0];
     const onlineUsersRef = firebase.database().ref('/onlineUsers');
     onlineUsersRef.once('value', (snapshot) => {
@@ -90,7 +94,10 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
   }
 
   goHome = () => {
-    window.location.href = '/';
+    clickSoundPlay();
+    setTimeout(() => {
+      window.location.href = '/';
+    }, 300)
   }
 
   toggleSound = (e, logged) => {
@@ -108,6 +115,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
       correctSound.muted = true;
       ready.muted = true;
     } else {
+      mouseclickSoundPlay();
       defaultClick.muted = false;
       socialClick.muted = false;
       mainMusic.muted = false;
@@ -115,6 +123,8 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
       ready.muted = false;
     }
   }
+
+
 
   render() {
     {/* Conditional render for 'is user logged in' */}
@@ -185,9 +195,16 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
 class Login extends Component {
   static muiName = 'FlatButton';
 
+  loginBtn = () => {
+    clickSoundPlay();
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 300)
+  }
+
   render() {
     return (
-      <FlatButton {...this.props} label="Sign In" href="/login" style={{color:'white'}} />
+      <FlatButton {...this.props} label="Sign In" style={{color:'white'}} onTouchTap={this.loginBtn} />
     );
   }
 }
