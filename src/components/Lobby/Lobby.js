@@ -414,7 +414,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             } else this.setState({ onlineUsersCount: currentNoOfUsers });
           })
         } // end of if(userIsAlreadyOnline)
-      } // end of if(snapshot.val())
+
 
       else {
         onlineUsersCountRef.once('value', (snapshot) => {
@@ -429,16 +429,16 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
           } // end of nearest else above
         }) // end of onlineUsersCountRef.once('value', (snapshot)
       } // end of else
+      } // end of if(snapshot.val())
     }) // end of onlineUsersRef.once('value', (snapshot)
 
-  // Logic for updating the state of online users when any user logs in or out
-  firebase.database().ref('/onlineUsers').on('value', (snapshot) => {
-    if(snapshot.val()) {
-      const updatedUserCount = Object.keys(snapshot.val()).length;
-      this.setState({ onlineUsersCount: updatedUserCount });
-    }
-
-  })
+    // Logic for updating the state of online users when any user logs in or out
+    firebase.database().ref('/onlineUsers').on('value', (snapshot) => {
+      if(snapshot.val()) {
+        const updatedUserCount = Object.keys(snapshot.val()).length;
+        this.setState({ onlineUsersCount: updatedUserCount });
+      }
+    })
 
   /**************************
   ** End of Online User Logic
