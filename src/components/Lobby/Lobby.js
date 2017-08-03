@@ -355,6 +355,9 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       if(!e.read) e.read = true;
     })
     this.props.updateNotice(0);
+    setTimeout(() => {
+      document.getElementById('gloablChatInput').focus()
+    },200)
   }
   handleClose = () => this.setState({open: false});
 
@@ -538,6 +541,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       modalSuccessMessage:'',
       roomName:''
     })
+
   }
   renderHandlerClose = (e) => {
     this.props.updateLobby(null);
@@ -550,6 +554,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       roomName:''
     })
   }
+
 
 
   render() {
@@ -570,7 +575,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                            fullWidth={true}
                            onChange={this.onChangeChat}
                            onKeyPress={this.onKeypressChat}
-                           value={this.state.chatmsg}/>
+                           value={this.state.chatmsg} autoFocus
+                           />
                 <RaisedButton label="Send" secondary={true}
                               className="sendBtn"
                               onTouchTap={this.onClickSend}/>
@@ -718,7 +724,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                          fullWidth={true}
                          onChange={this.onChangeChat}
                          onKeyPress={this.onKeypressChat}
-                         value={this.state.chatmsg}/>
+                         value={this.state.chatmsg} autoFocus
+                         id="gloablChatInput"/>
               <RaisedButton label="Send" secondary={true}
                             className="sendBtn"
                             onTouchTap={this.onClickSend}/>
