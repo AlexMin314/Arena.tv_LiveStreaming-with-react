@@ -143,12 +143,12 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
             ) : (
               <div className="headerWrapper">
                 <Toggle
-                  label={this.state.sound ? (
+                  label={this.props.sound ? (
                     <FontIcon className="material-icons" color="white">volume_up</FontIcon>
                   ) : (
                     <FontIcon className="material-icons" color="white">volume_off</FontIcon>
                   )}
-                  defaultToggled={true}
+                  defaultToggled={this.props.sound}
                   className="toggle"
                   onToggle={this.toggleSound}
                   labelPosition="left"
