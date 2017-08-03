@@ -616,6 +616,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
               </div>
               <div className="subtitleTextLiner"><hr/></div>
               <TextField floatingLabelText={this.state.modalSuccessMessage}
+                       floatingLabelStyle={{color:'rgb(58, 210, 73)'}}
                          hintText="(optional) Enter room name..."
                          errorText={this.state.modalErrorMessage}
                          fullWidth={true}
@@ -702,6 +703,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             <div className="subtitleTextLiner"><hr/></div>
             <TextField floatingLabelText={this.state.modalSuccessMessage}
                        hintText="Enter room name here..."
+                       floatingLabelStyle={{ top: '25px', color:'rgb(58, 210, 73)'}}
                        errorText={this.state.modalErrorMessage}
                        fullWidth={true}
                        className='joinRoomInput'
