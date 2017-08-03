@@ -84,7 +84,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
             setTimeout(() => this.start2(), 1000);
             setTimeout(() => this.start1(), 2000);
             setTimeout(() => this.realStart(), 3000);
-            countDownRef.update({ 'countDownStarted': true });
+            firebase.database().ref('rooms/' + this.props.roomkey).update({ 'countDownStarted': true });
           }
         })
       }
@@ -278,10 +278,10 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   }
 
   start3 = () => {
-      this.setState({ countDown3: ['countDown3 countDownStartHide'] });
-    setTimeout(() => {
-      this.setState({ countDown3: [] })
-    }, 500);
+        this.setState({ countDown3: ['countDown3 countDownStartHide'] });
+      setTimeout(() => {
+        this.setState({ countDown3: [] })
+      }, 500);
   }
 
   start2 = () => {
