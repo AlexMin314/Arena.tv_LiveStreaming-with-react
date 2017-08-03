@@ -30,6 +30,7 @@ import Canvas from './Canvas/Canvas';
 import RaisedButton from 'material-ui/RaisedButton';
 import FontIcon from 'material-ui/FontIcon';
 import IconButton from 'material-ui/IconButton';
+import Snackbar from 'material-ui/Snackbar';
 
 export class Room extends Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -53,7 +54,8 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       seconds: 90,
       timer: 0,
       startTheTimer: false,
-      winnerList: []
+      winnerList: [],
+      copy: false
     }
   }
 
@@ -357,13 +359,42 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 ** End of time remaining functions *
 *///////////////////////////////////
 
+  onCopy = (e) => {
+    const roomName = document.getElementById('roomNameGet').innerHTML;
+    const tempInput = document.createElement('input');
+    tempInput.setAttribute('value', roomName);
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy')
+    document.body.removeChild(tempInput)
+    this.setState({
+      copy: true,
+    });
+  }
 
+  handleTouchTap = () => {
+    this.setState({
+      copy: true,
+    });
+  };
+
+  handleRequestClose = () => {
+    this.setState({
+      copy: false,
+    });
+  };
 
   render() {
     const isItYourTurn = this.checkTurn();
     return (
       <div className="container-fluid contentBody">
         <div className="row roomContent">
+          <Snackbar
+            open={this.state.copy}
+            message="Room name copied to your clipboard."
+            autoHideDuration={2000}
+            onRequestClose={this.handleRequestClose}
+          />
           <div className="col-lg-2 hidden-md-down sectionDivider"></div>
           <div className="col-lg-8 col-md-12 sectionDivider">
             <div className="" id="mainContentWrapper">
@@ -391,11 +422,11 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                       <IconButton tooltip="Copy"
                                   children={<i className="material-icons">content_copy</i>}
                                   iconStyle={{width:15, height:15, fontSize: 15}}
-                                  style={{width:15, height:15 , fontSize: 15}}
-                                  hoveredStyle={{color:'rgb(255, 64, 129)'}}/>
+                                  style={{width:15, height:15 , fontSize: 15, color:'black'}}
+                                  hoveredStyle={{color:'rgb(255, 64, 129)'}}
+                                  onTouchTap={this.onCopy}/>
                     </div>
-                   <br/>
-                    <div className='rightContent'>{this.state.roomName}</div>
+                    <div className='rightContent' id="roomNameGet">{this.state.roomName}</div>
                   </div>
                   <div className="stageDiv">
                    Stage

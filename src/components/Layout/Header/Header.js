@@ -130,7 +130,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
                   trackSwitchedStyle={{backgroundColor: 'rgb(252, 182, 224)'}}
                   labelStyle={{display:'flex', color:'white', justifyContent: 'flex-end'}} />
                 <div className="greetingWrapper">
-                  <Avatar size="27"
+                  <Avatar size={27}
                           className="avatarClass"
                           src={this.props.user[0].photo}
                           style={avatar} />
