@@ -147,7 +147,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
                   trackSwitchedStyle={{backgroundColor: 'rgb(252, 182, 224)'}}
                   labelStyle={{display:'flex', color:'white', justifyContent: 'flex-end'}} />
                 <div className="greetingWrapper">
-                  <Avatar size="27"
+                  <Avatar size={27}
                           className="avatarClass"
                           src={this.props.user[0].photo}
                           style={avatar} />
@@ -160,12 +160,12 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
             ) : (
               <div className="headerWrapper">
                 <Toggle
-                  label={this.state.sound ? (
+                  label={this.props.sound ? (
                     <FontIcon className="material-icons" color="white">volume_up</FontIcon>
                   ) : (
                     <FontIcon className="material-icons" color="white">volume_off</FontIcon>
                   )}
-                  defaultToggled={true}
+                  defaultToggled={this.props.sound}
                   className="toggle"
                   onToggle={this.toggleSound}
                   labelPosition="left"

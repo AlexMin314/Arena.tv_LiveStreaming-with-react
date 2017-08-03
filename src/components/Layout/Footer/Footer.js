@@ -43,7 +43,7 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
 
     return (
       <div>
-      {this.props.user[0] === null ? (
+      {!this.props.user[0] ? (
         <div className="footer container-fluid">
           <h5 className="footer-content-left hidden-xs-down">
             MindTap &hearts;<span> Alex . EL </span>
