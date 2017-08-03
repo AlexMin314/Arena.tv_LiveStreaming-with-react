@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 // Import static files
 import './Home.css';
 
+// Import API
+import { clickSoundPlay } from '../../API/utilityAPI';
+
 //Import UI
 import FlatButton from 'material-ui/FlatButton';
 
@@ -37,12 +40,12 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
 
   onSignIn = (e) => {
     e.preventDefault();
-    let clicked = document.getElementById('clicked');
-    clicked.play();
+    clickSoundPlay();
     setTimeout(() => {window.location.href = '/login'},300);
   }
   onSignUp = (e) => {
     e.preventDefault();
+    clickSoundPlay();
     window.location.href = '/signup';
   }
 
