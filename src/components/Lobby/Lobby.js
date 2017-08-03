@@ -149,7 +149,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
           this.setState({ errorMessage: 'All rooms are currently full, please wait and try again or create a room!' });
         } else {
           // Get a random number within the range of the size of the availableRooms array
-          const randomNum = this.getRandomIntInRange(0, availableRooms.length);
+          const randomNum = getRandomIntInRange(0, availableRooms.length);
           // Assign the filtered room to variable
           const roomName = availableRooms[randomNum].roomInfo.roomName;
           // Add member count of the filtered room

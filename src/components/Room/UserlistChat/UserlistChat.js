@@ -61,6 +61,8 @@ export class Userlist extends Component { // eslint-disable-line react/prefer-st
       if (latestChat === curTurnAnswer &&
          chatSender === me.id &&
          me.id !== this.props.turnInfo.id) {
+         let correctSound = document.getElementById('correct');
+         correctSound.play()
          // stageWinnerUpdater for firebase
          stageWinnerUpdater(this.props.roomkey, me);
          // Turn changer

@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { addUser } from '../../../actions/userActions';
 import { isStillLoading } from '../../../actions/loadingActions';
 import { updateTimerStatus } from '../../../actions/timerActions';
+import { updateSoundStatus } from '../../../actions/soundActions';
 
 // Import Firebase
 import firebase from '../../../firebase';
@@ -71,19 +72,23 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
   }
 
   toggleSound = (e, logged) => {
+    this.props.updateSound(logged);
     let defaultClick = document.getElementById('clicked');
     let socialClick = document.getElementById('mouseClicked');
     let mainMusic = document.getElementById('mainMusic');
+    let correctSound = document.getElementById('correct');
 
     // Toggle sound off if value is false
     if(!logged) {
       defaultClick.muted = true;
       socialClick.muted = true;
       mainMusic.muted = true;
+      correctSound.muted = true;
     } else {
       defaultClick.muted = false;
       socialClick.muted = false;
       mainMusic.muted = false;
+      correctSound.muted = false;
     }
   }
 
@@ -115,7 +120,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
           />
           <Toggle
             label="Sound"
-            defaultToggled={true}
+            defaultToggled={this.props.sound}
             onToggle={this.toggleSound}
             labelPosition="right"
             style={{margin: 20}} />
@@ -159,7 +164,10 @@ class Logged extends Component {
 
 
 const mapStateToProps = (state) => {
-  return {user: state.user}
+  return {
+    user: state.user,
+    sound: state.soundStatus
+  }
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -172,6 +180,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateTimer: (timerStatus) => {
       dispatch(updateTimerStatus(timerStatus))
+    },
+    updateSound: (soundStatus) => {
+      dispatch(updateSoundStatus(soundStatus))
     }
   }
 }

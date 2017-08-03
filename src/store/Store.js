@@ -11,6 +11,7 @@ import turnReducer from '../reducers/turnReducer';
 import timerReducer from '../reducers/timerReducer';
 import navReducer from '../reducers/navReducer';
 import lobbyReducer from '../reducers/lobbyReducer';
+import soundReducer from '../reducers/soundReducer';
 
 export let initStore = () => {
 
@@ -23,7 +24,8 @@ export let initStore = () => {
     currentTurn: turnReducer,
     timerStatus: timerReducer,
     nav: navReducer,
-    lobby: lobbyReducer
+    lobby: lobbyReducer,
+    soundStatus: soundReducer
   });
 
   // Create the store with all the reducers and allow for chrome redux dev tools to run and read reducers
