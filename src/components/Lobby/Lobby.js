@@ -355,9 +355,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       if(!e.read) e.read = true;
     })
     this.props.updateNotice(0);
-    setTimeout(() => {
-      document.getElementById('gloablChatInput').focus()
-    },200)
+    setTimeout(() => document.getElementById('gloablChatInput').focus(), 200)
   }
   handleClose = () => this.setState({open: false});
 
