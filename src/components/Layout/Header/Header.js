@@ -82,18 +82,20 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
     let socialClick = document.getElementById('mouseClicked');
     let mainMusic = document.getElementById('mainMusic');
     let correctSound = document.getElementById('correct');
-
+    let ready = document.getElementById('ready');
     // Toggle sound off if value is false
     if(!logged) {
       defaultClick.muted = true;
       socialClick.muted = true;
       mainMusic.muted = true;
       correctSound.muted = true;
+      ready.muted = true;
     } else {
       defaultClick.muted = false;
       socialClick.muted = false;
       mainMusic.muted = false;
       correctSound.muted = false;
+      ready.muted = false;
     }
   }
 
