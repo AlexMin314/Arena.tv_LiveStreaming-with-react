@@ -378,12 +378,17 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                 <div className="sideRow">
                 <div className="roomInfoDiv">
                   <div className="roomNameDiv">
-                   Room Name:
+                   Room Name
                    <br/>
                     {this.state.roomName}
                   </div>
+                  <div className="stageDiv">
+                   Stage
+                   <br/>
+                    {this.state.currentStage ? this.state.currentStage : 0}
+                  </div>
                   <div className="roomTopicDiv">
-                    Room Topic:
+                    Room Topic
                     <br/>
                     {this.state.topic}
                   </div>
