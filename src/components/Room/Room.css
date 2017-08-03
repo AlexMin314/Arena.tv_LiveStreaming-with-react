@@ -31,7 +31,15 @@
 }
 .rightContent {
   margin-top: 3px;
-  color: rgb(255, 64, 129)
+  color: rgb(255, 64, 129);
+}
+.iconSize {
+  margin-left: 10px;
+  color: rgb(87, 87, 87);
+}
+.iconSize:hover {
+  color: rgb(255, 64, 129);
+  border: 1px solid white;
 }
 
 @font-face {

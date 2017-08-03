@@ -28,6 +28,7 @@ import Canvas from './Canvas/Canvas';
 
 // Import UI
 import RaisedButton from 'material-ui/RaisedButton';
+import FontIcon from 'material-ui/FontIcon';
 
 export class Room extends Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -382,7 +383,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
                 <div className="sideRow">
                 <div className="roomInfoDiv">
                   <div className="roomNameDiv">
-                   Room Name
+                   Room Name <i className="fa fa-clone iconSize" aria-hidden="true"></i>
                    <br/>
                     <div className='rightContent'>{this.state.roomName}</div>
                   </div>
