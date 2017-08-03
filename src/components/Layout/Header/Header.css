@@ -27,25 +27,27 @@
   }
 }
 .greeting {
-  display: flex;
-  margin: 0 5px;
+  display: block;
+  margin-left: 10px;
 }
 .greetingWrapper {
+  margin-right: 20px;
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   color: white;
+  padding: 0;
+  width: 100%;
 }
 .headerWrapper {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  color: white;
+
 }
 .toggle {
-  margin-right: 20px;
   margin-top: 6px;
 }
 @media screen and (max-width:430px)  {

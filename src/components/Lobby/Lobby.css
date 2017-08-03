@@ -248,7 +248,7 @@ Chat
     height: 40px;
     width: 40px;
   }
-  .chatToggle {
+  .chatToggle, .helpSection {
     display: none !important;
   }
   .chatBadge {

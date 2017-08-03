@@ -35,7 +35,7 @@ const displayNone = {
   display: "none",
 }
 const avatar = {
-
+  display:'flex'
 }
 const appBarStyle = {
 
@@ -122,23 +122,40 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
                   className="toggle"
                   onToggle={this.toggleSound}
                   labelPosition="left"
-                  style={{display:'flex'}}
+                  style={{display:'flex', marginRight: 20}}
                   thumbSwitchedStyle={{backgroundColor: 'rgb(255, 64, 129)'}}
                   trackSwitchedStyle={{backgroundColor: 'rgb(252, 182, 224)'}}
-                  labelStyle={{display:'flex', color:'white'}} />
+                  labelStyle={{display:'flex', color:'white', justifyContent: 'flex-end'}} />
                 <div className="greetingWrapper">
-                  <Avatar size="30"
+                  <Avatar size="27"
                           className="avatarClass"
                           src={this.props.user[0].photo}
                           style={avatar} />
                   <div className="greeting">
-                    Hi,{this.props.user[0].displayName}
+                    Hello, {this.props.user[0].displayName}
                   </div>
-                  <Logged logout={this.logout} />
                 </div>
+                <Logged logout={this.logout} />
               </div>
             ) : (
-              <Login />)}
+              <div className="headerWrapper">
+                <Toggle
+                  label={this.state.sound ? (
+                    <FontIcon className="material-icons" color="white">volume_up</FontIcon>
+                  ) : (
+                    <FontIcon className="material-icons" color="white">volume_off</FontIcon>
+                  )}
+                  defaultToggled={true}
+                  className="toggle"
+                  onToggle={this.toggleSound}
+                  labelPosition="left"
+                  style={{display:'flex', marginRight: 20}}
+                  thumbSwitchedStyle={{backgroundColor: 'rgb(255, 64, 129)'}}
+                  trackSwitchedStyle={{backgroundColor: 'rgb(252, 182, 224)'}}
+                  labelStyle={{display:'flex', color:'white', justifyContent: 'flex-end'}} />
+                <Login />
+              </div>
+              )}
           />
         </div>
       );
