@@ -387,6 +387,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   }
 
   componentDidMount() {
+    this.props.updateNotice(0);
 
   // Logic for displaying online users in lobby
     const userObj = this.props.user[0];
