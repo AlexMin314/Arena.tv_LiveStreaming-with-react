@@ -396,6 +396,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     let userIsAlreadyOnline = false;
     onlineUsersRef.once('value', (snapshot) => {
       const usersOnlineObj = snapshot.val();
+      const currentNoOfUsers = Object.keys(usersOnlineObj).length;
       for(const key in usersOnlineObj) {
         if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
         && (usersOnlineObj[key].email === this.props.user[0].email)) {
@@ -405,8 +406,10 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
       if(userIsAlreadyOnline) {
         onlineUsersCountRef.once('value', (snapshot) => {
-          if(!snapshot.val()) firebase.database().ref().update({ onlineUsersCount: 1});
-          else this.setState({ onlineUsersCount: snapshot.val() });
+          if(!snapshot.val()) {
+            firebase.database().ref().update({ onlineUsersCount: 1});
+            this.setState({ onlineUsersCount: 1 });
+          } else this.setState({ onlineUsersCount: currentNoOfUsers });
         })
       }
 
@@ -414,17 +417,22 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
         onlineUsersCountRef.once('value', (snapshot) => {
           if(!snapshot.val()) firebase.database().ref().update({ onlineUsersCount: 1});
           else {
-            let currentUserCount = snapshot.val();
-            const newUserCount = currentUserCount + 1;
-            firebase.database().ref().update({
-              onlineUsersCount: newUserCount
-            })
-            this.setState({ onlineUsersCount: newUserCount })
             onlineUsersRef.push(userObj);
+            onlineUsersRef.once('value',(snapshot) => {
+              const updatedUsersCount = Object.keys(snapshot.val()).length;
+              firebase.database().ref().update({ onlineUsersCount: updatedUsersCount });
+              this.setState({ onlineUsersCount: updatedUsersCount })
+            })
           } // end of nearest else above
         }) // end of onlineUsersCountRef.once('value', (snapshot)
       } // end of else
     }) // end of onlineUsersRef.once('value', (snapshot)
+
+  // Logic for updating the state of online users when any user logs in or out
+  firebase.database().ref('/onlineUsers').on('value', (snapshot) => {
+    const updatedUserCount = Object.keys(snapshot.val()).length;
+    this.setState({ onlineUsersCount: updatedUserCount });
+  })
 
   /**************************
   ** End of Online User Logic
@@ -458,51 +466,6 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
         this.setState({chatList: chatListArr});
     });
   } // End of componentDidMount
-
-  componentWillUnmount() {
-    const userObj = this.props.user[0];
-    const onlineUsersRef = firebase.database().ref('/onlineUsers');
-    const onlineUsersCountRef = firebase.database().ref('/onlineUsersCount');
-    let userIsInLobby = false;
-    onlineUsersRef.once('value', (snapshot) => {
-      const usersOnlineObj = snapshot.val();
-      for(const key in usersOnlineObj) {
-        if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
-        && (usersOnlineObj[key].email === this.props.user[0].email)) {
-          userIsInLobby = true
-        } // end of if((usersOnlineObj[key].displayName === this.props.user[0].displayName)
-      } // end of for(const key in usersOnlineObj)
-
-      if(!userIsInLobby) {
-        onlineUsersCountRef.once('value', (snapshot) => {
-          this.setState({ onlineUsersCount: snapshot.val() });
-        })
-      }
-
-      else {
-        onlineUsersCountRef.once('value', (snapshot) => {
-          if(snapshot.val()) {
-            let currentUserCount = snapshot.val();
-            const newUserCount = currentUserCount - 1;
-            firebase.database().ref().update({
-              onlineUsersCount: newUserCount
-            })
-            this.setState({ onlineUsersCount: newUserCount })
-            onlineUsersRef.once('value',(snapshot) =>{
-              const usersObj = snapshot.val();
-              let onlineUserKeyToRemove = '';
-              for(const key in usersObj) {
-                if((usersObj[key].displayName === this.props.user[0].displayName) && (usersObj[key].email === this.props.user[0].email))
-                onlineUserKeyToRemove = key;
-              }
-              firebase.database().ref('/onlineUsers/' + onlineUserKeyToRemove).remove();
-            })
-          }
-
-        }) // end of onlineUsersCountRef.once('value', (snapshot)
-      } // end of else
-    }) // end of onlineUsersRef.once('value', (snapshot)
-  }
 
   renderChat = () => {
     const returnArr = []

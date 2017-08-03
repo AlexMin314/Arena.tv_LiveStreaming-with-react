@@ -60,6 +60,23 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
 
   // logout onClick event listener
   logout = () => {
+    const userObj = this.props.user[0];
+    const onlineUsersRef = firebase.database().ref('/onlineUsers');
+    onlineUsersRef.once('value', (snapshot) => {
+      const usersObj = snapshot.val();
+      for (const key in usersObj) {
+        if(usersObj[key].displayName === userObj.displayName &&
+           usersObj[key].email === userObj.email) {
+             firebase.database().ref('/onlineUsers/' + key).remove()
+             onlineUsersRef.once('value', (snapshot) => {
+               const updatedUserCount = Object.keys(snapshot.val()).length;
+               firebase.database().ref().update({ onlineUsersCount: updatedUserCount })
+               this.setState({ onlineUsersCount: updatedUserCount });
+             })
+           } // end of if(usersObj[key].displayName === userObj.displayName
+      } // end of iteration for (const key in usersObj)
+    }) // end of onlineUsersRef.once('value', (snapshot)
+
     this.props.triggerLoading(false);
     this.props.updateTimer(null);
     // Remove user from firebase session
