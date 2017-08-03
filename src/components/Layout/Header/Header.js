@@ -123,7 +123,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
                   className="toggle"
                   onToggle={this.toggleSound}
                   labelPosition="left"
-                  style={{display:'flex', marginRight: 20}}
+                  style={{display:'flex', marginRight: '20px'}}
                   thumbSwitchedStyle={{backgroundColor: 'rgb(255, 64, 129)'}}
                   trackSwitchedStyle={{backgroundColor: 'rgb(252, 182, 224)'}}
                   labelStyle={{display:'flex', color:'white', justifyContent: 'flex-end'}} />
@@ -150,7 +150,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
                   className="toggle"
                   onToggle={this.toggleSound}
                   labelPosition="left"
-                  style={{display:'flex', marginRight: 20}}
+                  style={{display:'flex', marginRight: '20px'}}
                   thumbSwitchedStyle={{backgroundColor: 'rgb(255, 64, 129)'}}
                   trackSwitchedStyle={{backgroundColor: 'rgb(252, 182, 224)'}}
                   labelStyle={{display:'flex', color:'white', justifyContent: 'flex-end'}} />

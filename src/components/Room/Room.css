@@ -25,6 +25,15 @@
   flex-direction: column;
 }
 
+.roomNameDiv, .stageDiv, .roomTopicDiv {
+  margin-bottom: 20px;
+  margin-left: 8px;
+}
+.rightContent {
+  margin-top: 3px;
+  color: rgb(255, 64, 129)
+}
+
 @font-face {
   font-family: digitalTime;
   src: url('../../fonts/digital-7.ttf');

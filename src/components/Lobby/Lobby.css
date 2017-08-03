@@ -66,6 +66,21 @@
   font-weight: 900;
   text-shadow: #000000 1px 1px 1px, rgb(59, 59, 59) 2px 2px 2px;
 }
+.categorySmall {
+  display: inline-block;
+  height: 40px;
+  margin: 5px;
+  width: 40px;
+  font-size: 12px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 90% 90%;
+  text-align: center;
+  padding-top: 10px;
+  color: white;
+  font-weight: 900;
+  text-shadow: #000000 1px 1px 1px, rgb(59, 59, 59) 2px 2px 2px;
+}
 
 .category:hover {
   border-radius: 10px;
