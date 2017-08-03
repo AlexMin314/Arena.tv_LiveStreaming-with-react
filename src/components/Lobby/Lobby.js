@@ -736,7 +736,9 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                   docked={false}
                   containerClassName="globalChat"
                   containerStyle={globalChatStyle}>
-            <AppBar iconElementLeft={<IconButton tooltip="Users Online"></IconButton>}
+            <AppBar iconElementLeft={<FontIcon className="material-icons"
+                                               color="white"
+                                               style={{marginTop:'10px'}}>people</FontIcon>}
                     iconElementRight={<IconButton><NavigationClose onTouchTap={this.handleClose}/></IconButton>}
                     iconClassNameLeft='chatLeftIconNone'
                     title={this.state.onlineUsersCount}
