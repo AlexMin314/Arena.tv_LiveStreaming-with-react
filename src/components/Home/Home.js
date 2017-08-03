@@ -39,7 +39,7 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
     e.preventDefault();
     let clicked = document.getElementById('clicked');
     clicked.play();
-    setTimeout(() => {window.location.href = '/login'},50);
+    setTimeout(() => {window.location.href = '/login'},300);
   }
   onSignUp = (e) => {
     e.preventDefault();
@@ -48,8 +48,11 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
 
   componentDidMount() {
     let mainMusic = document.getElementById('mainMusic');
-    mainMusic.play();
-    mainMusic.loop = true;
+
+    if(this.props.sound) {
+      mainMusic.play();
+      mainMusic.loop = true;
+    }
   }
 
   render() {
@@ -124,7 +127,10 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
 }
 
 const mapStateToProps = (state) => {
-  return {user: state.user}
+  return {
+    user: state.user,
+    sound: state.soundStatus
+  }
 }
 
 export default connect(mapStateToProps)(Home);
