@@ -13,6 +13,7 @@ import { updateGameStart } from '../../actions/gameActions';
 import { updateNav } from '../../actions/navActions';
 import { updateTimerStatus } from '../../actions/timerActions';
 import { updateLobby } from '../../actions/lobbyActions';
+import { updateNotice } from '../../actions/noticeActions';
 
 // Import UI
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -70,6 +71,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
   constructor(props){
     super(props)
 
+    this.props.updateLobby(null)
+
     this.state = {
       roomName: '',
       roomTopic: 'TV',
@@ -77,7 +80,6 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       open: false,
       chatmsg: '',
       chatList: [],
-      missedMsg: 0,
       modalSuccessMesage: '',
       modalErrorMessage: '',
       allPassed: false,
@@ -352,8 +354,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     chatList.forEach((e) => {
       if(!e.read) e.read = true;
     })
-
-    this.setState({ missedMsg: 0});
+    this.props.updateNotice(0);
   }
   handleClose = () => this.setState({open: false});
 
@@ -445,12 +446,12 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
         const newMessage = data.val();
         if (this.state.open)  {
           newMessage.read = true;
-          this.setState({ missedMsg: 0});
+          this.props.updateNotice(0);
         } else {
           newMessage.read = false;
-          let unreadNum = this.state.missedMsg;
+          let unreadNum = this.props.noticeNum;
           unreadNum += 1;
-          this.setState({ missedMsg: unreadNum});
+          this.props.updateNotice(unreadNum);
         }
         chatListArr.push(newMessage)
         this.setState({chatList: chatListArr});
@@ -713,8 +714,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
 
           {/* chat part */}
-          {this.state.missedMsg > 0 ? (
-            <Badge badgeContent={this.state.missedMsg}
+          {this.props.noticeNum > 0 ? (
+            <Badge badgeContent={this.props.noticeNum}
                    primary={true}
                    key={uuid()}
                    className='chatBadge animated bounce'
@@ -768,7 +769,8 @@ const mapStateToProps = (state) => {
       user: state.user,
       roomkey: state.room,
       navInfo: state.nav,
-      lobbyInfo: state.lobby
+      lobbyInfo: state.lobby,
+      noticeNum: state.notice
     }
 }
 
@@ -788,6 +790,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     updateLobby: (status) => {
       dispatch(updateLobby(status))
+    },
+    updateNotice: (notice) => {
+      dispatch(updateNotice(notice))
     }
   }
 }

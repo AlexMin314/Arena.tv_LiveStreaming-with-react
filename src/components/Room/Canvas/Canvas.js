@@ -561,7 +561,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
           <div className="toolWrapper2">
             <div className="helpSection">
               <FontIcon className="material-icons" color="rgb(97, 95, 94)">help</FontIcon>
-              <span> Press anykey for chat.</span>
+              <span> Press anykey to chat.</span>
               <span> Submit your answer using the chat.</span>
             </div>
           </div>
