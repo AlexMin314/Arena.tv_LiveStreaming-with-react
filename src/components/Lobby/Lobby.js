@@ -631,7 +631,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                 <label className="btn btn-primary" id="mRadio2"
                        onClick={this.onRadioSelect}>
                   <input type="radio" autoComplete="off"/>
-                  <div className="category categoryModal GAME">GAMES</div>
+                  <div className="category categoryModal GAMES">GAMES</div>
                 </label>
                 <label className="btn btn-primary" id="mRadio3"
                        onClick={this.onRadioSelect}>
@@ -686,7 +686,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
             <div className="subtitleTextLiner"><hr/></div>
             <div className="categoryWrapper">
               <div className="category categoryAni TV" onClick={this.topicJoin}>TV</div>
-              <div className="category categoryAni GAME" onClick={this.topicJoin}>GAMES</div>
+              <div className="category categoryAni GAMES" onClick={this.topicJoin}>GAMES</div>
               <div className="category categoryAni ANIME" onClick={this.topicJoin}>ANIME</div>
               <div className="category categoryAni LOGOS" onClick={this.topicJoin}>LOGOS</div>
               <div className="category categoryAni TRAVEL" onClick={this.topicJoin}>TRAVEL</div>
