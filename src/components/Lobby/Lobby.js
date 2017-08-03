@@ -708,7 +708,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
                        value={this.state.roomName}/>
             <RaisedButton label="Join" secondary={true} fullWidth={true}
                           className="joinRoomBtn"
-                          onTouchTap={this.roomJoinLogic}/>
+                          onTouchTap={this.onJoinExistingRoom}/>
           </div>
         ) : null}
 
