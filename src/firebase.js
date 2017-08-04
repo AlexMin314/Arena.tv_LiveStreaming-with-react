@@ -97,11 +97,14 @@ export const stageWinnerUpdater = (roomkey, winner) => {
       // Update user score in room
       const membersRef = firebase.database().ref('rooms/' + roomkey + '/members');
       membersRef.once('value', (snapshot) => {
+        // store snapshot in membersObj
         const membersObj = snapshot.val();
         let membersArray = [];
+        // iterate over object to find the user who answered correctly
         for (const key in membersObj) {
           if(membersObj[key].displayName === winner.displayName) {
             let currentScoreRef = firebase.database().ref('rooms/' + roomkey + '/members/' + key + '/score');
+            // get the current user's score in firebase and add 10 points
             currentScoreRef.once('value', (snapshot) => {
               let currentScore = snapshot.val();
               currentScore += 10;
