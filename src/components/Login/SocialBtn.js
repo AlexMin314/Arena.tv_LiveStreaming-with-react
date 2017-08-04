@@ -12,6 +12,8 @@ import { isStillLoading } from '../../actions/loadingActions';
 // Import CSS
 import './SocialBtn.css';
 
+// Import API
+import { clickSoundPlay } from '../../API/utilityAPI';
 
 class SocialBtn extends Component {
   constructor() {
@@ -22,8 +24,7 @@ class SocialBtn extends Component {
 
   // Facebook Login Onclick listener
   facebookLogin = () => {
-    let clicked = document.getElementById('mouseClicked');
-    clicked.play();
+    clickSoundPlay();
     setTimeout(() => {
       this.props.triggerLoading(true);
       // assign provider variable for facebook
@@ -54,8 +55,7 @@ class SocialBtn extends Component {
 
   // Twitter Login Onclick listener
   twitterLogin = () => {
-    let clicked = document.getElementById('mouseClicked');
-    clicked.play();
+    clickSoundPlay();
     setTimeout(() => {
       this.props.triggerLoading(true);
       // assign provider variable for twitter
@@ -89,8 +89,7 @@ class SocialBtn extends Component {
 
   // Google Login Onclick listener
   googleLogin = () => {
-    let clicked = document.getElementById('mouseClicked');
-    clicked.play();
+    clickSoundPlay();
     setTimeout(() => {
       this.props.triggerLoading(true);
       // assign provider variable for twitter

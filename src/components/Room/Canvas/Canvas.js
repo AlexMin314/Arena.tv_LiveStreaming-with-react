@@ -22,6 +22,12 @@ import './Canvas.css';
 import { updateGameStart } from '../../../actions/gameActions';
 import { updateCurrentTurn } from '../../../actions/turnActions';
 
+// Import API
+import { clickSoundPlay,
+         clickSoundPlay2,
+         yaySoundPlay,
+         mouseclickSoundPlay } from '../../../API/utilityAPI';
+
 // Import child
 import ChatInput from '../ChatInput/ChatInput';
 
@@ -329,6 +335,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
    */
 
   handleClick = () => {
+    mouseclickSoundPlay();
     this.setState({ displayColorPicker: !this.state.displayColorPicker })
   };
 
@@ -339,6 +346,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   };
 
   handleChange = (color) => {
+    mouseclickSoundPlay();
     this.setState({
       color: color.rgb,
       eraser: false
@@ -346,6 +354,7 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   };
 
   weightPicker = (e, formerKey) => {
+    mouseclickSoundPlay();
     for(const key in this.weightTool) {
       if (key == (e === null ? formerKey : e.target.id.slice(-1))) {
         this.setState({ weightPick: 3 + (key - 1) * 5 });
@@ -386,15 +395,24 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
   clearAllDrawings = () => {
     // clear canvas
     this.setState({ eraser: false });
-    if (this.props.turnInfo.id === this.props.user[0].id) strokeClear(this.props.roomkey)
+    if (this.props.turnInfo.id === this.props.user[0].id) {
+      strokeClear(this.props.roomkey);
+      mouseclickSoundPlay();
+    }
   }
 
   undo = (e) => {
-    if (this.props.turnInfo.id === this.props.user[0].id) undoRecent(this.props.roomkey)
+    if (this.props.turnInfo.id === this.props.user[0].id) {
+      undoRecent(this.props.roomkey);
+      mouseclickSoundPlay();
+    }
   }
 
   eraser = (e) => {
     this.setState({ eraser: !this.state.eraser });
+    mouseclickSoundPlay();
+    const formerKey = (this.state.weightPick - 3) / 5 + 1
+    this.weightPicker(null, formerKey);
   }
 
   cancelEraser = (e) => {

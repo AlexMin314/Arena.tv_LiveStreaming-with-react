@@ -8,6 +8,9 @@ import firebase from '../../firebase';
 // Import Actions
 import { addUser } from '../../actions/userActions';
 
+// Import API
+import { clickSoundPlay } from '../../API/utilityAPI';
+
 // Import CSS
 import './Signup.css';
 
@@ -50,7 +53,7 @@ class Signup extends Component {
   // Event listener for Sign Up button
   signup = (e) => {
     e.preventDefault();
-
+    clickSoundPlay()
     let noErrors = true;
     // Passwords match validation
     if(this.state.password !== this.state.confirmPassword) {

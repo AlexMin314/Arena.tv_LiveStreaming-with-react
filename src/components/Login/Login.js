@@ -12,6 +12,9 @@ import { isStillLoading } from '../../actions/loadingActions';
 // Import CSS
 import './Login.css';
 
+// Import API
+import { clickSoundPlay, yaySoundPlay } from '../../API/utilityAPI';
+
 // Import UI
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -50,8 +53,7 @@ class Login extends Component {
   // Event listener for Login button
   login = (e) => {
     e.preventDefault();
-    let clicked = document.getElementById('clicked');
-    clicked.play();
+    clickSoundPlay();
     setTimeout(() => {
       this.props.triggerLoading(true);
       const {email, password} = this.state;
@@ -143,6 +145,13 @@ class Login extends Component {
     return returnedString;
   }
 
+  registerClick = () => {
+    yaySoundPlay();
+    setTimeout(() => {
+      window.location.href = '/signup';
+    }, 500)
+  }
+
   render() {
     return (
       <div className="container-fluid contentBody">
@@ -185,7 +194,7 @@ class Login extends Component {
                 <div className="goToSignUp">
                   Don't have a <span id="mindTapText">MindTap</span> account yet?
                   <FlatButton label="Register Now"
-                              href="/signup"
+                              onTouchTap={this.registerClick}
                               style={registerStyle}
                               className="registerNow"
                               fullWidth={true} />

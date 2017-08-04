@@ -8,6 +8,8 @@ import { updateNav } from '../../../actions/navActions';
 import { updateLobby } from '../../../actions/lobbyActions';
 import { updateNotice } from '../../../actions/noticeActions';
 
+// Import API
+import { clickSoundPlay, mouseclickSoundPlay } from '../../../API/utilityAPI';
 
 // import UI
 import FontIcon from 'material-ui/FontIcon';
@@ -36,6 +38,7 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
     this.setState({selectedIndex: index});
     this.props.navUpdating(index);
     this.props.updateLobby(null);
+    clickSoundPlay();
     if (index === 2) this.props.updateNotice(0);
   }
 

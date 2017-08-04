@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import uuid from 'uuid/v4';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 // Import firebase
 import { userRoomUpdating, updateRoomName } from '../../firebase';
@@ -33,7 +32,10 @@ import Badge from 'material-ui/Badge';
 import Paper from 'material-ui/Paper';
 
 // Import Utilities
-import { getRandomIntInRange } from '../../API/utilityAPI';
+import { getRandomIntInRange,
+         clickSoundPlay,
+         clickSoundPlay2,
+         mouseclickSoundPlay } from '../../API/utilityAPI';
 
 // Import CSS
 import './Lobby.css';
@@ -99,6 +101,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
    // Room Joining Logic
   roomJoinLogic = (rooms, filter, existingRoomName) => {
+    clickSoundPlay();
     if(rooms && existingRoomName && this.state.allPassed) {
       let foundRoom = [];
       let roomkey = '';
@@ -191,6 +194,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   // Quick Join
   onQuickJoin = (e) => {
+    clickSoundPlay();
     e.preventDefault();
     this.props.updateTimer(false);
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
@@ -201,6 +205,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   // Topic base join
   topicJoin = (e) => {
+    clickSoundPlay();
     e.preventDefault();
     const topic = e.target.innerHTML;
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
@@ -214,6 +219,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    * Topic Selection
    */
   onRadioSelect = (e) => {
+    clickSoundPlay2();
     // store room topic.
     this.setState({ roomTopic: e.target.innerHTML });
   };
@@ -222,6 +228,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    * Room Join/Creation Checker- room name storing into the state
    */
   onRoomName = (e) => {
+    if (e.target.value === '') return;
     this.setState({ roomName: e.target.value })
     firebase.database().ref('rooms').once('value', (snapshot) => {
       const roomsObj = snapshot.val();
@@ -298,7 +305,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    */
   onRoomCreation = (e) => {
     e.preventDefault();
-
+    clickSoundPlay();
     const roomkey = firebase.database().ref().child('rooms').push().key;
 
     // Get roomName
@@ -349,7 +356,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   toggleChatDrawer = () => {
     this.setState({open: !this.state.open});
-
+    mouseclickSoundPlay();
     const chatList = this.state.chatList;
     chatList.forEach((e) => {
       if(!e.read) e.read = true;
@@ -357,11 +364,13 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
     this.props.updateNotice(0);
     setTimeout(() => document.getElementById('gloablChatInput').focus(), 200)
   }
+
   handleClose = () => this.setState({open: false});
 
   onChangeChat = (e) => {
     this.setState({chatmsg: e.target.value});
   }
+
   onKeypressChat = (e) => {
     if (e.key === 'Enter' && this.state.chatmsg !== '') {
       const message = this.messageHelper();
@@ -369,6 +378,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
       this.setState({chatmsg: ''});
     }
   }
+
   onClickSend = (e) => {
     if (this.state.chatmsg !== '') {
       const message = this.messageHelper();
@@ -515,7 +525,11 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    */
   onJoinExistingRoom = (e) => {
     e.preventDefault();
+    clickSoundPlay();
     this.props.updateTimer(false);
+
+    if(this.state.roomName === '') return
+
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
       const rooms = snapshot.val();
       this.roomJoinLogic(rooms, null, this.state.roomName);
@@ -534,6 +548,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    */
 
   renderHandler = (e) => {
+    clickSoundPlay2();
     this.props.updateLobby(e.target.id);
     this.setState({
       errorMessage:'',
@@ -545,6 +560,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   }
   renderHandlerClose = (e) => {
+    clickSoundPlay2();
     this.props.updateLobby(null);
     this.props.navUpdating(0)
     this.setState({
