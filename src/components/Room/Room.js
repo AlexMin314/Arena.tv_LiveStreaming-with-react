@@ -117,20 +117,27 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       }
     });
 
-    // Get gameover
+    // Firebase Game Over Event Listener
     const gameoverRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameover');
     gameoverRef.on('value', (data) => {
       this.setState({ gameover: data.val() })
       if (data.val()) {
         if (this.props.sound) yaySoundPlay()
         this.setState({ gameoverChk: true });
+        // set the timer status in redux state to false
         this.props.updateTimer(false);
+        // reset the timer (needed to provision for if player clicks "play again")
         this.resetTimer();
-        // set gameStart to false --> Alex, we can do this in the updatingGameStart function in firebase.js
-        firebase.database().ref('rooms/' + this.props.roomkey).update({ gameStart: false });
-        firebase.database().ref('rooms/' + this.props.roomkey).update({ countDownStarted: false });
+        /* Update gameStart boolean in firebase to false
+        ** Update countDownStarted (affects 3 2 1 game start) boolean in firebase to false */
+        firebase.database().ref('rooms/' + this.props.roomkey).update({
+          gameStart: false,
+          countDownStarted: false
+        });
+        // Clear all room chat messages in firebase
         firebase.database().ref('rooms/' + this.props.roomkey + '/message').set({});
-      }
+      } // End of gameoverRef.on('value', (data)
+
       firebase.database().ref('rooms/' + this.props.roomkey + '/members')
         .once('value')
         .then((snapshot) => {
