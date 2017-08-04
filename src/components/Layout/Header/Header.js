@@ -115,7 +115,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
       correctSound.muted = true;
       ready.muted = true;
     } else {
-      if (this.props.sound) mouseclickSoundPlay();
+      mouseclickSoundPlay();
       defaultClick.muted = false;
       socialClick.muted = false;
       mainMusic.muted = false;
