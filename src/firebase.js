@@ -138,7 +138,10 @@ const resettingWinnerArray = (roomKey) => {
 
 // Game over status updator
 export const gameOverUpdator = (roomkey, data) => {
-  firebase.database().ref('/rooms/' + roomkey).update({ gameover: data });
+  firebase.database().ref('/rooms/' + roomkey).update({
+    gameover: data,
+    stage: 0
+  });
 }
 
 // For ready status checking to start game.

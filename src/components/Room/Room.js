@@ -153,12 +153,18 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
               }
             }
             for (const key in members) {
-              if ( members[key].score === cache.topscore) {
+              if ( members[key].score === cache.topscore && cache.topscore !== 0) {
                 cache.users.push(<div className="winners"
                                       key={uuid()}>
                                       {members[key].displayName}
                                       <i className="fa fa-trophy fa-2x" aria-hidden="true"></i>
                                       {members[key].score}
+                                      </div>)
+              }
+              if (cache.topscore === 0) {
+                cache.users.push(<div className="winners"
+                                      key={uuid()}>
+                                      ----
                                       </div>)
               }
             }
