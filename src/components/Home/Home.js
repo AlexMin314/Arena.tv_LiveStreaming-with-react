@@ -40,12 +40,12 @@ export class Home extends Component { // eslint-disable-line react/prefer-statel
 
   onSignIn = (e) => {
     e.preventDefault();
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     setTimeout(() => {window.location.href = '/login'},300);
   }
   onSignUp = (e) => {
     e.preventDefault();
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     window.location.href = '/signup';
   }
 

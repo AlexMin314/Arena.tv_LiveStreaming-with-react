@@ -24,7 +24,7 @@ class SocialBtn extends Component {
 
   // Facebook Login Onclick listener
   facebookLogin = () => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     setTimeout(() => {
       this.props.triggerLoading(true);
       // assign provider variable for facebook
@@ -55,7 +55,7 @@ class SocialBtn extends Component {
 
   // Twitter Login Onclick listener
   twitterLogin = () => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     setTimeout(() => {
       this.props.triggerLoading(true);
       // assign provider variable for twitter
@@ -89,7 +89,7 @@ class SocialBtn extends Component {
 
   // Google Login Onclick listener
   googleLogin = () => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     setTimeout(() => {
       this.props.triggerLoading(true);
       // assign provider variable for twitter
@@ -140,7 +140,8 @@ class SocialBtn extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    isStillLoading: state.IsStillLoading
+    isStillLoading: state.IsStillLoading,
+    sound: state.soundStatus
   };
 }
 

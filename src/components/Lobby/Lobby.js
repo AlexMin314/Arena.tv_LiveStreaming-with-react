@@ -101,7 +101,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
    // Room Joining Logic
   roomJoinLogic = (rooms, filter, existingRoomName) => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     if(rooms && existingRoomName && this.state.allPassed) {
       let foundRoom = [];
       let roomkey = '';
@@ -194,7 +194,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   // Quick Join
   onQuickJoin = (e) => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     e.preventDefault();
     this.props.updateTimer(false);
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
@@ -205,7 +205,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   // Topic base join
   topicJoin = (e) => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     e.preventDefault();
     const topic = e.target.innerHTML;
     firebase.database().ref('/rooms').once('value').then((snapshot) => {
@@ -219,7 +219,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    * Topic Selection
    */
   onRadioSelect = (e) => {
-    clickSoundPlay2();
+    if (this.props.sound) clickSoundPlay2();
     // store room topic.
     this.setState({ roomTopic: e.target.innerHTML });
   };
@@ -305,7 +305,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    */
   onRoomCreation = (e) => {
     e.preventDefault();
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     const roomkey = firebase.database().ref().child('rooms').push().key;
 
     // Get roomName
@@ -356,7 +356,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   toggleChatDrawer = () => {
     this.setState({open: !this.state.open});
-    mouseclickSoundPlay();
+    if (this.props.sound) mouseclickSoundPlay();
     const chatList = this.state.chatList;
     chatList.forEach((e) => {
       if(!e.read) e.read = true;
@@ -525,7 +525,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    */
   onJoinExistingRoom = (e) => {
     e.preventDefault();
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     this.props.updateTimer(false);
 
     if(this.state.roomName === '') return
@@ -548,7 +548,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    */
 
   renderHandler = (e) => {
-    clickSoundPlay2();
+    if (this.props.sound) clickSoundPlay2();
     this.props.updateLobby(e.target.id);
     this.setState({
       errorMessage:'',
@@ -560,7 +560,7 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
 
   }
   renderHandlerClose = (e) => {
-    clickSoundPlay2();
+    if (this.props.sound) clickSoundPlay2();
     this.props.updateLobby(null);
     this.props.navUpdating(0)
     this.setState({
@@ -767,7 +767,8 @@ const mapStateToProps = (state) => {
       roomkey: state.room,
       navInfo: state.nav,
       lobbyInfo: state.lobby,
-      noticeNum: state.notice
+      noticeNum: state.notice,
+      sound: state.soundStatus
     }
 }
 

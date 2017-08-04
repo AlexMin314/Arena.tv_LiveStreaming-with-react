@@ -122,7 +122,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
     gameoverRef.on('value', (data) => {
       this.setState({ gameover: data.val() })
       if (data.val()) {
-        yaySoundPlay()
+        if (this.props.sound) yaySoundPlay()
         this.setState({ gameoverChk: true });
         this.props.updateTimer(false);
         this.resetTimer();
@@ -268,7 +268,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    * Room related.
    */
   leaveRoom = () => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     // clear canvas
     if(this.props.user[0].id === this.props.turnInfo.id) strokeClear(this.props.roomkey)
     // updating to firebase
@@ -277,7 +277,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   playAgain = () => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     this.setState({
       ready: false,
       gameoverChk: false,
@@ -290,7 +290,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
    * GameLogic related
    */
   gameReady = () => {
-    yaySoundPlay();
+    if (this.props.sound) yaySoundPlay();
     this.setState({ ready: true });
     // Updating ready status of mine.
     readyUpdating(this.props.roomkey, this.state.memberKey, true);
@@ -303,7 +303,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
   }
 
   skipTurn = () => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     // clear canvas
     strokeClear(this.props.roomkey)
     // Turn Changing.
@@ -372,7 +372,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
 *///////////////////////////////////
 
   onCopy = (e) => {
-    mouseclickSoundPlay();
+    if (this.props.sound) mouseclickSoundPlay();
     const roomName = document.getElementById('roomNameGet').innerHTML;
     const tempInput = document.createElement('input');
     tempInput.setAttribute('value', roomName);
@@ -507,7 +507,8 @@ const mapStateToProps = (state) => {
       roomkey: state.room,
       gameStartInfo: state.gameStart,
       turnInfo: state.currentTurn,
-      timer: state.timerStatus
+      timer: state.timerStatus,
+      sound: state.soundStatus
     }
 }
 
