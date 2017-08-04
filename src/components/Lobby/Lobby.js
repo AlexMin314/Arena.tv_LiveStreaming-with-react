@@ -228,8 +228,8 @@ export class Lobby extends Component { // eslint-disable-line react/prefer-state
    * Room Join/Creation Checker- room name storing into the state
    */
   onRoomName = (e) => {
-    if (e.target.value === '') return;
     this.setState({ roomName: e.target.value })
+    if (e.target.value === '') return;
     firebase.database().ref('rooms').once('value', (snapshot) => {
       const roomsObj = snapshot.val();
       if(!roomsObj) this.setState({
