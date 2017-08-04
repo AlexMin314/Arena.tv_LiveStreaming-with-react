@@ -53,7 +53,7 @@ class Signup extends Component {
   // Event listener for Sign Up button
   signup = (e) => {
     e.preventDefault();
-    clickSoundPlay()
+    if (this.props.sound) clickSoundPlay()
     let noErrors = true;
     // Passwords match validation
     if(this.state.password !== this.state.confirmPassword) {
@@ -180,7 +180,8 @@ class Signup extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    sound: state.soundStatus
   };
 }
 

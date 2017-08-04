@@ -63,7 +63,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
 
   // logout onClick event listener
   logout = () => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     const userObj = this.props.user[0];
     const onlineUsersRef = firebase.database().ref('/onlineUsers');
     onlineUsersRef.once('value', (snapshot) => {
@@ -94,7 +94,7 @@ export class Header extends Component { // eslint-disable-line react/prefer-stat
   }
 
   goHome = () => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     setTimeout(() => {
       window.location.href = '/';
     }, 300)
@@ -196,7 +196,7 @@ class Login extends Component {
   static muiName = 'FlatButton';
 
   loginBtn = () => {
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     setTimeout(() => {
       window.location.href = '/login';
     }, 300)

@@ -53,7 +53,7 @@ class Login extends Component {
   // Event listener for Login button
   login = (e) => {
     e.preventDefault();
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     setTimeout(() => {
       this.props.triggerLoading(true);
       const {email, password} = this.state;
@@ -146,7 +146,7 @@ class Login extends Component {
   }
 
   registerClick = () => {
-    yaySoundPlay();
+    if (this.props.sound) yaySoundPlay();
     setTimeout(() => {
       window.location.href = '/signup';
     }, 500)
@@ -212,7 +212,8 @@ class Login extends Component {
 const mapStateToProps = (state) => {
   return {
     user: state.user,
-    isStillLoading: state.isStillLoading
+    isStillLoading: state.isStillLoading,
+    sound: state.soundStatus
   };
 }
 

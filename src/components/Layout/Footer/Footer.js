@@ -38,7 +38,7 @@ export class Footer extends Component { // eslint-disable-line react/prefer-stat
     this.setState({selectedIndex: index});
     this.props.navUpdating(index);
     this.props.updateLobby(null);
-    clickSoundPlay();
+    if (this.props.sound) clickSoundPlay();
     if (index === 2) this.props.updateNotice(0);
   }
 
@@ -91,7 +91,8 @@ const mapStateToProps = (state) => {
       user: state.user,
       navInfo: state.nav,
       startInfo: state.gameStart,
-      lobbyInfo: state.lobby
+      lobbyInfo: state.lobby,
+      sound: state.soundStatus
     }
 }
 
