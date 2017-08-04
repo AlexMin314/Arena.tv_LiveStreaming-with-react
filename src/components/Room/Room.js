@@ -296,9 +296,7 @@ export class Room extends Component { // eslint-disable-line react/prefer-statel
       gameoverChk: false,
       currentStage: 0
     });
-    setTimeout(() => {
-      allMemeberReadyUpdating(this.props.roomkey);
-    }, 300)
+    allMemeberReadyUpdating(this.props.roomkey);
   }
 
   /**
