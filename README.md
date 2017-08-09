@@ -1,22 +1,20 @@
 # Mind Tap with react
-GA WDI Final Project - A Pictionary-like, fun and engaging game 
+GA WDI Final Project - A Pictionary-like, fun and engaging game
 
 
 ### Introduction
-*
-
-### Why Mind Tap?
-*
+* Pictionary-like real-time drawing/guessing multiplayer game. Draw and Guess the keyword with your creativity!
 
 ### Stacks
+* Canvas
 * React
 * Redux
 * Firebase
-* Literally Canvas
 
 ### Getting Start
 * How to install
-* How to build
+  - npm install
+  - npm start
 
 ### Contribution
 * [Alex Min](https://github.com/AlexMin314)
