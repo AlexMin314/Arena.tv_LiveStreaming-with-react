@@ -78,6 +78,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     const startRef = firebase.database().ref('rooms/' + this.props.roomkey + '/gameStart');
     const countDownRef = firebase.database().ref('rooms/' + this.props.roomkey + '/countDownStarted');
     startRef.on('value', (data) => {
+      // update canvas width, hieghts info.
+      canvasSetting();
       if(data.val()) {
         winnerRef.once('value', (data) => {
           turnNoticeRef.once('value', (data) => {
@@ -98,6 +100,8 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     const turnNoticeRef = firebase.database().ref('rooms/' + this.props.roomkey + '/currentTurn');
     turnNoticeRef.on('value', (data) => {
       if (newItems) {
+        // update canvas width, hieghts info.
+        canvasSetting();
         setTimeout(() => {
           if(this.props.user[0].id === this.props.turnInfo.id) {
             this.setState({ turnNotice: ['turnNoticeText startHide'] });
@@ -119,6 +123,14 @@ export class Canvas extends Component { // eslint-disable-line react/prefer-stat
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
     let drawing = false;
+
+    const canvasSetting = () => {
+      cRect = canvas.getBoundingClientRect();
+      aspect = canvas.clientWidth / canvas.clientHeight;
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+      console.log(canvas.width, canvas.height)
+    }
 
     // Canvas Drawing Logic for init loading and add_child.
     const redraw = () => {
