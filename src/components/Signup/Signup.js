@@ -96,7 +96,7 @@ class Signup extends Component {
         const localUser = {
           displayName: username,
           email: email,
-          photo: 'http://www.perlworkshop.nl/nlpw2016/img/default-avatar.png'
+          photo: '../../img/default-avartar.png'
         }
 
         // Listener for changes to users object
