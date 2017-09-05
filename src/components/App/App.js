@@ -40,7 +40,7 @@ class App extends Component {
       <Router>
         <MuiThemeProvider muiTheme={muiTheme}>
           <Layout>
-              <Switch>
+            <Switch>
               <Route exact path="/" component={userLoggedIn ? Lobby : Home}/>
               <Route exact path='/signup' component={userLoggedIn ? Lobby : Signup}/>
               <Route exact path='/login' component={userLoggedIn ? Lobby : Login}/>
